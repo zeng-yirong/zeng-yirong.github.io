@@ -4,14 +4,27 @@
                                 <h3 class="text-uppercase resume-section-heading mb-4">Software and Demo</h3>
 
                                 {{ range .Site.Params.software.list }}
-                                <div class="item mb-3">
+                                <div class="software-item">
                                     <div class="item-heading row align-items-center mb-2">
-                                        <h4 class="item-title col-12 col-md-12 col-lg-12 mb-2 mb-md-0">{{ .title }} <a href={{ .href }} target="_blank"> {{ .meta }} </a> </h4>
-                                        <p class="item-title col-12 col-md-12 col-lg-12 mb-2 mb-md-0"> <font color="#696969">{{ .name }}</font> </p>
+                                        <h4 class="item-title col-12 mb-2">
+                                            {{ .title }}
+                                            {{ if .href }}
+                                            <a href="{{ .href }}" target="_blank" rel="noopener" class="ml-2">
+                                                <span class="badge" style="background: {{ $.Site.Params.primaryColor }}; font-weight: normal;">
+                                                    {{ .meta }} <i class="fas fa-external-link-alt ml-1"></i>
+                                                </span>
+                                            </a>
+                                            {{ else }}
+                                            <span class="badge" style="background: {{ $.Site.Params.primaryColor }}; font-weight: normal;">
+                                                {{ .meta }}
+                                            </span>
+                                            {{ end }}
+                                        </h4>
+                                        <p class="item-meta col-12">
+                                            <i class="fas fa-users"></i> {{ .name }}
+                                        </p>
                                     </div>
-                                    <div class="item-content">
-                                    </div>
-                                </div><!--//item-->
+                                </div><!--//software-item-->
                                 {{ end }}
 
                             </section><!--//project-section-->

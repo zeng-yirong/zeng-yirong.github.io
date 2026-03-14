@@ -4,22 +4,23 @@
                                 <h3 class="text-uppercase resume-section-heading mb-4">{{ i18n "information" }}</h3>
 
                                 {{ range .Site.Params.information.list }}
-                                <div class="item mb-3">
-                                    <div class="item-heading row align-items-center mb-2">
-                                        <h4 class="item-title col-12 col-md-12 col-lg-12 mb-2 mb-md-0">{{ .title }}</h4>
-                                        <p class="item-title col-12 col-md-12 col-lg-12 mb-2 mb-md-0"> Authors | <font color="#696969">{{ .name }}</font> </p>
-                                        {{ if .publisher }}
-                                        <p class="item-title col-12 col-md-12 col-lg-12 mb-2 mb-md-0"> Paper | <a href={{ .href }} target="_blank"> {{ .publisher }} </a> </p>
+                                <div class="information-item">
+                                    <div class="paper-title mb-2">
+                                        {{ .title }}
+                                    </div>
+                                    <div class="paper-authors mb-2">
+                                        <strong>Authors:</strong> {{ .name }}
+                                    </div>
+                                    <div>
+                                        {{ if .href }}
+                                        <a href="{{ .href }}" target="_blank" rel="noopener" class="paper-venue">
+                                            {{ .publisher }}
+                                        </a>
+                                        {{ else }}
+                                        <span class="paper-venue">{{ .publisher }}</span>
                                         {{ end }}
                                     </div>
-                                    <div class="item-content">
-                                        <ul class="list-unstyled resume-skills-list">
-                                            {{ range .items }}
-                                            <li class="mb-2">{{ with .details }}{{ . | markdownify }}{{ end }}</li>
-                                            {{ end }}
-                                        </ul>
-                                    </div>
-                                </div><!--//item-->
+                                </div><!--//information-item-->
                                 {{ end }}
 
                             </section><!--//project-section-->

@@ -9,8 +9,8 @@ publishDir = "docs"
     author = "Yirong Zeng"
     description = "Yirong Zeng's Academic Resume"
 
-    primaryColor = "#54B689"
-    textPrimaryColor = "#292929"
+    primaryColor = "#2563eb"
+    textPrimaryColor = "#1e293b"
 
     [params.profile]
         enable = true
@@ -53,11 +53,11 @@ publishDir = "docs"
         enable = true
 
         [[params.internships.list]]
-        name = "2024.9-present Huawei (华为小艺 北京)"
+        name = "2024.9-present Huawei Technologies Co., Ltd"
         [[params.internships.list]]
-        name = "2023.7-2023.12 China Academy of Cyber (中国网络空间安全研究院，北京)"
+        name = "2023.7-2023.12 China Academy of Cyber"
         [[params.internships.list]]
-        name = "2021.12-2022.5 NEC (日电中国，北京)"
+        name = "2021.12-2022.5 NEC"
 
     [params.hobbies]
         enable = true

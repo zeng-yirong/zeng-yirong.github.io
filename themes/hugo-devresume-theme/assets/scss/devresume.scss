@@ -10,8 +10,8 @@
 
 /*************************** Theme Colours****************************/
 // Define theme colour scheme
-$theme-color-primary: {{ .Site.Params.primaryColor | default "#54B689" }};
-$theme-text-color-primary: {{ .Site.Params.textPrimaryColor | default "#292929" }};
+$theme-color-primary: {{ .Site.Params.primaryColor | default "#2563eb" }};
+$theme-text-color-primary: {{ .Site.Params.textPrimaryColor | default "#1e293b" }};
 $theme-text-color-secondary: lighten($theme-text-color-primary, 15%);
 $theme-text-color-light: lighten($theme-text-color-primary, 40%);
 $theme-border-color:  lighten($theme-text-color-primary, 60%);
@@ -44,7 +44,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: $theme-text-color-secondary;
-
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -57,6 +57,7 @@ a.theme-link {
 	text-decoration: underline;
     -webkit-text-decoration-color: rgba($theme-text-color-primary,0.3);
     text-decoration-color: rgba($theme-text-color-primary,0.3);
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
     &:hover {
 	    color: $theme-color-primary;
 	    -webkit-text-decoration-color: rgba($theme-color-primary,0.8);
@@ -69,6 +70,7 @@ a.theme-link {
 	padding: .375rem 1rem;
 	height: 2.5rem;
 	font-size: 1rem;
+    transition: all 0.2s ease;
 }
 
 .btn:focus, .btn.focus {
@@ -81,6 +83,7 @@ a.theme-link {
 
 .demo-btn-on-bg {
 	background: rgba(0, 0, 0, 0.2);
+	transition: background 0.2s ease;
 	&:hover {
 		background: rgba(0, 0, 0, 0.3);
 	}
@@ -89,6 +92,12 @@ a.theme-link {
 /*********** Resume **********/
 .resume-wrapper {
 	border: 1px solid rgba(0, 0, 0, 0.025);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.3s ease;
+    &:hover {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
 }
 
 .resume-section-heading {
@@ -97,12 +106,14 @@ a.theme-link {
 	font-size: 1.125rem;
 	letter-spacing: 0.15rem;
 	color: $theme-color-primary;
+    font-weight: 700;
    &:before {
 	   content: "";
 	    display: inline-block;
 	    width: 5px;
 	    height: 100%;
-	    background: $theme-color-primary;
+	    background: linear-gradient(180deg, $theme-color-primary, lighten($theme-color-primary, 20%));
+	    border-radius: 2px;
 	    position: absolute;
 	    left: 0;
 	    top: 0;
@@ -114,12 +125,13 @@ a.theme-link {
 	font-weight: 900;
 	letter-spacing: 0.4rem;
 	color: $theme-color-primary;
-
+    text-shadow: 0 1px 2px rgba($theme-color-primary, 0.1);
 }
 
 .resume-tagline {
 	font-size: 1.25rem;
 	font-weight: 300;
+    color: $theme-text-color-secondary;
 }
 
 .resume-contact {
@@ -129,6 +141,7 @@ a.theme-link {
 
 a.resume-link {
 	color: $theme-text-color-secondary;
+    transition: color 0.2s ease;
 	&:hover {
 		color: $theme-color-primary;
 	}
@@ -136,21 +149,36 @@ a.resume-link {
 
 .resume-profile-image {
 	max-width: 120px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
 }
 
 .resume-intro {
 	font-size: 0.875rem;
+    line-height: 1.7;
 }
+
 .resume-main {
 	.item-title {
-		font-size: 1rem;
+		font-size: 1.1rem;
+        font-weight: 600;
+        line-height: 1.4;
+        color: $theme-text-color-primary;
+        transition: color 0.2s ease;
 	}
 
-   .item-meta {
+    .item-meta {
 	   font-size: 0.75rem;
+       color: $theme-text-color-light;
    }
    .item-content {
 		font-size: 0.875rem;
+        line-height: 1.6;
 	}
 }
 
@@ -161,6 +189,7 @@ a.resume-link {
 	}
 	.item-title {
 		font-size: 1rem;
+        font-weight: 600;
 	}
 
 }
@@ -181,6 +210,7 @@ a.resume-link {
 
 .resume-social-list {
 	font-size: 0.75rem;
+    gap: 0.75rem;
 }
 
 
@@ -188,11 +218,89 @@ a.resume-link {
 	color: #fb866a;
 }
 
+/*********** Paper/Information Section Enhanced Styles **********/
+.information-item {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    &:hover {
+        background-color: rgba($theme-color-primary, 0.04);
+        transform: translateX(4px);
+    }
+    .paper-title {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: $theme-text-color-primary;
+        margin-bottom: 0.5rem;
+    }
+    .paper-authors {
+        font-size: 0.85rem;
+        color: $theme-text-color-secondary;
+        margin-bottom: 0.5rem;
+    }
+    .paper-venue {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background: linear-gradient(135deg, $theme-color-primary, lighten($theme-color-primary, 15%));
+        color: #fff;
+        border-radius: 1rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 2px 4px rgba($theme-color-primary, 0.3);
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba($theme-color-primary, 0.4);
+            color: #fff;
+        }
+    }
+}
+
+/*********** Software Section Enhanced Styles **********/
+.software-item {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(135deg, rgba($theme-color-primary, 0.05), rgba($theme-color-primary, 0.02));
+    border: 1px solid rgba($theme-color-primary, 0.1);
+    margin-bottom: 1rem;
+    transition: all 0.2s ease;
+    &:hover {
+        background: linear-gradient(135deg, rgba($theme-color-primary, 0.1), rgba($theme-color-primary, 0.05));
+        border-color: rgba($theme-color-primary, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($theme-color-primary, 0.15);
+    }
+    a {
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
 // Medium devices (tablets, less than 992px)
 @media (max-width: 991.98px) {
-
     .resume-aside {
 	    border-left: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        padding-top: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .resume-wrapper {
+        padding: 1.5rem !important;
+    }
+
+    .resume-name {
+        font-size: 2rem;
+        letter-spacing: 0.2rem;
+    }
+
+    .resume-contact {
+        border-left: 0;
+        margin-top: 1rem;
     }
 }
 
@@ -202,6 +310,49 @@ a.resume-link {
 	.resume-contact {
 	    border-left: 0;
     }
+
+    .resume-name {
+        font-size: 1.75rem;
+        letter-spacing: 0.15rem;
+    }
+
+    .resume-tagline {
+        font-size: 1rem;
+    }
+
+    .resume-section-heading {
+        font-size: 1rem;
+    }
+
+    .information-item {
+        .paper-title {
+            font-size: 1rem;
+        }
+        .paper-venue {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+        }
+    }
+
+    // Improve readability on small screens
+    .resume-main .item-title {
+        font-size: 1rem;
+        word-wrap: break-word;
+    }
+}
+
+
+// Dark mode support (optional - can be toggled via JS)
+@media (prefers-color-scheme: dark) {
+    // Uncomment to enable automatic dark mode
+    // body {
+    //     background-color: #0f172a;
+    //     color: #e2e8f0;
+    // }
+    // .resume-wrapper {
+    //     background-color: #1e293b;
+    //     border-color: rgba(255, 255, 255, 0.1);
+    // }
 }
 
 
