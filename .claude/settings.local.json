@@ -17,7 +17,22 @@
       "Bash(pkill -f \"hugo.exe\" 2>/dev/null || true)",
       "WebFetch(domain:scholar.google.com)",
       "WebSearch",
-      "Bash(./hugo_bin/hugo.exe 2>&1)"
+      "Bash(./hugo_bin/hugo.exe 2>&1)",
+      "Bash(hugo)",
+      "Bash(where hugo:*)",
+      "Bash(hugo server:*)",
+      "Bash(where.exe hugo:*)",
+      "Bash(npm list:*)",
+      "Bash(hugo version:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm install:*)",
+      "Bash(winget install:*)",
+      "Bash(hash -r)",
+      "Bash(winget list:*)",
+      "Bash(\"C:\\\\Users\\\\Administrator\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\Hugo.Hugo.Extended_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\hugo.exe\" server:*)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :1313)",
+      "Bash(taskkill /F /PID 12128)"
     ],
     "deny": [],
     "ask": []

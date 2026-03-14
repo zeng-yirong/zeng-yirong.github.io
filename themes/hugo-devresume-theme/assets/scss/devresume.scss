@@ -262,15 +262,15 @@ a.resume-link {
 .software-item {
     padding: 1rem;
     border-radius: 0.5rem;
-    background: linear-gradient(135deg, rgba($theme-color-primary, 0.05), rgba($theme-color-primary, 0.02));
-    border: 1px solid rgba($theme-color-primary, 0.1);
+    background: linear-gradient(135deg, rgba($theme-color-primary, 0.02), rgba($theme-color-primary, 0.01));
+    border: 1px solid rgba($theme-color-primary, 0.08);
     margin-bottom: 1rem;
     transition: all 0.2s ease;
     &:hover {
-        background: linear-gradient(135deg, rgba($theme-color-primary, 0.1), rgba($theme-color-primary, 0.05));
-        border-color: rgba($theme-color-primary, 0.3);
+        background: linear-gradient(135deg, rgba($theme-color-primary, 0.05), rgba($theme-color-primary, 0.02));
+        border-color: rgba($theme-color-primary, 0.2);
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba($theme-color-primary, 0.15);
+        box-shadow: 0 4px 12px rgba($theme-color-primary, 0.1);
     }
     a {
         text-decoration: none;

@@ -72,15 +72,17 @@ publishDir = "docs"
         enable = true
 
         [[params.interests.list]]
-        name = "Tool Learning"
+        name = "Tool Learning (2024-)"
         [[params.interests.list]]
-        name = "Agentic RL"
+        name = "Agentic RL (2024-)"
         [[params.interests.list]]
-        name = "Misinformation Detection"
+        name = "Instruction Following (2025-)"
+        [[params.interests.list]]
+        name = "Misinformation Detection (2022-2024)"
 
     [params.summary]
         enable = true
-        text = "I'm a 4th Ph.D. student in Research Center for Social Computing and Information Retrieval (SCIR), at Harbin Institute of Technology (HIT, China). I am advised by Prof. Liu Ting. I obtained my bachelor degree in June 2022. My research interests include Tool Learning, Agentic RL, misinformation detection."
+        text = "I'm a 4th Ph.D. student in Research Center for Social Computing and Information Retrieval (SCIR), at Harbin Institute of Technology (HIT, China). I am advised by Prof. Liu Ting. I obtained my bachelor degree in June 2022. My research interests include Tool Learning, Agentic RL, Instruction Following, misinformation detection."
 
     [params.experience]
         enable = false
