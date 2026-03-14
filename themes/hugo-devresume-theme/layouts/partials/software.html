@@ -1,0 +1,17 @@
+
+                            <section class="project-section py-3">
+
+                                <h3 class="text-uppercase resume-section-heading mb-4">Software and Demo</h3>
+
+                                {{ range .Site.Params.software.list }}
+                                <div class="item mb-3">
+                                    <div class="item-heading row align-items-center mb-2">
+                                        <h4 class="item-title col-12 col-md-12 col-lg-12 mb-2 mb-md-0">{{ .title }} <a href={{ .href }} target="_blank"> {{ .meta }} </a> </h4>
+                                        <p class="item-title col-12 col-md-12 col-lg-12 mb-2 mb-md-0"> <font color="#696969">{{ .name }}</font> </p>
+                                    </div>
+                                    <div class="item-content">
+                                    </div>
+                                </div><!--//item-->
+                                {{ end }}
+
+                            </section><!--//project-section-->

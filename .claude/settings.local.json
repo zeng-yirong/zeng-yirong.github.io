@@ -2,7 +2,22 @@
   "permissions": {
     "allow": [
       "Bash(powershell -Command:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(cat >> temp_software.txt << 'EOF'\n\n\n    [params.software]\n        enable = true\n\n        [[params.software.list]]\n        title = \"Misinformation Detection\"\n        name = \"Yirong Zeng, Juyi Dai, Shen You\"\n        meta = \"Demo System\"\n        href = \"https://huggingface.co/spaces/You-shen/React\"\nEOF\ncat temp_software.txt)",
+      "Bash(cat >> config_temp.toml << 'EOF'\n\n\n    [params.software]\n        enable = true\n\n        [[params.software.list]]\n        title = \"Misinformation Detection\"\n        name = \"Yirong Zeng, Juyi Dai, Shen You\"\n        meta = \"Demo System\"\n        href = \"https://huggingface.co/spaces/You-shen/React\"\n\n\n    [params.social]\n        enable = true\n\n        [[params.social.list]]\n        icon = \"fab fa-github-square\"\n        url = \"https://github.com/zeng-yirong\"\n        title = \"zeng-yirong\"\n\n\n\n\n\n\nEOF\nmv config_temp.toml config.toml)",
+      "Bash(hugo 2>&1 | head -20)",
+      "Bash(choco install:*)",
+      "Bash(curl -L -o hugo.zip \"https://github.com/gohugoio/hugo/releases/download/v0.74.3/hugo_extended_0.74.3_Windows-64bit.zip\" 2>&1 | tail -5)",
+      "Bash(unzip -o hugo.zip -d hugo_bin 2>&1 && ls -la hugo_bin/)",
+      "Bash(7z x:*)",
+      "Bash(python -c \"import zipfile; zipfile.ZipFile\\('hugo.zip'\\).extractall\\('hugo_bin'\\)\" 2>&1 && ls -la hugo_bin/)",
+      "Bash(./hugo_bin/hugo.exe version:*)",
+      "Bash(ls -la *.png *.jpg *.jpeg 2>/dev/null || echo \"No image files in root\")",
+      "Bash(find . -name \"*.png\" -o -name \"*.jpg\" -o -name \"*.jpeg\" 2>/dev/null | head -20)",
+      "Bash(pkill -f \"hugo.exe\" 2>/dev/null || true)",
+      "WebFetch(domain:scholar.google.com)",
+      "WebSearch",
+      "Bash(./hugo_bin/hugo.exe 2>&1)"
     ],
     "deny": [],
     "ask": []

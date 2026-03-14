@@ -44,6 +44,10 @@
                             {{ partial "information.html" . }}
                             {{ end }}
 
+                            {{ if .Site.Params.software.enable }}
+                            {{ partial "software.html" . }}
+                            {{ end }}
+
                         </div><!--//resume-main-->
 
                         {{ partial "sidebar.html" . }}

@@ -1,0 +1,30 @@
+# Hugo binaries
+hugo.zip
+hugo_bin/
+hugo.exe
+hugo
+
+# Hugo build output (not applicable since we commit docs/, but good for reference)
+/public/
+/resources/_gen/
+/assets/jsconfig.json
+hugo_stats.json
+
+# Temporary files
+*.tmp
+*.temp
+temp_*.txt
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
