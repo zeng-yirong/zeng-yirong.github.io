@@ -32,7 +32,8 @@
       "Bash(\"C:\\\\Users\\\\Administrator\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\Hugo.Hugo.Extended_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\hugo.exe\" server:*)",
       "Bash(netstat -ano)",
       "Bash(findstr :1313)",
-      "Bash(taskkill /F /PID 12128)"
+      "Bash(taskkill /F /PID 12128)",
+      "Bash(hugo --minify)"
     ],
     "deny": [],
     "ask": []

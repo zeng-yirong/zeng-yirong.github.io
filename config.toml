@@ -101,6 +101,14 @@ publishDir = "docs"
         details = ""
 
         [[params.information.list]]
+        title = "TinyJudge: Unverifiable Constraint Alignment via Lightweight Specialist Ensembles."
+        name = "Yirong Zeng, Xiao Ding, Yufei Liu, Yuxian Wang, Qunyao Du, Yutai Hou, Wu Ning, Haonan Song, Duyu Tang, Dandan Tu, et al."
+        publisher = "ACL 2026"
+        href = "https://openreview.net/forum?id=YNAqD3eYPw&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3Daclweb.org%2FACL%2F2026%2FConference%2FAuthors%23your-submissions)"
+        details = ""
+
+
+        [[params.information.list]]
         title = "Precision over Diversity: High-Precision Reward Generalizes to Robust Instruction Following."
         name = "Yirong Zeng, Yufei Liu, Xiao Ding, Yutai Hou, Yuxian Wang, Haonan Song, Wu Ning, Dandan Tu, Qixun Zhang, Bibo Cai, et al."
         publisher = "arXiv 2026"
