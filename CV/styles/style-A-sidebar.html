@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>曾屹荣 · 简历 — 样式A：深蓝侧栏现代风</title>
+<!-- ============================================================
+  样式 A：Sidebar Modern（深蓝侧栏 + 白底主体）
+  特点：照片/联系方式/数字亮点放左侧色块栏，正文在右侧；
+       经典双栏模板，信息密度高、扫读快。
+  配色可换：--accent: #1e3a5f（深蓝）→ 墨绿 #14432a / 绛紫 #3b2a5f / 黑金 #111+gold
+============================================================ -->
+<style>
+  :root{
+    --accent:#1e3a5f; --accent-soft:#2c5282; --ink:#1a202c; --muted:#64748b;
+    --bg:#f1f5f9; --paper:#fff; --hl:#d97706; --line:#e2e8f0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .page{max-width:1000px;margin:32px auto;background:var(--paper);
+        box-shadow:0 10px 40px rgba(0,0,0,.12);display:grid;grid-template-columns:300px 1fr}
+  /* ---------- 侧栏 ---------- */
+  aside{background:linear-gradient(180deg,var(--accent),#152a46);color:#e6edf5;padding:36px 26px}
+  .avatar{width:130px;height:130px;border-radius:50%;object-fit:cover;
+          border:4px solid rgba(255,255,255,.85);display:block;margin:0 auto 18px}
+  aside h1{font-size:26px;text-align:center;letter-spacing:2px}
+  aside .tagline{font-size:12.5px;text-align:center;color:#a8c0da;margin:6px 0 24px;line-height:1.5}
+  .side-sec{margin-bottom:26px}
+  .side-sec h2{font-size:13px;letter-spacing:3px;color:#ffd77a;border-bottom:1px solid rgba(255,255,255,.2);
+               padding-bottom:6px;margin-bottom:12px;font-weight:600}
+  .side-sec li{list-style:none;font-size:13px;margin-bottom:9px;display:flex;gap:8px;align-items:flex-start}
+  .side-sec .ico{opacity:.8}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+        padding:3px 10px;border-radius:20px;font-size:12px}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{background:rgba(255,255,255,.08);border-radius:8px;padding:10px;text-align:center}
+  .stat b{display:block;font-size:20px;color:#ffd77a}
+  .stat span{font-size:11px;color:#a8c0da}
+  /* ---------- 主体 ---------- */
+  main{padding:36px 38px}
+  section{margin-bottom:30px}
+  section>h2{font-size:17px;color:var(--accent);letter-spacing:1px;display:flex;align-items:center;gap:10px;
+             border-bottom:2px solid var(--accent);padding-bottom:8px;margin-bottom:16px}
+  section>h2::before{content:"";width:8px;height:8px;background:var(--hl);border-radius:2px;transform:rotate(45deg)}
+  .job-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap}
+  .job-head h3{font-size:15.5px}
+  .date{font-size:12.5px;color:var(--muted);font-weight:600;white-space:nowrap}
+  .sub{font-size:13px;color:var(--muted);margin:2px 0 10px}
+  .badge{display:inline-block;background:#fef3c7;color:#92400e;border:1px solid #fcd34d;
+         font-size:11px;padding:1px 8px;border-radius:10px;margin-left:6px;vertical-align:1px}
+  ul.blocks{margin-left:0}
+  ul.blocks>li{list-style:none;margin-bottom:12px;padding-left:16px;position:relative;font-size:13.5px}
+  ul.blocks>li::before{content:"▸";position:absolute;left:0;color:var(--accent-soft)}
+  ul.blocks b.g{color:var(--accent)}
+  ul.blocks em{font-style:normal;color:var(--hl);font-weight:700}
+  .pubs li{list-style:none;font-size:13px;margin-bottom:9px;padding-left:52px;position:relative}
+  .venue{position:absolute;left:0;top:2px;width:46px;text-align:center;font-size:10px;font-weight:700;
+         padding:2px 0;border-radius:4px}
+  .a{background:#dcfce7;color:#166534}.b{background:#e0f2fe;color:#075985}.p{background:#f3e8ff;color:#6b21a8}
+  .pubs b{font-weight:600}
+  .pubs .note{color:var(--muted);font-size:12px}
+  .awards li{list-style:none;font-size:13.5px;margin-bottom:8px;padding-left:20px;position:relative}
+  .awards li::before{content:"🏅";position:absolute;left:0;font-size:12px}
+  @media print{body{background:#fff}.page{margin:0;box-shadow:none;max-width:100%}}
+</style>
+</head>
+<body>
+<div class="page">
+  <aside>
+    <img class="avatar" src="../personal-photo.jpg" alt="照片">
+    <h1>曾屹荣</h1>
+    <p class="tagline">博士候选人 · Agentic RL<br>Harness Agent 训练 · 指令遵循</p>
+
+    <div class="side-sec"><h2>数 字 亮 点</h2>
+      <div class="stat-grid">
+        <div class="stat"><b>9</b><span>一作已发表</span></div>
+        <div class="stat"><b>4</b><span>CCF-A 已发表</span></div>
+        <div class="stat"><b>6</b><span>CCF-A 在投</span></div>
+        <div class="stat"><b>4</b><span>成果落地华为</span></div>
+      </div>
+    </div>
+
+    <div class="side-sec"><h2>联 系 方 式</h2>
+      <ul>
+        <li><span class="ico">✉</span> yrzeng@ir.hit.edu.cn</li>
+        <li><span class="ico">☎</span> 188-4572-3437</li>
+        <li><span class="ico">⌂</span> zeng-yirong.github.io</li>
+        <li><span class="ico">⌥</span> github.com/zeng-yirong</li>
+        <li><span class="ico">◎</span> Google Scholar</li>
+      </ul>
+    </div>
+
+    <div class="side-sec"><h2>教 育</h2>
+      <ul>
+        <li>哈尔滨工业大学<br><span style="font-size:11.5px;color:#a8c0da">直博五年级 · 计算机科学与技术 · 2022–</span></li>
+        <li>哈尔滨工程大学<br><span style="font-size:11.5px;color:#a8c0da">本科 · 计算机科学与技术 · 2018–2022</span></li>
+      </ul>
+    </div>
+
+    <div class="side-sec"><h2>导 师 / 实 验 室</h2>
+      <ul><li>刘挺 教授（校长）<br>社会计算与交互机器人研究中心（SCIR）</li></ul>
+    </div>
+
+    <div class="side-sec"><h2>技 能 / 关 键 词</h2>
+      <div class="chips">
+        <span class="chip">Agentic RL</span><span class="chip">GRPO/RLVR</span>
+        <span class="chip">PyTorch</span><span class="chip">Verl</span>
+        <span class="chip">LLM 后训练</span><span class="chip">工具调用</span>
+        <span class="chip">指令遵循</span><span class="chip">昇腾适配</span>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <section>
+      <h2>实习经历</h2>
+      <div class="job-head"><h3>华为（北京）小艺 · 基础算法开发部 — 研究型实习生<span class="badge">首批顶尖人才计划 · 实习生领头人（带7人）</span></h3><span class="date">2024.09 – 至今</span></div>
+      <p class="sub">负责小艺中控先导技术探索，产出 12 项研究成果，其中 <em>4 项落地小艺业务</em></p>
+      <ul class="blocks">
+        <li><b class="g">Harness Agent 训练体系：</b>构建 SFT 数据流水线（<em>2万条 / 42类场景</em>，NeurIPS'26）；主导搭建 <em>139 个</em> Agentic RL 工具环境（ClawForge 开源 / EnvCraft ICLR'27 在投）；设计轻量化 Harness 支撑在线 In-Harness RL，训练资源开销 <em>↓8×</em>、推理开销 <em>↓32%</em>（ClawLoop 开源 / AAAI'27）</li>
+        <li><b class="g">Agentic RL 核心算法：</b>提出解耦熵约束策略 AutoTool（ICLR'26），实现工具调用快慢思考自适应，<em>落地小艺主对话</em>；发现无效交互是长程训练熵增根因，截断+token掩码提升稳定性与上限（NeurIPS'26）；完成昇腾生态训练适配与信用分配探索（EMNLP'25×2）</li>
+        <li><b class="g">指令遵循：</b>定位反馈信号质量瓶颈，提出约束密度控制，能力 <em>81 → 89</em> 并落地小艺主对话（ICLR'27 在投）；轻量专家集成 TinyJudge 缓解 reward hack（ACL'26）；OPD 解耦-聚合方案性能 <em>+4%</em>（ICLR'27 在投）</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>研究方向</h2>
+      <ul class="blocks">
+        <li><b class="g">智能体强化学习（Agentic RL）</b>（2024.09–今）— 训练稳定性与上限、自适应快慢思考、工具环境与数据合成、轻量 Harness 与 In-Harness RL；近期探索 Skill Curator 驱动 Agent Skill 进化</li>
+        <li><b class="g">指令遵循（Instruction Following）</b>（2025.06–今）— RL 泛化性机制与上限提升、多模态 RLVR 数据合成（MIFS）、在线策略蒸馏应用</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>发表论文（第一作者）</h2>
+      <ul class="pubs">
+        <li><span class="venue a">A</span><b>Unveiling Entropy-Performance Decoupling in Agentic RL</b> — NeurIPS 2026 <span class="note">无效交互截断提升训练稳定性与上限</span></li>
+        <li><span class="venue a">A</span><b>ClawBenchPro: Benchmarking How Well Agent Harnesses Work</b>（共一）— NeurIPS 2026</li>
+        <li><span class="venue a">A</span><b>AutoTool: Decoupled Entropy Constraints for Tool-Use Scaling</b> — ICLR 2026 <span class="note">落地华为小艺主对话</span></li>
+        <li><span class="venue a">A</span><b>TinyJudge: Unverifiable Constraint Alignment via Specialist Ensembles</b> — ACL 2026</li>
+        <li><span class="venue b">B</span><b>iTool: Dynamic Deficiency Calibration for Advanced Tool Use</b> — EMNLP 2025 Main</li>
+        <li><span class="venue b">B</span><b>Tool Zero: Training Tool-Augmented LLMs via Pure RL from Scratch</b> — EMNLP 2025 Findings <span class="note">业界首篇</span></li>
+        <li><span class="venue b">B</span><b>Moderation Matters: LLMs for Rumor Detection</b> — NAACL 2025</li>
+        <li><span class="venue b">B</span><b>RU22Fact: Multilingual Explainable Fact-Checking</b> — COLING 2024</li>
+        <li><span class="venue b">B</span><b>Human Cognitive Process Aligned Rumor Detection</b> — IPM（SCI-Q1）</li>
+        <li><span class="venue p">在投</span><b>6 篇 CCF-A 在投</b>：ICLR 2027 ×4（Precision Bounds Diversity / EnvCraft / OPD / Not Every Tool Call Helps）· AAAI 2027 Phase II · ACL-ARR</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>荣誉奖项</h2>
+      <ul class="awards">
+        <li><b>中国科协青年科技人才培育工程博士生专项计划</b>（2026）</li>
+        <li><b>华为火花奖</b> — agent skill 渐近式披露 + 指令遵循泛化性探索</li>
+        <li>教育部国家奖学金；各级校级奖学金</li>
+        <li>ACM 省赛银牌（队长）2021 · 全国数学竞赛二等奖 2020 · 数学建模一等奖 2019</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>开源项目</h2>
+      <ul class="blocks">
+        <li><b class="g">ClawLoop</b>（⭐33）— 轻量化 Harness 及 Agent 训练框架（基于 Verl）｜<b class="g">ClawForge / EnvCraft</b>（⭐32）— Agentic RL 环境合成与训练代码｜<b class="g">MIFS</b> — 多模态指令遵循数据集（11k+ downloads）</li>
+        <li>惊堂木 — 主导开发的虚假信息检测小程序（2025.01）；活字大模型开源贡献（⭐200+，2024）</li>
+      </ul>
+    </section>
+  </main>
+</div>
+</body>
+</html>
