@@ -1,0 +1,146 @@
+# ============================================================
+# 简历唯一数据源（内容与版式分离）。只改这里，然后运行:
+#   python3 build.py            # 生成全部样式 HTML + PDF
+#   python3 build.py --style B --profile institute
+# 多版本：profiles 里按 variant 覆盖任意段落（默认 default）
+# ============================================================
+
+basics:
+  name: "曾屹荣"
+  en_name: "Yirong Zeng"
+  photo: "../personal-photo.jpg"
+  tagline: "博士候选人 · Agentic RL / 大模型工具学习 / Harness Agent 训练"
+  phone: "18845723437"
+  email: "yrzeng@ir.hit.edu.cn"
+  school_line: "哈尔滨工业大学（本部）计算学部"
+  advisor: "刘挺教授（校长）"
+  lab: "社会计算与交互机器人研究中心（SCIR）"
+  grad_expected: "2027.09"
+  links:
+    homepage: {label: "个人主页", url: "https://zeng-yirong.github.io"}
+    scholar:  {label: "谷歌学术", url: "https://scholar.google.com/citations?user=TBD"}
+    github:   {label: "GitHub", url: "https://github.com/zeng-yirong"}
+
+highlights:                     # 数字速览（侧栏/横幅统计区）
+  - {num: "9",  label: "一作已发表论文"}
+  - {num: "4",  label: "CCF-A 已发表"}
+  - {num: "6",  label: "CCF-A 在投"}
+  - {num: "12", label: "华为研究成果"}
+  - {num: "4",  label: "成果落地小艺"}
+  - {num: "7",  label: "带教实习生(领头人)"}
+
+chips:                          # 关键词标签
+  ["Agentic RL", "Harness Agent", "Tool Learning", "Instruction Following",
+   "RLVR", "LLM Post-training"]
+
+summary: >
+  哈尔滨工业大学直博五年级（导师刘挺教授），研究方向为大模型 Agentic RL、
+  Harness Agent 训练与指令遵循。以第一作者（含共一）在 NeurIPS、ICLR、ACL、
+  EMNLP、NAACL、COLING、IPM 等顶级会议/期刊发表论文 9 篇（CCF-A 4 篇、CCF-B 5 篇），
+  另有 6 篇 CCF-A 在投。华为小艺首批顶尖人才计划实习生、部门实习生领头人（带 7 人团队），
+  产出 12 项研究成果、4 项落地小艺业务；核心指标：指令遵从 81→89、训练资源开销↓8×、
+  推理开销↓32%。开源 ClawLoop⭐33 / ClawForge⭐32 / MIFS 数据集 11k+ downloads。
+
+education:
+  - school: "哈尔滨工业大学"
+    degree: "直博五年级 · 博士候选人"
+    major: "计算学部 · 计算机科学与技术"
+    time: "2022.09 – 至今（预计 2027.09 毕业）"
+    bullets:
+      - "导师：刘挺教授（校长）；实验室：社会计算与交互机器人研究中心（SCIR）"
+      - "研究方向：自然语言处理、大模型、Agentic RL、Harness Agent 训练、指令遵循"
+      - "一作发表论文 9 篇（CCF-A 4 篇、CCF-B 5 篇），另有 6 篇 CCF-A 在投"
+  - school: "哈尔滨工程大学"
+    degree: "本科"
+    major: "计算机科学与技术"
+    time: "2018.09 – 2022.07"
+    bullets: []
+
+internship:
+  org: "华为（北京）小艺 · 基础算法开发部"
+  role: "研究型实习生"
+  time: "2024.09 – 至今"
+  badges: ["首批顶尖人才计划实习生", "部门实习生领头人（带 7 人团队）"]
+  lead: "负责小艺中控相关的先导技术探索：在 Harness Agent 训练、Agentic RL、指令遵循方向产出 12 项研究成果，其中 4 项落地小艺业务。"
+  groups:
+    - title: "Harness Agent 训练体系搭建"
+      items:
+        - text: "构建 SFT 数据生产流水线，产出 **2 万条**数据、覆盖 **42 类** Harness 使用场景，支撑大规模 Agent 训练数据供给【NeurIPS 2026 ×2】"
+        - text: "主导搭建 **139 个** Agentic RL Tool 环境，支撑业务 Agentic RL 先导探索【EnvCraft ICLR 2027 在投；**ClawForge 已开源**】"
+        - text: "设计轻量化 Harness，支撑大规模在线 In-Harness RL 训练，训练资源开销减少 **8 倍**、推理开销减少 **32%**【Less Harness More Signal AAAI 2027 Phase II；**ClawLoop 已开源**】"
+    - title: "Agentic RL 核心算法研发"
+      items:
+        - text: "提出解耦熵约束策略（**AutoTool, ICLR 2026**），实现大模型使用工具时依据问题复杂度自适应调整快慢思考模式，**落地小艺主对话**"
+        - text: "发现长程 Agentic RL 训练后期异常熵增的关键原因是轨迹中的无效交互，通过提前截断 + token 掩码提升训练稳定性与上限【**NeurIPS 2026**】"
+        - text: "完成华为昇腾生态训练适配，初步探索训练信用分配机制【iTool EMNLP 2025；Tool Zero EMNLP 2025 Findings】"
+    - title: "Agent 指令遵循性能提升"
+      items:
+        - text: "发现 RL 影响指令遵从能力的关键瓶颈是反馈信号质量，提出约束密度控制，低成本提升指令遵从性能上限，落地小艺主对话，相关能力 **81→89**【ICLR 2027 在投】"
+        - text: "轻量专家集成方法（**TinyJudge, ACL 2026**）缓解多约束场景下 LLM 的 reward hack 问题：平均性能 +10%、奖励精度 +12%、训练速度 3×"
+        - text: "探索在线策略蒸馏（OPD）在指令遵从中的应用，解耦-聚合修正教师在多约束下的分布，性能 **+4%**【ICLR 2027 在投】"
+
+research_focus:
+  - name: "智能体强化学习（Agentic RL）"
+    time: "2024.09 – 至今"
+    bullets:
+      - "通过工具调用获取环境/人类反馈并持续更新模型参数以提升性能上限，是大模型后训练的主流核心技术方案"
+      - "研究覆盖：训练稳定性与上限提升（NeurIPS 2026、EMNLP 2025×2）、自适应快慢思考（ICLR 2026）、工具环境与数据合成（NeurIPS 2026、ICLR 2027 在投）、轻量化 Harness 与 In-Harness RL（AAAI 2027 Phase II）"
+      - "近期探索：通过训练 Skill Curator 实现 Agent Skill 的进化"
+  - name: "指令遵循（Instruction Following）"
+    time: "2025.06 – 至今"
+    bullets:
+      - "要求模型回答时额外满足用户指定约束，是智能体对话与长程任务执行的必备基础能力"
+      - "研究覆盖：RL 训练下指令遵从泛化性机制与上限提升（ACL 2026、ICLR 2027 在投）、多模态指令遵循 RLVR 数据合成（ACL-ARR 在投）、在线策略蒸馏 OPD 应用（ICLR 2027 在投）"
+
+publications:                   # venue_tier: A/B/P(在投); first: 独一; co: 共一
+  published:
+    - {title: "Unveiling Entropy-Performance Decoupling in Agentic RL for Tool-Integrated Reasoning", authors: "Yirong Zeng, Shen You, et al.", venue: "NeurIPS 2026", tier: "A", first: true,  note: "发现无效交互是长程训练后期异常熵增的关键原因；监控并提前截断轨迹，提升训练稳定性与上限"}
+    - {title: "ClawBenchPro: Benchmarking How Well Agent Harnesses Work", authors: "Yufei Liu*, Yirong Zeng*（共一）, et al.", venue: "NeurIPS 2026", tier: "A", co: true, note: "构建 Harness 数据生产线，系统评测不同 Agent 在不同 Harness 下的表现差异"}
+    - {title: "AutoTool: Automatic Scaling of Tool-Use Capabilities in RL via Decoupled Entropy Constraints", authors: "Yirong Zeng, Xiao Ding, et al.", venue: "ICLR 2026", tier: "A", first: true, note: "解耦熵约束 GRPO，解决推理模型坍塌，实现快慢思考自适应；落地华为小艺主对话"}
+    - {title: "TinyJudge: Unverifiable Constraint Alignment via Lightweight Specialist Ensembles", authors: "Yirong Zeng, Yufei Liu, et al.", venue: "ACL 2026", tier: "A", first: true, note: "轻量小型奖励模型专家集成（~0.6B）：平均性能 +10%、奖励精度 +12%、训练速度 3×"}
+    - {title: "iTool: Reinforced Fine-Tuning with Dynamic Deficiency Calibration for Advanced Tool Use", authors: "Yirong Zeng, Xiao Ding, et al.", venue: "EMNLP 2025 Main", tier: "B", first: true, note: "动态缺陷校准强化微调，复杂场景较基线提升 6.5%"}
+    - {title: "Tool Zero: Training Tool-Augmented LLMs via Pure RL from Scratch", authors: "Yirong Zeng, Xiao Ding, et al.", venue: "EMNLP 2025 Findings", tier: "B", first: true, note: "业界首篇通用领域 GRPO 纯 RL 从零训练 Tool-Use；动态泛化引导奖励设计"}
+    - {title: "Moderation Matters: Exploring Large Language Models for Effective Rumor Detection on Social Media", authors: "Yirong Zeng, Xiao Ding, et al.", venue: "NAACL 2025", tier: "B", first: true, note: "探索 LLM 在社交媒体谣言检测中的有效性，提出 moderation 增强方法"}
+    - {title: "RU22Fact: Optimizing Evidence for Multilingual Explainable Fact-Checking on Russia-Ukraine Conflict", authors: "Yirong Zeng, Xiao Ding, et al.", venue: "COLING 2024", tier: "B", first: true, note: "多语言可解释事实验证，优化证据选择策略"}
+    - {title: "Human Cognitive Process Aligned Rumor Detection with Small Language Models Enhanced Large Language Models", authors: "Yirong Zeng, Xiao Ding, et al.", venue: "IPM 2026 (SCI-Q1)", tier: "B", first: true, note: "人类认知过程对齐的谣言检测，小模型增强大模型框架"}
+  pending:
+    - {title: "Precision Bounds Diversity: Reward Engineering for Instruction Following via RLVR", authors: "Yirong Zeng, Yufei Liu, et al.", venue: "ICLR 2027", tier: "P", first: true, note: "反馈信号质量是指令遵从 RL 关键；控制约束密度低成本提升性能上限"}
+    - {title: "EnvCraft: Synthesizing Executable Environments in Agentic RL for Claw-like Agent", authors: "Yirong Zeng, Shen You, et al.", venue: "ICLR 2027", tier: "P", first: true, note: "工具环境与数据合成生产线：139 个交互环境、约 2 万复杂任务"}
+    - {title: "Constraint-Decoupled On-Policy Distillation for Multi-Constraint Instruction Following", authors: "Yirong Zeng, Weian Yu, et al.", venue: "ICLR 2027", tier: "P", first: true, note: "OPD 解耦-聚合修正教师多约束分布，性能 +4%"}
+    - {title: "Less Harness, More Signal: Efficient In-Harness RL for Autonomous Agents", authors: "Yufei Liu*, Yirong Zeng*（共一）, et al.", venue: "AAAI 2027", tier: "P", co: true, note: "轻量 Harness + 无效 token 掩码：训练资源开销↓8×、推理开销↓32%"}
+    - {title: "Not Every Tool Call Helps: Fine-Grained Credit Assignment for Efficient Tool-Integrated Reasoning", authors: "Shen You*, Yirong Zeng*（共一）, et al.", venue: "ICLR 2027", tier: "P", co: true, note: "细粒度信用分配，识别无效工具调用并优化工具集成推理效率"}
+    - {title: "Towards Scalable RLVR: Multimodal Instruction Following Data Synthesis and Distillation", authors: "Yirong Zeng, Sai Zhang, et al.", venue: "ACL-ARR", tier: "P", first: true, note: "多模态指令遵循 RLVR 数据合成与蒸馏，MIFS 数据集 11k+ downloads"}
+
+opensource:
+  - {name: "ClawLoop", desc: "轻量化 Harness 及 Agent 训练框架（基于 Verl）", time: "2026.08", metric: "⭐ 33", link: "github.com/zeng-yirong/clawloop", detail: "支撑大规模在线 In-Harness RL 训练，训练资源开销↓8×、推理开销↓32%；华为小艺 Harness Agent 训练核心组件"}
+  - {name: "ClawForge (EnvCraft)", desc: "Agentic RL 环境合成及配套训练代码", time: "2026.08", metric: "⭐ 32", link: "github.com/zeng-yirong/EnvCraft", detail: "自动化合成 139 个沙箱隔离交互环境、约 2 万复杂任务，支持通用 / Claw-Special 领域 Agentic RL 训练"}
+  - {name: "MIFS", desc: "多模态指令遵循数据集（RLVR）", time: "2026.06", metric: "11k+ downloads", link: "modelscope.cn/datasets/asdqfad/MIFS", detail: "支持 RLVR 训练的多模态指令遵循数据集；配套论文在投 ACL-ARR"}
+
+awards:
+  - {text: "中国科协青年科技人才培育工程博士生专项计划", year: "2026", star: true}
+  - {text: "华为火花奖（agent skill 渐近式披露 + 指令遵循泛化性探索）", year: ""}
+  - {text: "教育部国家奖学金；各级校级奖学金", year: ""}
+  - {text: "ACM 省赛银牌（队长）", year: "2021"}
+  - {text: "全国大学生数学竞赛二等奖", year: "2020"}
+  - {text: "全国大学生数学建模竞赛一等奖", year: "2019"}
+
+projects:
+  - {name: "惊堂木 — 虚假信息检测系统小程序", role: "主导开发", time: "2025.01", detail: "基于大模型的社交媒体虚假信息检测系统，支持实时谣言识别与证据溯源；配套 HuggingFace Demo"}
+  - {name: "活字大模型开源项目", role: "开源贡献", time: "2024", detail: "哈工大活字大模型（GitHub ⭐200+），负责指令遵循与工具调用相关模块"}
+
+skills:
+  - {group: "研究方向", items: ["Agentic RL / RLVR", "Tool Learning", "Instruction Following", "Agent Harness"]}
+  - {group: "技术栈", items: ["Python", "PyTorch", "Verl / veRL 训练框架", "GRPO / PPO / DPO", "华为昇腾 NPU 适配"]}
+  - {group: "语言", items: ["中文（母语）", "English（学术写作/报告）"]}
+
+# ------------------ 多版本 profile ------------------
+profiles:
+  default: {}
+  talent:                      # 人才计划版：荣誉前置、强调人才称号
+    overrides:
+      section_order: ["summary", "highlights_bar", "education", "awards", "internship", "publications", "research_focus", "opensource", "projects", "skills"]
+      header_badges: ["科协博士生专项计划（2026）", "华为顶尖人才计划实习生", "国家奖学金"]
+  institute:                   # 研究院版：研究主线优先
+    overrides:
+      section_order: ["summary", "research_focus", "publications", "internship", "education", "opensource", "awards", "projects", "skills"]
+      header_badges: ["一作 9 篇（CCF-A×4）", "6 篇 CCF-A 在投", "Agentic RL · IF"]

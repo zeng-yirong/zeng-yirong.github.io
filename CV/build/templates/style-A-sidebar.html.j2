@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>{{ d.basics.name }} · 简历 — 样式A：深蓝侧栏现代风（{{ profile_name }}）</title>
+<style>
+  @page{size:A4;margin:0}
+  :root{--accent:#1e3a5f;--accent-soft:#2c5282;--ink:#1a202c;--muted:#64748b;
+        --bg:#f1f5f9;--paper:#fff;--hl:#d97706;--line:#e2e8f0}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .page{max-width:1000px;margin:24px auto;background:var(--paper);
+        box-shadow:0 10px 40px rgba(0,0,0,.12);display:grid;grid-template-columns:290px 1fr}
+  aside{background:linear-gradient(180deg,var(--accent),#152a46);color:#e6edf5;padding:30px 22px}
+  .avatar{width:118px;height:118px;border-radius:50%;object-fit:cover;
+          border:4px solid rgba(255,255,255,.85);display:block;margin:0 auto 14px}
+  aside h1{font-size:25px;text-align:center;letter-spacing:2px}
+  aside .tagline{font-size:12px;text-align:center;color:#a8c0da;margin:6px 0 18px;line-height:1.5}
+  .side-sec{margin-bottom:20px}
+  .side-sec h2{font-size:12.5px;letter-spacing:3px;color:#ffd77a;border-bottom:1px solid rgba(255,255,255,.2);
+               padding-bottom:5px;margin-bottom:10px;font-weight:600}
+  .side-sec p,.side-sec li{font-size:12px;margin-bottom:7px;line-height:1.55}
+  .side-sec a{color:#cfe0f2;text-decoration:none}
+  .chips{display:flex;flex-wrap:wrap;gap:5px}
+  .chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+        padding:2px 9px;border-radius:20px;font-size:11px}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .stat{background:rgba(255,255,255,.08);border-radius:8px;padding:8px 4px;text-align:center}
+  .stat b{display:block;font-size:19px;color:#ffd77a}
+  .stat span{font-size:10.5px;color:#a8c0da}
+  main{padding:30px 34px}
+  section{margin-bottom:22px;break-inside:auto}
+  section>h2{font-size:16px;color:var(--accent);letter-spacing:1px;display:flex;align-items:center;gap:10px;
+             border-bottom:2px solid var(--accent);padding-bottom:6px;margin-bottom:12px}
+  section>h2::before{content:"";width:8px;height:8px;background:var(--hl);border-radius:2px;transform:rotate(45deg)}
+  .entry-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap}
+  .entry-head h3{font-size:14.5px}.entry-head h3 .where{color:var(--muted);font-weight:400;font-size:12.5px}
+  .time{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
+  .badges{margin:3px 0 5px}
+  .badge{display:inline-block;background:#fef3c7;color:#92400e;border:1px solid #fcd34d;
+         font-size:11px;padding:1px 8px;border-radius:10px;margin-right:6px}
+  .lead{font-size:12.5px;color:#3a4150;margin-bottom:6px}
+  .gtitle{font-size:12.5px;font-weight:700;color:var(--accent);margin:7px 0 3px}
+  ul.detail{margin-left:0}
+  ul.detail li{list-style:none;font-size:12.5px;margin-bottom:5px;padding-left:14px;position:relative;color:#2a2f38}
+  ul.detail li::before{content:"▸";position:absolute;left:0;color:var(--accent-soft)}
+  ul.detail em{font-style:normal;color:var(--hl);font-weight:700}
+  .entry{margin-bottom:12px}
+  .desc{font-size:12.5px;color:#3a4150;margin-top:2px}
+  .pubs{list-style:none}
+  .pubs li.pub{font-size:12px;margin-bottom:8px;padding:6px 8px 6px 8px;border-left:3px solid #cbd5e1;background:#f8fafc;border-radius:0 6px 6px 0}
+  .pubs li.pub.pre{border-left-color:#c4b5fd;background:#faf5ff}
+  .tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:5px}
+  .tag.A{background:#dcfce7;color:#166534}.tag.B{background:#e0f2fe;color:#075985}.tag.P{background:#ede9fe;color:#5b21b6}
+  .pub-title{font-weight:600}
+  .pub-meta{color:var(--muted);font-size:11px}
+  .pub-note{color:#475569;font-size:11.5px}
+  .subhead{font-size:13px;color:var(--accent-soft);margin:12px 0 8px}
+  .awards li{list-style:none;font-size:12.5px;margin-bottom:6px;padding-left:18px;position:relative}
+  .awards li::before{content:"🏅";position:absolute;left:0;font-size:11px}
+  .skill-line{font-size:12.5px;margin-bottom:6px}.skill-line b{color:var(--accent)}
+  .summary{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#2a2f38}
+  @media print{body{background:#fff}.page{margin:0;box-shadow:none;max-width:100%;min-height:100vh}}
+</style>
+</head>
+<body>
+<div class="page">
+  <aside>
+    <img class="avatar" src="{{ d.basics.photo_b64 }}" alt="照片">
+    <h1>{{ d.basics.name }}</h1>
+    <p class="tagline">{{ d.basics.en_name }}<br>{{ d.basics.tagline }}</p>
+
+    {% if ov.header_badges %}
+    <div class="side-sec"><h2>头 衔</h2>
+      <div class="chips">{% for x in ov.header_badges %}<span class="chip">{{ x }}</span>{% endfor %}</div>
+    </div>
+    {% endif %}
+
+    <div class="side-sec"><h2>数 字 亮 点</h2>
+      <div class="stat-grid">
+        {% for h in d.highlights %}<div class="stat"><b>{{ h.num }}</b><span>{{ h.label }}</span></div>{% endfor %}
+      </div>
+    </div>
+
+    <div class="side-sec"><h2>联 系 方 式</h2>
+      <p>📱 {{ d.basics.phone }}</p>
+      <p>✉️ {{ d.basics.email }}</p>
+      <p>🏫 {{ d.basics.school_line }}</p>
+      <p>导师：{{ d.basics.advisor }}</p>
+      <p>{{ d.basics.lab }}</p>
+      {% for l in d.basics.links.values() %}<p>🔗 <a href="{{ l.url }}">{{ l.label }}：{{ l.url | replace('https://','') }}</a></p>{% endfor %}
+    </div>
+
+    <div class="side-sec"><h2>关 键 词</h2>
+      <div class="chips">{% for c in d.chips %}<span class="chip">{{ c }}</span>{% endfor %}</div>
+    </div>
+
+    <div class="side-sec"><h2>技 能</h2>
+      {% for s in d.skills %}<p><b style="color:#ffd77a">{{ s.group }}：</b>{{ s["items"] | join('、') }}</p>{% endfor %}
+    </div>
+  </aside>
+
+  <main>
+    {%- set order = ov.section_order | default(['summary','education','internship','research_focus','publications','opensource','awards','projects']) %}
+    {%- for sec in order %}
+      {%- if sec == 'highlights_bar' %}{# A版已在侧栏展示，跳过 #}
+      {%- elif sec == 'summary' %}
+      <section><h2>个人简介</h2><p class="summary">{{ d.summary }}</p></section>
+
+      {%- elif sec == 'education' %}
+      <section><h2>教育背景</h2>
+        {% for ed in d.education %}
+        <div class="entry">
+          <div class="entry-head"><h3>{{ ed.school }} <span class="where">{{ ed.degree }} · {{ ed.major }}</span></h3><span class="time">{{ ed.time }}</span></div>
+          {% if ed.bullets %}<ul class="detail">{% for x in ed.bullets %}<li>{{ x }}</li>{% endfor %}</ul>{% endif %}
+        </div>{% endfor %}
+      </section>
+
+      {%- elif sec == 'internship' %}
+      <section><h2>实习经历</h2>
+        <div class="entry">
+          <div class="entry-head"><h3>{{ d.internship.org }} <span class="where">{{ d.internship.role }}</span></h3><span class="time">{{ d.internship.time }}</span></div>
+          <p class="badges">{% for bd in d.internship.badges %}<span class="badge">{{ bd }}</span>{% endfor %}</p>
+          <p class="lead">{{ d.internship.lead }}</p>
+          {% for g in d.internship.groups %}
+          <div class="gtitle">▸ {{ g.title }}</div>
+          <ul class="detail">{% for it in g["items"] %}<li>{{ it.html | safe }}</li>{% endfor %}</ul>
+          {% endfor %}
+        </div>
+      </section>
+
+      {%- elif sec == 'research_focus' %}
+      <section><h2>研究方向</h2>
+        {% for r in d.research_focus %}
+        <div class="entry">
+          <div class="entry-head"><h3>{{ r.name }}</h3><span class="time">{{ r.time }}</span></div>
+          <ul class="detail">{% for x in r.bullets %}<li>{{ x }}</li>{% endfor %}</ul>
+        </div>{% endfor %}
+      </section>
+
+      {%- elif sec == 'publications' %}
+      <section><h2>发表论文（一作/共一 {{ d.publications.published | length }} 篇）</h2>
+        <ol class="pubs">
+          {% for p in d.publications.published %}
+          <li class="pub"><span class="tag {{ p.tier }}">CCF-{{ p.tier }}</span>
+            <span class="pub-title">[{{ loop.index }}] {{ p.title }}</span><br>
+            <span class="pub-meta">{{ p.authors }} ｜ <b>{{ p.venue }}</b>{% if p.first %} ｜ 一作{% elif p.co %} ｜ 共同一作{% endif %}</span><br>
+            <span class="pub-note">{{ p.note }}</span></li>
+          {% endfor %}
+        </ol>
+        <h4 class="subhead">在投论文（CCF-A，{{ d.publications.pending | length }} 篇）</h4>
+        <ol class="pubs" start="{{ d.publications.published | length + 1 }}">
+          {% for p in d.publications.pending %}
+          <li class="pub pre"><span class="tag P">在投</span>
+            <span class="pub-title">[{{ d.publications.published | length + loop.index }}] {{ p.title }}</span><br>
+            <span class="pub-meta">{{ p.authors }} ｜ <b>{{ p.venue }}</b>（在投）{% if p.first %} ｜ 一作{% elif p.co %} ｜ 共同一作{% endif %}</span><br>
+            <span class="pub-note">{{ p.note }}</span></li>
+          {% endfor %}
+        </ol>
+      </section>
+
+      {%- elif sec == 'opensource' %}
+      <section><h2>开源项目</h2>
+        {% for o in d.opensource %}
+        <div class="entry">
+          <div class="entry-head"><h3>{{ o.name }} <span class="where">{{ o.desc }}</span></h3><span class="time">{{ o.time }} · {{ o.metric }}</span></div>
+          <p class="desc">{{ o.detail }} ｜ {{ o.link }}</p>
+        </div>{% endfor %}
+      </section>
+
+      {%- elif sec == 'awards' %}
+      <section><h2>荣誉奖项</h2>
+        <ul class="awards">{% for a in d.awards %}<li>{{ '★ ' if a.star else '' }}{{ a.text }}{% if a.year %} · {{ a.year }}{% endif %}</li>{% endfor %}</ul>
+      </section>
+
+      {%- elif sec == 'projects' %}
+      <section><h2>项目经历</h2>
+        {% for p in d.projects %}
+        <div class="entry">
+          <div class="entry-head"><h3>{{ p.name }} <span class="where">{{ p.role }}</span></h3><span class="time">{{ p.time }}</span></div>
+          <p class="desc">{{ p.detail }}</p>
+        </div>{% endfor %}
+      </section>
+      {%- endif %}
+    {%- endfor %}
+  </main>
+</div>
+</body>
+</html>

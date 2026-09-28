@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>{{ d.basics.name }} · 简历 — 样式C：渐变科技风（{{ profile_name }}）</title>
+<style>
+  @page{size:A4;margin:0}
+  :root{--brand:#6366f1;--brand2:#8b5cf6;--ink:#1e293b;--muted:#64748b;--bg:#f8fafc;--card:#fff;--hl:#f59e0b}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+  .wrap{max-width:920px;margin:0 auto 40px;background:var(--card);border-radius:16px;overflow:hidden;
+        box-shadow:0 12px 48px rgba(30,41,59,.14)}
+  .hero{background:radial-gradient(1200px 500px at 80% -40%,rgba(255,255,255,.22),transparent),
+        linear-gradient(120deg,#312e81,var(--brand) 55%,var(--brand2));color:#fff;padding:32px 40px;
+        display:flex;gap:26px;align-items:center}
+  .hero img{width:104px;height:104px;border-radius:20px;object-fit:cover;border:3px solid rgba(255,255,255,.5);
+            box-shadow:0 8px 24px rgba(0,0,0,.3)}
+  .hero h1{font-size:28px;letter-spacing:3px}
+  .hero .role{font-size:13.5px;opacity:.92;margin-top:3px}
+  .hero .links{font-size:12px;margin-top:8px;opacity:.9}
+  .hero .links a{color:#fff;text-decoration:none;margin-right:12px;border-bottom:1px dashed rgba(255,255,255,.4)}
+  .hl-badges{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+  .hl-badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);font-size:11.5px;
+            padding:3px 11px;border-radius:20px;font-weight:600}
+  .kpis{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid #eef1f6}
+  .kpi{padding:14px 6px;text-align:center;border-right:1px solid #eef1f6}
+  .kpi:last-child{border-right:none}
+  .kpi b{font-size:23px;background:linear-gradient(120deg,var(--brand),var(--brand2));
+         -webkit-background-clip:text;background-clip:text;color:transparent}
+  .kpi span{display:block;font-size:10.5px;color:var(--muted);margin-top:2px}
+  .content{padding:30px 40px}
+  section{margin-bottom:26px}
+  section>h2{font-size:17px;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  section>h2 .dot{width:26px;height:26px;border-radius:8px;background:linear-gradient(120deg,var(--brand),var(--brand2));
+                  color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center}
+  .timeline{position:relative;padding-left:22px}
+  .timeline::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;
+                    background:linear-gradient(var(--brand),var(--brand2));border-radius:2px;opacity:.35}
+  .tl-item{position:relative;margin-bottom:16px}
+  .tl-item::before{content:"";position:absolute;left:-22px;top:6px;width:12px;height:12px;border-radius:50%;
+                   background:#fff;border:3px solid var(--brand)}
+  .tl-head{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline}
+  .tl-head h3{font-size:14.5px}.tl-head h3 .org{color:var(--muted);font-weight:400;font-size:13px}
+  .pill-time{font-size:11px;background:#eef2ff;color:var(--brand);padding:2px 10px;border-radius:12px;font-weight:700}
+  .tl-desc{font-size:12.5px;color:#475569;margin:3px 0 6px}
+  ul.detail{margin:0}
+  ul.detail li{list-style:none;font-size:12.3px;color:#334155;margin-bottom:4px;padding-left:14px;position:relative}
+  ul.detail li::before{content:"•";position:absolute;left:2px;color:var(--brand)}
+  ul.detail em{font-style:normal;color:var(--hl);font-weight:700}
+  .badge{display:inline-block;font-size:10.5px;background:#fef3c7;color:#92400e;border:1px solid #fcd34d;
+         padding:0 8px;border-radius:10px;margin:2px 4px 2px 0;font-weight:600}
+  .gtitle{font-size:12.5px;font-weight:700;color:var(--brand);margin:7px 0 2px}
+  .pubs{list-style:none}
+  .pubs li.pub{font-size:12px;margin-bottom:8px;padding:8px 12px;background:#f8fafc;border:1px solid #e8edf4;border-radius:10px}
+  .pubs li.pub.pre{background:#faf5ff;border-color:#e9d5ff}
+  .tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:4px;margin-right:6px}
+  .tag.A{background:#dcfce7;color:#166534}.tag.B{background:#e0f2fe;color:#075985}.tag.P{background:#ede9fe;color:#6b21a8}
+  .pub-title{font-weight:600;color:var(--ink)}
+  .pub-meta{color:var(--muted);font-size:11px}
+  .pub-note{color:#475569;font-size:11.5px}
+  .subhead{font-size:13px;color:var(--brand2);margin:12px 0 8px}
+  .awards li{list-style:none;font-size:12.5px;margin-bottom:6px;padding-left:20px;position:relative}
+  .awards li::before{content:"🏅";position:absolute;left:0;font-size:11px}
+  .skill-line{font-size:12.5px;margin-bottom:5px}.skill-line b{color:var(--brand)}
+  .summary{background:linear-gradient(120deg,#eef2ff,#faf5ff);border:1px solid #e0e7ff;border-radius:12px;
+           padding:12px 16px;font-size:12.5px;color:#334155}
+  @media print{body{background:#fff}.wrap{margin:0;box-shadow:none;max-width:100%;border-radius:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <img src="{{ d.basics.photo_b64 }}" alt="照片">
+    <div>
+      <h1>{{ d.basics.name }} <span style="font-size:16px;opacity:.85">{{ d.basics.en_name }}</span></h1>
+      <p class="role">{{ d.basics.tagline }}</p>
+      <p class="links">{{ d.basics.phone }} ｜ {{ d.basics.email }} ｜ 导师：{{ d.basics.advisor }} ｜ {{ d.basics.lab }}
+        {% for l in d.basics.links.values() %}｜ <a href="{{ l.url }}">{{ l.label }}</a>{% endfor %}</p>
+      <div class="hl-badges">
+        {% if ov.header_badges %}{% for x in ov.header_badges %}<span class="hl-badge">{{ x }}</span>{% endfor %}
+        {% else %}{% for c in d.chips %}<span class="hl-badge">{{ c }}</span>{% endfor %}{% endif %}
+      </div>
+    </div>
+  </div>
+
+  {%- set order = ov.section_order | default(['highlights_bar','summary','education','internship','research_focus','publications','opensource','awards','projects','skills']) %}
+  {%- for sec in order %}
+    {%- if sec == 'highlights_bar' %}
+    <div class="kpis">{% for h in d.highlights %}<div class="kpi"><b>{{ h.num }}</b><span>{{ h.label }}</span></div>{% endfor %}</div>
+    {%- endif %}
+  {%- endfor %}
+
+  <div class="content">
+  {%- for sec in order %}
+    {%- if sec == 'highlights_bar' %}{# 已渲染 #}
+
+    {%- elif sec == 'summary' %}
+    <section><h2><span class="dot">✦</span>个人简介</h2><p class="summary">{{ d.summary }}</p></section>
+
+    {%- elif sec == 'education' %}
+    <section><h2><span class="dot">🎓</span>教育背景</h2><div class="timeline">
+      {% for ed in d.education %}
+      <div class="tl-item">
+        <div class="tl-head"><h3>{{ ed.school }} <span class="org">{{ ed.degree }} · {{ ed.major }}</span></h3><span class="pill-time">{{ ed.time }}</span></div>
+        {% if ed.bullets %}<ul class="detail">{% for x in ed.bullets %}<li>{{ x }}</li>{% endfor %}</ul>{% endif %}
+      </div>{% endfor %}
+    </div></section>
+
+    {%- elif sec == 'internship' %}
+    <section><h2><span class="dot">💼</span>实习经历</h2><div class="timeline">
+      <div class="tl-item">
+        <div class="tl-head"><h3>{{ d.internship.org }} <span class="org">{{ d.internship.role }}</span></h3><span class="pill-time">{{ d.internship.time }}</span></div>
+        <p>{% for bd in d.internship.badges %}<span class="badge">{{ bd }}</span>{% endfor %}</p>
+        <p class="tl-desc">{{ d.internship.lead }}</p>
+        {% for g in d.internship.groups %}
+        <div class="gtitle">▸ {{ g.title }}</div>
+        <ul class="detail">{% for it in g["items"] %}<li>{{ it.html | safe }}</li>{% endfor %}</ul>
+        {% endfor %}
+      </div>
+    </div></section>
+
+    {%- elif sec == 'research_focus' %}
+    <section><h2><span class="dot">🧭</span>研究方向</h2>
+      {% for r in d.research_focus %}
+      <div class="tl-item" style="margin-bottom:14px">
+        <div class="tl-head"><h3>{{ r.name }}</h3><span class="pill-time">{{ r.time }}</span></div>
+        <ul class="detail">{% for x in r.bullets %}<li>{{ x }}</li>{% endfor %}</ul>
+      </div>{% endfor %}
+    </section>
+
+    {%- elif sec == 'publications' %}
+    <section><h2><span class="dot">📄</span>发表论文（一作/共一 {{ d.publications.published | length }} 篇）</h2>
+      <ol class="pubs">
+        {% for p in d.publications.published %}
+        <li class="pub"><span class="tag {{ p.tier }}">CCF-{{ p.tier }}</span>
+          <span class="pub-title">[{{ loop.index }}] {{ p.title }}</span><br>
+          <span class="pub-meta">{{ p.authors }} ｜ <b>{{ p.venue }}</b>{% if p.first %} ｜ 一作{% elif p.co %} ｜ 共同一作{% endif %}</span><br>
+          <span class="pub-note">{{ p.note }}</span></li>
+        {% endfor %}
+      </ol>
+      <h4 class="subhead">在投论文（CCF-A，{{ d.publications.pending | length }} 篇）</h4>
+      <ol class="pubs" start="{{ d.publications.published | length + 1 }}">
+        {% for p in d.publications.pending %}
+        <li class="pub pre"><span class="tag P">在投</span>
+          <span class="pub-title">[{{ d.publications.published | length + loop.index }}] {{ p.title }}</span><br>
+          <span class="pub-meta">{{ p.authors }} ｜ <b>{{ p.venue }}</b>（在投）{% if p.first %} ｜ 一作{% elif p.co %} ｜ 共同一作{% endif %}</span><br>
+          <span class="pub-note">{{ p.note }}</span></li>
+        {% endfor %}
+      </ol>
+    </section>
+
+    {%- elif sec == 'opensource' %}
+    <section><h2><span class="dot">🛠</span>开源项目</h2>
+      {% for o in d.opensource %}
+      <div class="tl-item" style="margin-bottom:12px">
+        <div class="tl-head"><h3>{{ o.name }} <span class="org">{{ o.desc }}</span></h3><span class="pill-time">{{ o.time }} · {{ o.metric }}</span></div>
+        <p class="tl-desc">{{ o.detail }} ｜ {{ o.link }}</p>
+      </div>{% endfor %}
+    </section>
+
+    {%- elif sec == 'awards' %}
+    <section><h2><span class="dot">🏆</span>荣誉奖项</h2>
+      <ul class="awards">{% for a in d.awards %}<li>{{ '★ ' if a.star else '' }}{{ a.text }}{% if a.year %} · {{ a.year }}{% endif %}</li>{% endfor %}</ul>
+    </section>
+
+    {%- elif sec == 'projects' %}
+    <section><h2><span class="dot">🗂</span>项目经历</h2>
+      {% for p in d.projects %}
+      <div class="tl-item" style="margin-bottom:12px">
+        <div class="tl-head"><h3>{{ p.name }} <span class="org">{{ p.role }}</span></h3><span class="pill-time">{{ p.time }}</span></div>
+        <p class="tl-desc">{{ p.detail }}</p>
+      </div>{% endfor %}
+    </section>
+
+    {%- elif sec == 'skills' %}
+    <section><h2><span class="dot">⚙</span>技能</h2>
+      {% for s in d.skills %}<p class="skill-line"><b>{{ s.group }}：</b>{{ s["items"] | join('、') }}</p>{% endfor %}
+    </section>
+    {%- endif %}
+  {%- endfor %}
+  </div>
+</div>
+</body>
+</html>

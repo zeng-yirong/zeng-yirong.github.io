@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>曾屹荣 · 简历 — 样式B：极简单栏学术风（default）</title>
+<style>
+  @page{size:A4;margin:14mm 0}
+  :root{--ink:#16181d;--muted:#5b6472;--line:#d8dce3;--accent:#0f6b4f;--paper:#fff}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;
+       background:#eceef1;color:var(--ink);line-height:1.65}
+  .sheet{max-width:820px;margin:28px auto;background:var(--paper);padding:52px 64px;
+         box-shadow:0 4px 24px rgba(0,0,0,.08)}
+  header{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:24px}
+  header h1{font-family:Georgia,"Songti SC",serif;font-size:32px;letter-spacing:6px}
+  header .role{font-size:14px;color:var(--muted);margin-top:5px}
+  header .contact{font-size:12px;margin-top:10px;color:var(--ink);line-height:1.9}
+  header .contact a{color:var(--accent);text-decoration:none;margin:0 5px}
+  .hb{display:inline-block;font-size:11px;font-weight:700;color:var(--accent);
+      border:1px solid var(--accent);border-radius:12px;padding:1px 10px;margin:8px 3px 0}
+  .summary{background:#f4f7f5;border-left:3px solid var(--accent);padding:12px 16px;
+           font-size:12.8px;color:#2a2f38;margin-bottom:24px}
+  .kpis{display:flex;justify-content:space-between;margin-bottom:24px;border:1px solid var(--line);border-radius:6px}
+  .kpi{flex:1;text-align:center;padding:10px 4px;border-right:1px solid var(--line)}
+  .kpi:last-child{border-right:none}
+  .kpi b{display:block;font-size:20px;color:var(--accent);font-family:Georgia,serif}
+  .kpi span{font-size:10.5px;color:var(--muted)}
+  section{margin-bottom:22px}
+  h2{font-family:Georgia,"Songti SC",serif;font-size:15.5px;letter-spacing:2px;
+     border-bottom:1px solid var(--line);padding-bottom:5px;margin-bottom:12px;display:flex;
+     justify-content:space-between;align-items:baseline}
+  h2 .en{font-size:10px;color:#aab2bf;letter-spacing:1px;font-weight:400}
+  .entry{margin-bottom:12px}
+  .entry-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+  .entry-head h3{font-size:14px}.entry-head h3 .where{color:var(--muted);font-weight:400;font-size:12.5px}
+  .time{font-size:11.5px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .desc{font-size:12.5px;color:#3a4150;margin-top:2px}
+  ul.detail{margin:4px 0 0 0}
+  ul.detail li{list-style:none;font-size:12.5px;color:#2a2f38;margin-bottom:4px;padding-left:15px;position:relative}
+  ul.detail li::before{content:"–";position:absolute;left:2px;color:var(--accent)}
+  ul.detail em{font-style:normal;color:var(--accent);font-weight:700}
+  .badge{display:inline-block;font-size:10.5px;background:#e3f2ea;color:var(--accent);border:1px solid #b9dcc9;
+         padding:0 8px;border-radius:10px;margin:2px 4px 2px 0}
+  .gtitle{font-size:12.5px;font-weight:700;color:var(--accent);margin:8px 0 2px}
+  ol.pubs{counter-reset:p;list-style:none}
+  ol.pubs li.pub{position:relative;padding:7px 0 7px 30px;border-bottom:1px dashed #e6e9ee;font-size:12.3px}
+  ol.pubs li.pub::before{counter-increment:p;content:counter(p);position:absolute;left:0;top:9px;
+    width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font-size:10.5px;
+    display:flex;align-items:center;justify-content:center;font-weight:600}
+  ol.pubs li.pre::before{background:#9aa3b2}
+  .tag{display:inline-block;font-size:10px;font-weight:700;padding:0 6px;border-radius:3px;margin-right:5px}
+  .tag.A{background:#e3f2ea;color:var(--accent)}.tag.B{background:#eef1f5;color:#4a5568}.tag.P{background:#f6eee9;color:#8a5a3b}
+  .pub-title{font-weight:600}
+  .pub-meta{color:var(--muted);font-size:11.5px}
+  .pub-note{color:#3a4150;font-size:11.8px}
+  .subhead{font-size:12.5px;color:var(--muted);margin:12px 0 6px;font-weight:600}
+  .awards li{list-style:none;font-size:12.5px;margin-bottom:5px;padding-left:16px;position:relative}
+  .awards li::before{content:"◆";position:absolute;left:0;color:var(--accent);font-size:9px;top:4px}
+  .skill-line{font-size:12.5px;margin-bottom:5px}.skill-line b{color:var(--accent)}
+  @media print{body{background:#fff}.sheet{margin:0;box-shadow:none;max-width:100%;padding:44px 58px}}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <h1>曾屹荣 <span style="font-size:18px;letter-spacing:1px;color:#5b6472">Yirong Zeng</span></h1>
+    <p class="role">博士候选人 · Agentic RL / 大模型工具学习 / Harness Agent 训练</p>
+    <p class="contact">
+      18845723437 ｜ yrzeng@ir.hit.edu.cn ｜ 哈尔滨工业大学（本部）计算学部<br>
+      导师：刘挺教授（校长） ｜ 社会计算与交互机器人研究中心（SCIR） ｜ 预计毕业：2027.09<br>
+<a href="https://zeng-yirong.github.io">个人主页：zeng-yirong.github.io</a><a href="https://scholar.google.com/citations?user=TBD">谷歌学术：scholar.google.com/citations?user=TBD</a><a href="https://github.com/zeng-yirong">GitHub：github.com/zeng-yirong</a>    </p>
+  </header>    <p class="summary">哈尔滨工业大学直博五年级（导师刘挺教授），研究方向为大模型 Agentic RL、 Harness Agent 训练与指令遵循。以第一作者（含共一）在 NeurIPS、ICLR、ACL、 EMNLP、NAACL、COLING、IPM 等顶级会议/期刊发表论文 9 篇（CCF-A 4 篇、CCF-B 5 篇）， 另有 6 篇 CCF-A 在投。华为小艺首批顶尖人才计划实习生、部门实习生领头人（带 7 人团队）， 产出 12 项研究成果、4 项落地小艺业务；核心指标：指令遵从 81→89、训练资源开销↓8×、 推理开销↓32%。开源 ClawLoop⭐33 / ClawForge⭐32 / MIFS 数据集 11k+ downloads。
+</p>    <div class="kpis"><div class="kpi"><b>9</b><span>一作已发表论文</span></div><div class="kpi"><b>4</b><span>CCF-A 已发表</span></div><div class="kpi"><b>6</b><span>CCF-A 在投</span></div><div class="kpi"><b>12</b><span>华为研究成果</span></div><div class="kpi"><b>4</b><span>成果落地小艺</span></div><div class="kpi"><b>7</b><span>带教实习生(领头人)</span></div></div>    <section><h2>教育背景<span class="en">EDUCATION</span></h2>
+      <div class="entry">
+        <div class="entry-head"><h3>哈尔滨工业大学 <span class="where">直博五年级 · 博士候选人 · 计算学部 · 计算机科学与技术</span></h3><span class="time">2022.09 – 至今（预计 2027.09 毕业）</span></div>
+<ul class="detail"><li>导师：刘挺教授（校长）；实验室：社会计算与交互机器人研究中心（SCIR）</li><li>研究方向：自然语言处理、大模型、Agentic RL、Harness Agent 训练、指令遵循</li><li>一作发表论文 9 篇（CCF-A 4 篇、CCF-B 5 篇），另有 6 篇 CCF-A 在投</li></ul>      </div>      <div class="entry">
+        <div class="entry-head"><h3>哈尔滨工程大学 <span class="where">本科 · 计算机科学与技术</span></h3><span class="time">2018.09 – 2022.07</span></div>
+      </div>    </section>    <section><h2>实习经历<span class="en">INDUSTRY EXPERIENCE</span></h2>
+      <div class="entry">
+        <div class="entry-head"><h3>华为（北京）小艺 · 基础算法开发部 <span class="where">研究型实习生</span></h3><span class="time">2024.09 – 至今</span></div>
+        <p><span class="badge">首批顶尖人才计划实习生</span><span class="badge">部门实习生领头人（带 7 人团队）</span></p>
+        <p class="desc">负责小艺中控相关的先导技术探索：在 Harness Agent 训练、Agentic RL、指令遵循方向产出 12 项研究成果，其中 4 项落地小艺业务。</p>
+        <div class="gtitle">▸ Harness Agent 训练体系搭建</div>
+        <ul class="detail"><li>构建 SFT 数据生产流水线，产出 <em>2 万条</em>数据、覆盖 <em>42 类</em> Harness 使用场景，支撑大规模 Agent 训练数据供给【NeurIPS 2026 ×2】</li><li>主导搭建 <em>139 个</em> Agentic RL Tool 环境，支撑业务 Agentic RL 先导探索【EnvCraft ICLR 2027 在投；<em>ClawForge 已开源</em>】</li><li>设计轻量化 Harness，支撑大规模在线 In-Harness RL 训练，训练资源开销减少 <em>8 倍</em>、推理开销减少 <em>32%</em>【Less Harness More Signal AAAI 2027 Phase II；<em>ClawLoop 已开源</em>】</li></ul>
+        <div class="gtitle">▸ Agentic RL 核心算法研发</div>
+        <ul class="detail"><li>提出解耦熵约束策略（<em>AutoTool, ICLR 2026</em>），实现大模型使用工具时依据问题复杂度自适应调整快慢思考模式，<em>落地小艺主对话</em></li><li>发现长程 Agentic RL 训练后期异常熵增的关键原因是轨迹中的无效交互，通过提前截断 + token 掩码提升训练稳定性与上限【<em>NeurIPS 2026</em>】</li><li>完成华为昇腾生态训练适配，初步探索训练信用分配机制【iTool EMNLP 2025；Tool Zero EMNLP 2025 Findings】</li></ul>
+        <div class="gtitle">▸ Agent 指令遵循性能提升</div>
+        <ul class="detail"><li>发现 RL 影响指令遵从能力的关键瓶颈是反馈信号质量，提出约束密度控制，低成本提升指令遵从性能上限，落地小艺主对话，相关能力 <em>81→89</em>【ICLR 2027 在投】</li><li>轻量专家集成方法（<em>TinyJudge, ACL 2026</em>）缓解多约束场景下 LLM 的 reward hack 问题：平均性能 +10%、奖励精度 +12%、训练速度 3×</li><li>探索在线策略蒸馏（OPD）在指令遵从中的应用，解耦-聚合修正教师在多约束下的分布，性能 <em>+4%</em>【ICLR 2027 在投】</li></ul>
+      </div>
+    </section>    <section><h2>研究方向<span class="en">RESEARCH INTERESTS</span></h2>
+      <div class="entry">
+        <div class="entry-head"><h3>智能体强化学习（Agentic RL）</h3><span class="time">2024.09 – 至今</span></div>
+        <ul class="detail"><li>通过工具调用获取环境/人类反馈并持续更新模型参数以提升性能上限，是大模型后训练的主流核心技术方案</li><li>研究覆盖：训练稳定性与上限提升（NeurIPS 2026、EMNLP 2025×2）、自适应快慢思考（ICLR 2026）、工具环境与数据合成（NeurIPS 2026、ICLR 2027 在投）、轻量化 Harness 与 In-Harness RL（AAAI 2027 Phase II）</li><li>近期探索：通过训练 Skill Curator 实现 Agent Skill 的进化</li></ul>
+      </div>      <div class="entry">
+        <div class="entry-head"><h3>指令遵循（Instruction Following）</h3><span class="time">2025.06 – 至今</span></div>
+        <ul class="detail"><li>要求模型回答时额外满足用户指定约束，是智能体对话与长程任务执行的必备基础能力</li><li>研究覆盖：RL 训练下指令遵从泛化性机制与上限提升（ACL 2026、ICLR 2027 在投）、多模态指令遵循 RLVR 数据合成（ACL-ARR 在投）、在线策略蒸馏 OPD 应用（ICLR 2027 在投）</li></ul>
+      </div>    </section>    <section><h2>发表论文<span class="en">PUBLICATIONS（一作/共一 9 篇）</span></h2>
+      <ol class="pubs">
+        <li class="pub"><span class="tag A">CCF-A</span>
+          <span class="pub-title">Unveiling Entropy-Performance Decoupling in Agentic RL for Tool-Integrated Reasoning</span><br>
+          <span class="pub-meta">Yirong Zeng, Shen You, et al. ｜ <b>NeurIPS 2026</b> (一作)</span><br>
+          <span class="pub-note">发现无效交互是长程训练后期异常熵增的关键原因；监控并提前截断轨迹，提升训练稳定性与上限</span></li>
+        <li class="pub"><span class="tag A">CCF-A</span>
+          <span class="pub-title">ClawBenchPro: Benchmarking How Well Agent Harnesses Work</span><br>
+          <span class="pub-meta">Yufei Liu*, Yirong Zeng*（共一）, et al. ｜ <b>NeurIPS 2026</b> (共同一作)</span><br>
+          <span class="pub-note">构建 Harness 数据生产线，系统评测不同 Agent 在不同 Harness 下的表现差异</span></li>
+        <li class="pub"><span class="tag A">CCF-A</span>
+          <span class="pub-title">AutoTool: Automatic Scaling of Tool-Use Capabilities in RL via Decoupled Entropy Constraints</span><br>
+          <span class="pub-meta">Yirong Zeng, Xiao Ding, et al. ｜ <b>ICLR 2026</b> (一作)</span><br>
+          <span class="pub-note">解耦熵约束 GRPO，解决推理模型坍塌，实现快慢思考自适应；落地华为小艺主对话</span></li>
+        <li class="pub"><span class="tag A">CCF-A</span>
+          <span class="pub-title">TinyJudge: Unverifiable Constraint Alignment via Lightweight Specialist Ensembles</span><br>
+          <span class="pub-meta">Yirong Zeng, Yufei Liu, et al. ｜ <b>ACL 2026</b> (一作)</span><br>
+          <span class="pub-note">轻量小型奖励模型专家集成（~0.6B）：平均性能 +10%、奖励精度 +12%、训练速度 3×</span></li>
+        <li class="pub"><span class="tag B">CCF-B</span>
+          <span class="pub-title">iTool: Reinforced Fine-Tuning with Dynamic Deficiency Calibration for Advanced Tool Use</span><br>
+          <span class="pub-meta">Yirong Zeng, Xiao Ding, et al. ｜ <b>EMNLP 2025 Main</b> (一作)</span><br>
+          <span class="pub-note">动态缺陷校准强化微调，复杂场景较基线提升 6.5%</span></li>
+        <li class="pub"><span class="tag B">CCF-B</span>
+          <span class="pub-title">Tool Zero: Training Tool-Augmented LLMs via Pure RL from Scratch</span><br>
+          <span class="pub-meta">Yirong Zeng, Xiao Ding, et al. ｜ <b>EMNLP 2025 Findings</b> (一作)</span><br>
+          <span class="pub-note">业界首篇通用领域 GRPO 纯 RL 从零训练 Tool-Use；动态泛化引导奖励设计</span></li>
+        <li class="pub"><span class="tag B">CCF-B</span>
+          <span class="pub-title">Moderation Matters: Exploring Large Language Models for Effective Rumor Detection on Social Media</span><br>
+          <span class="pub-meta">Yirong Zeng, Xiao Ding, et al. ｜ <b>NAACL 2025</b> (一作)</span><br>
+          <span class="pub-note">探索 LLM 在社交媒体谣言检测中的有效性，提出 moderation 增强方法</span></li>
+        <li class="pub"><span class="tag B">CCF-B</span>
+          <span class="pub-title">RU22Fact: Optimizing Evidence for Multilingual Explainable Fact-Checking on Russia-Ukraine Conflict</span><br>
+          <span class="pub-meta">Yirong Zeng, Xiao Ding, et al. ｜ <b>COLING 2024</b> (一作)</span><br>
+          <span class="pub-note">多语言可解释事实验证，优化证据选择策略</span></li>
+        <li class="pub"><span class="tag B">CCF-B</span>
+          <span class="pub-title">Human Cognitive Process Aligned Rumor Detection with Small Language Models Enhanced Large Language Models</span><br>
+          <span class="pub-meta">Yirong Zeng, Xiao Ding, et al. ｜ <b>IPM 2026 (SCI-Q1)</b> (一作)</span><br>
+          <span class="pub-note">人类认知过程对齐的谣言检测，小模型增强大模型框架</span></li>
+      </ol>
+      <h4 class="subhead">在投论文（CCF-A，6 篇）</h4>
+      <ol class="pubs" start="10">
+        <li class="pub pre"><span class="tag P">在投</span>
+          <span class="pub-title">Precision Bounds Diversity: Reward Engineering for Instruction Following via RLVR</span><br>
+          <span class="pub-meta">Yirong Zeng, Yufei Liu, et al. ｜ <b>ICLR 2027</b>（在投） (一作)</span><br>
+          <span class="pub-note">反馈信号质量是指令遵从 RL 关键；控制约束密度低成本提升性能上限</span></li>
+        <li class="pub pre"><span class="tag P">在投</span>
+          <span class="pub-title">EnvCraft: Synthesizing Executable Environments in Agentic RL for Claw-like Agent</span><br>
+          <span class="pub-meta">Yirong Zeng, Shen You, et al. ｜ <b>ICLR 2027</b>（在投） (一作)</span><br>
+          <span class="pub-note">工具环境与数据合成生产线：139 个交互环境、约 2 万复杂任务</span></li>
+        <li class="pub pre"><span class="tag P">在投</span>
+          <span class="pub-title">Constraint-Decoupled On-Policy Distillation for Multi-Constraint Instruction Following</span><br>
+          <span class="pub-meta">Yirong Zeng, Weian Yu, et al. ｜ <b>ICLR 2027</b>（在投） (一作)</span><br>
+          <span class="pub-note">OPD 解耦-聚合修正教师多约束分布，性能 +4%</span></li>
+        <li class="pub pre"><span class="tag P">在投</span>
+          <span class="pub-title">Less Harness, More Signal: Efficient In-Harness RL for Autonomous Agents</span><br>
+          <span class="pub-meta">Yufei Liu*, Yirong Zeng*（共一）, et al. ｜ <b>AAAI 2027</b>（在投） (共同一作)</span><br>
+          <span class="pub-note">轻量 Harness + 无效 token 掩码：训练资源开销↓8×、推理开销↓32%</span></li>
+        <li class="pub pre"><span class="tag P">在投</span>
+          <span class="pub-title">Not Every Tool Call Helps: Fine-Grained Credit Assignment for Efficient Tool-Integrated Reasoning</span><br>
+          <span class="pub-meta">Shen You*, Yirong Zeng*（共一）, et al. ｜ <b>ICLR 2027</b>（在投） (共同一作)</span><br>
+          <span class="pub-note">细粒度信用分配，识别无效工具调用并优化工具集成推理效率</span></li>
+        <li class="pub pre"><span class="tag P">在投</span>
+          <span class="pub-title">Towards Scalable RLVR: Multimodal Instruction Following Data Synthesis and Distillation</span><br>
+          <span class="pub-meta">Yirong Zeng, Sai Zhang, et al. ｜ <b>ACL-ARR</b>（在投） (一作)</span><br>
+          <span class="pub-note">多模态指令遵循 RLVR 数据合成与蒸馏，MIFS 数据集 11k+ downloads</span></li>
+      </ol>
+    </section>    <section><h2>开源项目<span class="en">OPEN SOURCE</span></h2>
+      <div class="entry">
+        <div class="entry-head"><h3>ClawLoop <span class="where">轻量化 Harness 及 Agent 训练框架（基于 Verl）</span></h3><span class="time">2026.08 · ⭐ 33</span></div>
+        <p class="desc">支撑大规模在线 In-Harness RL 训练，训练资源开销↓8×、推理开销↓32%；华为小艺 Harness Agent 训练核心组件 ｜ github.com/zeng-yirong/clawloop</p>
+      </div>      <div class="entry">
+        <div class="entry-head"><h3>ClawForge (EnvCraft) <span class="where">Agentic RL 环境合成及配套训练代码</span></h3><span class="time">2026.08 · ⭐ 32</span></div>
+        <p class="desc">自动化合成 139 个沙箱隔离交互环境、约 2 万复杂任务，支持通用 / Claw-Special 领域 Agentic RL 训练 ｜ github.com/zeng-yirong/EnvCraft</p>
+      </div>      <div class="entry">
+        <div class="entry-head"><h3>MIFS <span class="where">多模态指令遵循数据集（RLVR）</span></h3><span class="time">2026.06 · 11k+ downloads</span></div>
+        <p class="desc">支持 RLVR 训练的多模态指令遵循数据集；配套论文在投 ACL-ARR ｜ modelscope.cn/datasets/asdqfad/MIFS</p>
+      </div>    </section>    <section><h2>荣誉奖项<span class="en">HONORS & AWARDS</span></h2>
+      <ul class="awards"><li>★ 中国科协青年科技人才培育工程博士生专项计划 · 2026</li><li>华为火花奖（agent skill 渐近式披露 + 指令遵循泛化性探索）</li><li>教育部国家奖学金；各级校级奖学金</li><li>ACM 省赛银牌（队长） · 2021</li><li>全国大学生数学竞赛二等奖 · 2020</li><li>全国大学生数学建模竞赛一等奖 · 2019</li></ul>
+    </section>    <section><h2>项目经历<span class="en">PROJECTS</span></h2>
+      <div class="entry">
+        <div class="entry-head"><h3>惊堂木 — 虚假信息检测系统小程序 <span class="where">主导开发</span></h3><span class="time">2025.01</span></div>
+        <p class="desc">基于大模型的社交媒体虚假信息检测系统，支持实时谣言识别与证据溯源；配套 HuggingFace Demo</p>
+      </div>      <div class="entry">
+        <div class="entry-head"><h3>活字大模型开源项目 <span class="where">开源贡献</span></h3><span class="time">2024</span></div>
+        <p class="desc">哈工大活字大模型（GitHub ⭐200+），负责指令遵循与工具调用相关模块</p>
+      </div>    </section>    <section><h2>技能<span class="en">SKILLS</span></h2>
+<p class="skill-line"><b>研究方向：</b>Agentic RL / RLVR、Tool Learning、Instruction Following、Agent Harness</p><p class="skill-line"><b>技术栈：</b>Python、PyTorch、Verl / veRL 训练框架、GRPO / PPO / DPO、华为昇腾 NPU 适配</p><p class="skill-line"><b>语言：</b>中文（母语）、English（学术写作/报告）</p>    </section></div>
+</body>
+</html>

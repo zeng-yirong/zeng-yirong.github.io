@@ -1,0 +1,90 @@
+{# ============================================================
+   共享内容宏（所有样式模板复用）——内容与版式分离的"内容层"
+   每个 section 一个宏，模板按需以不同 HTML 外壳/顺序组织。
+   ============================================================ #}
+
+{% macro contact_inline(b) -%}
+  📱 {{ b.phone }} ｜ ✉ {{ b.email }} ｜ 🏫 {{ b.school_line }}
+  <br>导师：{{ b.advisor }} ｜ 实验室：{{ b.lab }} ｜ 预计毕业：{{ b.grad_expected }}
+  {%- for l in b.links.values() %} ｜ <a href="{{ l.url }}">{{ l.label }}</a>{% endfor %}
+{%- endmacro %}
+
+{% macro pub_item(p, idx) -%}
+  <li class="pub {{ 'pre' if p.tier == 'P' }}">
+    <span class="tag {{ p.tier }}">{{ '在投' if p.tier == 'P' else 'CCF-' ~ p.tier }}</span>
+    <span class="pub-title">{{ idx }}. {{ p.title }}</span><br>
+    <span class="pub-meta">{{ p.authors }} ｜ <b>{{ p.venue }}</b>{% if p.first %} ｜ 一作{% elif p.co %} ｜ 共同一作{% endif %}</span><br>
+    <span class="pub-note">{{ p.note }}</span>
+  </li>
+{%- endmacro %}
+
+{% macro education(e) -%}
+  {% for ed in e %}
+  <div class="entry">
+    <div class="entry-head"><h3>{{ ed.school }} <span class="where">{{ ed.degree }} · {{ ed.major }}</span></h3><span class="time">{{ ed.time }}</span></div>
+    {% if ed.bullets %}<ul class="detail">{% for x in ed.bullets %}<li>{{ x }}</li>{% endfor %}</ul>{% endif %}
+  </div>
+  {% endfor %}
+{%- endmacro %}
+
+{% macro internship_block(it) -%}
+  <div class="entry">
+    <div class="entry-head"><h3>{{ it.org }} <span class="where">{{ it.role }}</span></h3><span class="time">{{ it.time }}</span></div>
+    <p class="badges">{% for bd in it.badges %}<span class="badge">{{ bd }}</span>{% endfor %}</p>
+    <p class="lead">{{ it.lead }}</p>
+    {% for g in it.groups %}
+    <div class="group"><div class="gtitle">▸ {{ g.title }}</div>
+      <ul class="detail">{% for i in g.items %}<li>{{ md(i.text) }}</li>{% endfor %}</ul></div>
+    {% endfor %}
+  </div>
+{%- endmacro %}
+
+{% macro research(rf) -%}
+  {% for r in rf %}
+  <div class="entry">
+    <div class="entry-head"><h3>{{ r.name }}</h3><span class="time">{{ r.time }}</span></div>
+    <ul class="detail">{% for x in r.bullets %}<li>{{ x }}</li>{% endfor %}</ul>
+  </div>
+  {% endfor %}
+{%- endmacro %}
+
+{% macro os_block(os) -%}
+  {% for o in os %}
+  <div class="entry">
+    <div class="entry-head"><h3>{{ o.name }} <span class="where">{{ o.desc }}</span></h3><span class="time">{{ o.time }} · {{ o.metric }}</span></div>
+    <p class="desc">{{ o.detail }}</p>
+    <p class="pub-meta">{{ o.link }}</p>
+  </div>
+  {% endfor %}
+{%- endmacro %}
+
+{% macro awards_block(aw) -%}
+  <ul class="awards">{% for a in aw %}
+    <li>{{ '★ ' if a.star else '' }}{{ a.text }}{% if a.year %} · {{ a.year }}{% endif %}</li>
+  {% endfor %}</ul>
+{%- endmacro %}
+
+{% macro projects_block(pj) -%}
+  {% for p in pj %}
+  <div class="entry">
+    <div class="entry-head"><h3>{{ p.name }} <span class="where">{{ p.role }}</span></h3><span class="time">{{ p.time }}</span></div>
+    <p class="desc">{{ p.detail }}</p>
+  </div>
+  {% endfor %}
+{%- endmacro %}
+
+{% macro skills_block(sk) -%}
+  {% for s in sk %}
+  <p class="skill-line"><b>{{ s.group }}：</b>{{ s.items | join('、') }}</p>
+  {% endfor %}
+{%- endmacro %}
+
+{% macro pubs_all(pub) -%}
+  <ol class="pubs">{{ pub.published | map('list') and '' }}
+  {% for p in pub.published %}{{ pub_item(p, loop.index) }}{% endfor %}
+  </ol>
+  <h4 class="subhead">在投论文（CCF-A，{{ pub.pending | length }} 篇）</h4>
+  <ol class="pubs" start="{{ pub.published | length + 1 }}">
+  {% for p in pub.pending %}{{ pub_item(p, pub.published | length + loop.index) }}{% endfor %}
+  </ol>
+{%- endmacro %}
