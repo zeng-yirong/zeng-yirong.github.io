@@ -1,106 +1,294 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-一条命令：resume.yaml（唯一数据源） -> 各样式 HTML + PDF
+一条命令：data/<版本>.yaml（各自独立的数据源） -> 该版本的 HTML + PDF
+
+一版一数据、一版一模板，三份数据不共享任何字段：
+
+  版本       数据文件                模板                            输出
+  A 通用版    data/A-general.yaml    style-A-sidebar.html.j2         resume-A-general.*
+  B 研究院版  data/B-institute.yaml  style-B-minimal.html.j2         resume-B-institute.*
+  C 人才计划版 data/C-talent.yaml    style-C-tech-timeline.html.j2   resume-C-talent.*
+
 用法：
-  python3 build.py                          # 全部样式 × default profile
-  python3 build.py --style B                # 只出样式B
-  python3 build.py --profile talent         # 人才计划版
-  python3 build.py --all-profiles           # 三个版本(default/talent/institute)全量生成
-  python3 build.py --no-pdf                 # 只出HTML不压PDF
-输出：CV/build/output/{html,pdf}/resume-{style}-{profile}.(html|pdf)
+  python build.py                # 三份全出（HTML + PDF）
+  python build.py --style C      # 只出人才计划版
+  python build.py --no-pdf       # 只出 HTML，快速预览
+
+改完数据后另跑 python validate.py 校验三份文件承载的事实是否一致。
 """
-import argparse, copy, re, sys
+import argparse
+import base64
+import re
+import sys
 from pathlib import Path
+
 import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from markupsafe import Markup
 
-ROOT = Path(__file__).resolve().parent          # CV/build
-DATA = ROOT / "resume.yaml"
+ROOT     = Path(__file__).resolve().parent          # CV/build
+CV_DIR   = ROOT.parent                              # CV
+DATA_DIR = ROOT / "data"
+TPL_DIR  = ROOT / "templates"
 OUT_HTML = ROOT / "output" / "html"
-OUT_PDF = ROOT / "output" / "pdf"
+OUT_PDF  = ROOT / "output" / "pdf"
+PHOTO    = CV_DIR / "personal-photo.jpg"            # 固定常量：与数据文件所在目录解耦
 
-STYLES = {
-    "A": "style-A-sidebar.html.j2",
-    "B": "style-B-minimal.html.j2",
-    "C": "style-C-tech-timeline.html.j2",
+VARIANTS = {
+    "A": {"basename": "A-general",   "data": "A-general.yaml",   "label": "通用版",
+          "tpl": "style-A-sidebar.html.j2"},
+    "B": {"basename": "B-institute", "data": "B-institute.yaml", "label": "研究院版",
+          "tpl": "style-B-minimal.html.j2"},
+    "C": {"basename": "C-talent",    "data": "C-talent.yaml",    "label": "人才计划版",
+          "tpl": "style-C-tech-timeline.html.j2"},
 }
-DEFAULT_ORDER = ["summary", "highlights_bar", "education", "internship",
-                 "research_focus", "publications", "opensource", "awards", "projects", "skills"]
+
+# 校验用：每版期望的顶层键，以及各版允许出现在顺序表里的段落名
+REQUIRED = {
+    "A": ["sidebar", "main_sections", "summary", "education", "internship",
+          "research_focus", "publications", "opensource", "awards", "projects"],
+    "B": ["header", "sections", "summary", "education", "internship",
+          "research_focus", "publications", "opensource", "awards", "projects", "skills"],
+    "C": ["hero", "kpis", "order", "timeline", "summary", "publications", "awards", "skills"],
+}
+BLOCKS = {                       # 顺序表里可写的「整块」段落名
+    "A": {"summary", "education", "internship", "research_focus", "publications",
+          "opensource", "awards", "projects"},
+    "B": {"summary", "highlights", "education", "internship", "research_focus",
+          "publications", "opensource", "awards", "projects", "skills"},
+    "C": {"summary", "publications", "awards", "skills"},
+}
+ORDER_KEY = {"A": "main_sections", "B": "sections", "C": "order"}
+
+# C 版数据里各结构的合法键。为什么值得单独挡一道：拼错的键（把 pgbreak 写成 pagebreak）
+# 在模板里只会取到 Undefined——不报错、不渲染、断页静默消失，肉眼很难发现。
+# 加新键时改这里一处，别在模板里加「如果写错就…」的兜底。
+C_KEYS = {
+    "rail":  {"rail", "icon", "title", "note", "pgbreak"},
+    "pair":  {"pair", "ratio"},
+    "pubs":  {"published", "pending", "pgbreak"},
+}
+
 
 def md_bold(s: str) -> str:
     """极简行内标记：**xx** -> <em>xx</em>（构建期处理，模板零逻辑）"""
     return re.sub(r"\*\*(.+?)\*\*", r"<em>\1</em>", s or "")
 
-def load_data(profile: str) -> dict:
-    d = yaml.safe_load(DATA.read_text(encoding="utf-8"))
-    ov = copy.deepcopy(d.get("profiles", {}).get(profile, {}).get("overrides", {})) if profile != "default" else {}
-    d["_ov"] = ov
-    # 照片转 base64 内联：输出文件自包含（PDF/HTML 不依赖相对路径）
-    ph = (DATA.parent.parent / d["basics"]["photo"].replace("../", "")).resolve()
-    if not ph.exists():
-        ph = DATA.parent.parent / "personal-photo.jpg"
-    if ph.exists():
-        import base64
-        mime = "image/png" if ph.suffix.lower() == ".png" else "image/jpeg"
-        d["basics"]["photo_b64"] = f"data:{mime};base64," + base64.b64encode(ph.read_bytes()).decode()
-    else:
-        d["basics"]["photo_b64"] = d["basics"]["photo"]
-    # 预处理：把 internship 条目里的 **bold** 转成 <em>，模板直接 safe 输出
-    for g in d["internship"]["groups"]:
-        for it in g["items"]:
-            it["html"] = md_bold(it["text"])
+
+def photo_uri() -> str:
+    """照片内联为 base64，输出文件自包含。缺失则返回空串（模板会跳过 <img>）。"""
+    if not PHOTO.exists():
+        print(f"warning: 缺少照片 {PHOTO}，产物中不显示头像", file=sys.stderr)
+        return ""
+    mime = "image/png" if PHOTO.suffix.lower() == ".png" else "image/jpeg"
+    return f"data:{mime};base64," + base64.b64encode(PHOTO.read_bytes()).decode()
+
+
+def load_data(path: Path) -> dict:
+    d = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not isinstance(d, dict):
+        raise SystemExit(f"{path} 不是一个 YAML 映射")
+    d["photo_uri"] = photo_uri()
     return d
 
-def render(env: Environment, style: str, d: dict, profile: str) -> str:
-    tpl = env.get_template(STYLES[style])
-    return tpl.render(d=d, ov=d["_ov"], profile_name=profile,
-                      md=lambda t: __import__("jinja2").Markup(md_bold(t)))
 
-def to_pdf(html_path: Path, pdf_path: Path):
-    from playwright.sync_api import sync_playwright
+def check(style: str, d: dict, path: Path) -> list:
+    """轻量自检：拼错段落名或漏接数据要报错，而不是静默少渲染一段。"""
+    errs = []
+    for k in REQUIRED[style]:
+        if k not in d:
+            errs.append(f"缺少顶层键 {k!r}")
+
+    order = d.get(ORDER_KEY[style]) or []
+    for row in order:
+        # 顺序表元素允许「一行两栏」：写成列表 = 这两个段落并排。
+        # 栏内元素的写法与单栏时完全一样（段落名 / 带 rail 的字典）。
+        # 也可写成 {pair: [左, 右], ratio: [a, b]}——并排且带逐行栏宽比（配平两栏高度）。
+        if isinstance(row, list):
+            if len(row) != 2:
+                errs.append(f"并排行 {row!r} 有 {len(row)} 栏，目前只支持 2 栏")
+            entries = row
+        elif isinstance(row, dict) and "pair" in row:
+            entries = row["pair"]
+            if not isinstance(entries, list) or len(entries) != 2:
+                errs.append(f"pair 行 {row!r} 必须给 2 栏，目前只支持 2 栏")
+                entries = entries if isinstance(entries, list) else []
+            ratio = row.get("ratio")
+            if ratio is None:
+                errs.append(f"pair 行 {row!r} 缺少 ratio（两栏宽度比，如 [1, 1]）")
+            elif not isinstance(ratio, list) or len(ratio) != 2 or not all(
+                    isinstance(x, (int, float)) and x > 0 for x in ratio):
+                errs.append(f"pair 行的 ratio {ratio!r} 必须是两个正数，如 [0.8, 1.2]")
+        else:
+            entries = [row]
+        for blk in entries:
+            # 顺序表元素有两种写法：段落名字符串 / 带元信息的字典（B 用 key，C 用 rail）
+            if isinstance(blk, str):
+                name = blk
+            elif isinstance(blk, dict) and "rail" in blk:
+                types = d.get("timeline") or []
+                have = {e.get("type") for e in types}
+                for t in blk["rail"]:
+                    if t not in have:
+                        errs.append(f"rail {t!r} 在 timeline 里没有任何条目（可选：{sorted(have)}）")
+                continue
+            elif isinstance(blk, dict) and "key" in blk:
+                name = blk["key"]
+            else:
+                errs.append(f"顺序表元素 {blk!r} 既不是段落名，也不是带 key/rail 的字典")
+                continue
+
+            if name not in BLOCKS[style]:
+                errs.append(f"段落名 {name!r} 不是 {style} 版的合法段落，"
+                            f"可选：{sorted(BLOCKS[style])}")
+            elif name not in d:
+                errs.append(f"顺序表引用了 {name!r}，但数据里没有这个段落")
+
+    if style == "C":                     # timeline 条目必须有槽位，否则会静默消失
+        rails = set()
+        for row in order:
+            if isinstance(row, dict) and "pair" in row:
+                row = row["pair"]
+            for blk in (row if isinstance(row, list) else [row]):
+                if isinstance(blk, dict) and "rail" in blk:
+                    rails.update(blk["rail"])
+        for e in d.get("timeline") or []:
+            t = e.get("type")
+            if not t:
+                errs.append(f"timeline 条目缺少 type：{e.get('title')!r}")
+            elif t not in rails:
+                errs.append(f"timeline 条目 type={t!r}（{e.get('title')!r}）没有任何 rail 选中，会被漏渲染")
+
+        # 拼错的键 = 静默失效（见 C_KEYS 的注释），逐层点名
+        def keys_of(row, kind):
+            allowed = C_KEYS[kind]
+            # 报错只列键名，不打印整行——pubs 那行的数据有十几篇论文，铺开会淹掉报错本身
+            for k in row:
+                if k not in allowed:
+                    errs.append(f"{kind} 行里有不认识的键 {k!r}"
+                                f"（该行现有：{sorted(row)}；可用：{sorted(allowed)}）")
+            if "pgbreak" in row and not isinstance(row["pgbreak"], bool):
+                errs.append(f"{kind} 行的 pgbreak 必须是 true/false，现在是 "
+                            f"{row['pgbreak']!r}——写成字符串不会报错但会静默失效"
+                            f"（该行现有：{sorted(row)}）")
+
+        for row in order:
+            if isinstance(row, dict):
+                keys_of(row, "pair" if "pair" in row else "rail")
+        pub = d.get("publications")
+        if isinstance(pub, dict):
+            keys_of(pub, "pubs")
+
+        # 数字横条的开关（kpis 那一节的注释写了用途）。两类静默失效都要挡：
+        # 写成字符串 "false" 会被当成真→横条凭空出现；为 true 但 kpis 为空→产物里
+        # 连注释都没有，将来想启用时无从下手。
+        if "kpis_comment_only" in d and not isinstance(d["kpis_comment_only"], bool):
+            errs.append(f"kpis_comment_only 必须是 true/false，现在是 "
+                        f"{d['kpis_comment_only']!r}——写成字符串会被当成真，横条会凭空出现")
+        if d.get("kpis_comment_only") and not d.get("kpis"):
+            errs.append("kpis_comment_only 为 true，但 kpis 是空的：产物里不会留下任何注释，"
+                        "将来想启用这条横条时无从下手（要么把 kpis 填上，要么删掉这个开关）")
+
+    # 页码开关（见 PAGE_FOOTER 那段注释）。两类静默问题都要挡：
+    # 写 "false" 会被当成真、页码凭空出现；而 A/C 的 @page 下边距是 0，
+    # 底部没有页脚带子，页脚会被画到正文上——那是个非致命但很难看的静默故障。
+    if "page_numbers" in d and not isinstance(d["page_numbers"], bool):
+        errs.append(f"page_numbers 必须是 true/false，现在是 {d['page_numbers']!r}"
+                    "——写成字符串会被当成真，页码会凭空出现")
+    if d.get("page_numbers") and style != "B":
+        errs.append(f"{style} 版模板的 @page 下边距是 0（留白靠元素自身 padding），"
+                    "页面底部没有页脚带子；打开 page_numbers 前要先让出底部留白，"
+                    "并重新量分页（那会真的挤掉正文高度）")
+    return errs
+
+
+def render(env: Environment, style: str, d: dict) -> str:
+    tpl = env.get_template(VARIANTS[style]["tpl"])
+    return tpl.render(d=d, md=lambda t: Markup(md_bold(t)))
+
+
+# 页码（数据里写 page_numbers: true 才加）。**只能由 Chromium 的 footer 画，不能靠 CSS**：
+# Chromium 至今不支持 @page 的页边内容（@bottom-center 之类），HTML 里没有 page 计数器。
+# 关键点：footer 是画在**页边距那条带子里**的，不是内容区——所以它不吃正文高度。
+# B 的 `@page{margin:14mm 0}` 本来就在页面底部留了 14mm 空白（正文最多写到 803pt、
+# 页高 843pt），页脚落在那条带子里（实测 y≈819pt），页数与正文位置都不动（2026-09-30 实测）。
+# 反过来，若某版把 @page 下边距设成 0（A/C 就是 `margin:0`，留白靠元素自身的 padding），
+# 就没有这条带子——要给它加页码得先让出底部留白，那会真的挤掉正文、必须重新量分页。
+# 页眉则必须显式压掉：display_header_footer=True 会把**页眉和页脚一起**打开，
+# 不给 header_template 的话 Chromium 会画它自带的默认页眉（日期 + 网页标题 + 网址），
+# 于是每页顶上多出一行「2026/9/30 00:16 曾屹荣 · 简历 — 样式B：…」（实测踩过）。
+# 传一个「有内容但看不见」的 div，比传空串可靠——空串会被当成没给、又退回默认页眉。
+PAGE_HEADER = '<div style="height:0"></div>'
+PAGE_FOOTER = ('<div style="width:100%;font-size:8pt;color:#5b6472;text-align:center;'
+               'font-family:Arial,Helvetica,sans-serif">'
+               '第 <span class="pageNumber"></span> 页 / 共 <span class="totalPages"></span> 页</div>')
+
+
+def to_pdf(html_path: Path, pdf_path: Path, page_numbers: bool = False):
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        raise SystemExit("需要 playwright：python -m pip install playwright "
+                         "&& python -m playwright install chromium")
     with sync_playwright() as p:
         browser = p.chromium.launch(args=["--no-sandbox"])
         page = browser.new_page()
         page.goto(html_path.as_uri(), wait_until="networkidle")
-        # 版式留白由模板 CSS 控制，PDF 边距归零保证整页背景完整
+        # 版式留白由模板 CSS 控制，PDF 边距归零保证整页背景完整。
+        # 页脚那条带子用的就是 CSS 的 @page 下边距，所以这里不必（也不该）再传边距：
+        # 传了等于把 CSS 的 14mm 覆盖成别的值，正文区会跟着变、分页全乱。
+        opts = {}
+        if page_numbers:
+            opts = {"display_header_footer": True,
+                    "header_template": PAGE_HEADER, "footer_template": PAGE_FOOTER}
         page.pdf(path=str(pdf_path), format="A4", print_background=True, scale=0.95,
-                 margin={"top": "0", "bottom": "0", "left": "0", "right": "0"})
+                 margin={"top": "0", "bottom": "0", "left": "0", "right": "0"}, **opts)
         browser.close()
 
+
+def page_count(pdf_path: Path) -> int:
+    """粗略页数（数 /Type /Page，排除 /Pages）。精确值用 pypdf。"""
+    return len(re.findall(rb"/Type\s*/Page[^s]", pdf_path.read_bytes()))
+
+
 def main():
+    # Windows 控制台默认 GBK，中文报错会变乱码
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8")
+        except (AttributeError, OSError):
+            pass
+
     ap = argparse.ArgumentParser()
-    ap.add_argument("--style", choices=list(STYLES) + ["ABC"], default="ABC")
-    ap.add_argument("--profile", default="default")
-    ap.add_argument("--all-profiles", action="store_true")
-    ap.add_argument("--no-pdf", action="store_true")
+    ap.add_argument("--style", choices=list(VARIANTS), default=None,
+                    help="只生成一个版本（默认三份全出）")
+    ap.add_argument("--no-pdf", action="store_true", help="只出 HTML，不压 PDF")
     args = ap.parse_args()
 
     OUT_HTML.mkdir(parents=True, exist_ok=True)
     OUT_PDF.mkdir(parents=True, exist_ok=True)
-    env = Environment(loader=FileSystemLoader(ROOT / "templates"),
+    env = Environment(loader=FileSystemLoader(TPL_DIR),
                       autoescape=select_autoescape(["html"], default_for_string=False),
                       trim_blocks=True, lstrip_blocks=True)
-    env.policies["template_class"] = env.policies.get("template_class")  # keep default
 
-    styles = list(STYLES) if args.style == "ABC" else [args.style]
-    profiles = ["default", "talent", "institute"] if args.all_profiles else [args.profile]
+    for st in ([args.style] if args.style else list(VARIANTS)):
+        v = VARIANTS[st]
+        path = DATA_DIR / v["data"]
+        d = load_data(path)
+        errs = check(st, d, path)
+        if errs:
+            raise SystemExit(f"{path.name} 校验失败：\n  - " + "\n  - ".join(errs))
 
-    made = []
-    for st in styles:
-        for pf in profiles:
-            d = load_data(pf)
-            html = render(env, st, d, pf)
-            hp = OUT_HTML / f"resume-{st}-{pf}.html"
-            hp.write_text(html, encoding="utf-8")
-            made.append(str(hp))
-            if not args.no_pdf:
-                pp = OUT_PDF / f"resume-{st}-{pf}.pdf"
-                to_pdf(hp, pp)
-                made.append(str(pp))
-    print("Generated %d files:" % len(made))
-    for m in made:
-        print("  ", m)
+        hp = OUT_HTML / f"resume-{v['basename']}.html"
+        hp.write_text(render(env, st, d), encoding="utf-8")
+        line = f"  {v['label']:<7} {hp.name}"
+        if not args.no_pdf:
+            pp = OUT_PDF / f"resume-{v['basename']}.pdf"
+            to_pdf(hp, pp, page_numbers=bool(d.get("page_numbers")))
+            line += f"  + {pp.name}  (~{page_count(pp)} 页)"
+        print(line)
+
 
 if __name__ == "__main__":
     sys.exit(main())

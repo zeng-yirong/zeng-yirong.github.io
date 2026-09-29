@@ -2,16 +2,46 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>{{ d.basics.name }} · 简历 — 样式C：渐变科技风（{{ profile_name }}）</title>
+<title>{{ d.hero.name }} · 简历 — 样式C：科技风 · 时间轴（{{ d.version }}）</title>
 <style>
   @page{size:A4;margin:0}
-  :root{--brand:#6366f1;--brand2:#8b5cf6;--ink:#1e293b;--muted:#64748b;--bg:#f8fafc;--card:#fff;--hl:#f59e0b}
+  /* --page-pad  = 正文左右留白（纸面到文字），hero 与 .content 共用，改一个数就整体变宽窄；
+     --rail-pad  = 时间轴左侧留白，行首圆点与内容缩进都按它算，同样改一处即可 */
+  /* 调色板（2026-09-30 定稿）：**回到原来那套靛蓝 + 紫 + 琥珀的彩色取向**。
+     当天先按「不用渐变、配色再素一点」把整份收成「一个冷石板蓝 + 中性灰」，
+     本人看后否掉了（"原来的更好一些"）——只保留两件事：① 不用渐变；
+     ② 标签/徽章/logo 的颜色淡一档。所以 --brand2 / --hl 都回来了，中性令牌 --rule / --wash 撤掉。
+     --brand  = 主色靛蓝。当天第二轮嫌 indigo-500 #6366f1「太亮」，降饱和到 #5b64a8；
+                **同日第三轮又要求「其他柔和回调一半」**，于是取两者的中间色 #5f65cc。
+                这一处改了，标题色块、时间轴圆点环、分组标题、技能名、项目符号、
+                胶囊文字、虚线下划线会**一起**变——它们全都引用这个变量。
+                #5f65cc 上的白字对比度 4.98:1（≥4.5 仍达标），是这个色能到的最浅处。
+                **hero 横幅不跟它走**（见下面 .hero 那条：横幅留在 #5b64a8）。
+     --brand2 = 第二色紫（.subhead、.kpi 数字）。**本人两轮都明确不动它**——
+                「在投论文」那个紫色小标题是全份唯一还饱和的一处，知道就好，别顺手改。
+     --hl     = 高亮琥珀，只用在正文 **加粗** 的会议/期刊名上（ul.detail em）。
+                降饱和那次是 #f59e0b→#b5822f，本轮回一半到 #d5901d；对比度 2.7:1，
+                但它只落在加粗的会议名上（不是正文），别再往深里压。
+     加新颜色前先问一句：这一处是不是真的需要第 4 个色相。 */
+  :root{--brand:#5f65cc;--brand2:#8b5cf6;--ink:#1e293b;--muted:#64748b;--bg:#f8fafc;--card:#fff;--hl:#d5901d;
+        --page-pad:80px;--rail-pad:22px}
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
   .wrap{max-width:920px;margin:0 auto 40px;background:var(--card);border-radius:16px;overflow:hidden;
         box-shadow:0 12px 48px rgba(30,41,59,.14)}
-  .hero{background:radial-gradient(1200px 500px at 80% -40%,rgba(255,255,255,.22),transparent),
-        linear-gradient(120deg,#312e81,var(--brand) 55%,var(--brand2));color:#fff;padding:32px 40px;
+  /* hero 纵向留白 32→26px（2026-09-28）：实习段当时只差约 45px 就能整个装进第 1 页，
+     结果最后一条要点被挤到第 2 页顶端。省下来的高度让实习段完整收在第 1 页里
+     （第 2 页从哪里开始现在由数据里的 pgbreak 显式指定，不再靠这些数字凑页缝；
+     kpis 横条同时在 2026-09-28 去掉，又还回来约 40px——两处都别随手加回去）。 */
+  /* 头部横幅：**纯色写死，不要再加回渐变**（本人 2026-09-30 要求「不使用渐变色」）。
+     历史：2026-09-28 先要求去渐变 → 改成纯色 #4338ca → 当天又要求回退（"还是之前的好看"），
+     此后一直是「左上角白色径向光晕 + 120° 三色线性渐变（#312e81→#6366f1 55%→#8b5cf6）」；
+     2026-09-30 本人确认渐变要去掉（但配色回到原来那套），于是先取渐变中段 #4f46e5；
+     同日第二轮再要求「横幅颜色还是太亮了，再淡一点」→ 改用降过饱和的靛蓝 #5b64a8。
+     **这个值从此与 --brand 脱钩**：第三轮本人要求「其他柔和回调一半，但横幅不动」，
+     --brand 回到 #5f65cc 后横幅要留在 #5b64a8，所以这里不能再写成 var(--brand)。
+     白字对比度 5.5:1；那两处渐变往返到此为止，别再照旧记录把光晕/三色渐变加回来。 */
+  .hero{background:#5b64a8;color:#fff;padding:26px var(--page-pad);
         display:flex;gap:26px;align-items:center}
   .hero img{width:104px;height:104px;border-radius:20px;object-fit:cover;border:3px solid rgba(255,255,255,.5);
             box-shadow:0 8px 24px rgba(0,0,0,.3)}
@@ -19,163 +49,335 @@
   .hero .role{font-size:13.5px;opacity:.92;margin-top:3px}
   .hero .links{font-size:12px;margin-top:8px;opacity:.9}
   .hero .links a{color:#fff;text-decoration:none;margin-right:12px;border-bottom:1px dashed rgba(255,255,255,.4)}
+  /* hero 联系方式的小图标：全部 currentColor（继承 hero 的白字），底色改了也不用重画；
+     图标写在 <a> 外面，否则锚点的虚线下划线会从图标底下穿过去。 */
+  .hero .links .hi svg{vertical-align:-2px;margin-right:3px;opacity:.9}
   .hl-badges{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
   .hl-badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);font-size:11.5px;
             padding:3px 11px;border-radius:20px;font-weight:600}
-  .kpis{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid #eef1f6}
-  .kpi{padding:14px 6px;text-align:center;border-right:1px solid #eef1f6}
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #eef1f6}
+  .kpi{padding:9px 6px;text-align:center;border-right:1px solid #eef1f6}
   .kpi:last-child{border-right:none}
-  .kpi b{font-size:23px;background:linear-gradient(120deg,var(--brand),var(--brand2));
-         -webkit-background-clip:text;background-clip:text;color:transparent}
-  .kpi span{display:block;font-size:10.5px;color:var(--muted);margin-top:2px}
-  .content{padding:30px 40px}
-  section{margin-bottom:26px}
-  section>h2{font-size:17px;display:flex;align-items:center;gap:10px;margin-bottom:14px}
-  section>h2 .dot{width:26px;height:26px;border-radius:8px;background:linear-gradient(120deg,var(--brand),var(--brand2));
+  /* 数字横条目前不显示（注释态），但也一并去掉渐变——留着 background-clip 的渐变字，
+     将来数据里一启用开关就会冒出一处渐变。用 --brand2 紫，与原来那道渐变的末段同色。 */
+  .kpi b{font-size:18px;color:var(--brand2)}
+  .kpi span{display:block;font-size:10px;color:var(--muted);margin-top:1px}
+  /* 正文左右留白：与 .hero 用同一个 --page-pad，否则横幅里的姓名会与正文错开 */
+  .content{padding:26px var(--page-pad)}
+  section{margin-bottom:23px}
+  /* 段落标题不与其内容分家：否则「荣誉奖项」标题会孤零零留在上一页末行 */
+  section>h2{break-after:avoid;font-size:17px;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  /* 段落标题的色块：原来就是「靛蓝→紫的渐变块 + 白图标」，2026-09-30 只把渐变改成**平铺的
+     --brand**——这块 26px 色块是段落的视觉锚点，要与原来一样醒目地留着。
+     别改成「浅底 + 主色图标」：那一版（当时的「甲」方案）本人看后否掉了。
+     几何零变化：仍是 26×26 的块、白图标 15px 居中，只是底色不再有渐变过渡。 */
+  section>h2 .dot{width:26px;height:26px;border-radius:8px;background:var(--brand);
                   color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center}
-  .timeline{position:relative;padding-left:22px}
+  /* 段落标题的图标 2026-09-28 起由彩色 emoji 换成 ICON 里的单色 SVG：
+     ① hero 早就是单色线性图标，标题却用彩色立体 emoji，风格断层；
+     ② emoji 依赖本机字体（换台电脑重建字形会变），PDF 抽文本还会多出空格。
+     图标名写在数据的 order[].icon 里（education/internship/research/opensource/
+     projects/awards/skills/pubs）；写不认识的名字会原样输出，所以旧的 emoji 仍然能用。
+     尺寸用 CSS 定而不是 SVG 的 width 属性，好让同一份图标在 hero（13px）和标题（15px）两处复用。 */
+  section>h2 .dot svg{width:15px;height:15px;display:block}
+  /* 两种导轨外壳都只干一件事：让出左侧留白，区别只在有没有那条竖线。
+     留白不能加在 <section> 上——那会把段落标题一起推右，
+     「研究方向/开源项目/项目经历」的标题就跟另外六段不齐了。 */
+  .timeline,.rail{padding-left:var(--rail-pad)}
+  .timeline{position:relative}
+  /* 时间轴导轨：原来那条是靛蓝→紫的渐变（opacity .35），2026-09-30 去掉渐变、其余一概不动——
+     仍是主色 + 同样的透明度，所以线的颜色观感、粗细、存在感与原来完全一致。 */
   .timeline::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;
-                    background:linear-gradient(var(--brand),var(--brand2));border-radius:2px;opacity:.35}
+                    background:var(--brand);opacity:.35;border-radius:2px}
   .tl-item{position:relative;margin-bottom:16px}
-  .tl-item::before{content:"";position:absolute;left:-22px;top:6px;width:12px;height:12px;border-radius:50%;
+  .tl-item::before{content:"";position:absolute;left:calc(-1 * var(--rail-pad));top:6px;width:12px;height:12px;border-radius:50%;
                    background:#fff;border:3px solid var(--brand)}
-  .tl-head{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline}
-  .tl-head h3{font-size:14.5px}.tl-head h3 .org{color:var(--muted);font-weight:400;font-size:13px}
-  .pill-time{font-size:11px;background:#eef2ff;color:var(--brand);padding:2px 10px;border-radius:12px;font-weight:700}
+  /* 条目标题不与其内容分家：重排后「活字大模型」的标题留在上页末行、正文被甩到下页。
+     注意不能改成 .tl-item{break-inside:avoid}——实习经历有 16 行，整条挪走会在第 1 页
+     底部留下约 1/3 页空白，比末页短更难看。 */
+  /* 时间胶囊浮在标题第一行右侧。为什么用 float 而不是 flex：flex 一行两列会把标题
+     每一行都压窄（胶囊占掉右侧约 150px），标题反而多折一行（ClawForge 实测 4 行→3 行）；
+     float 只让出第一行，第二行起标题重新占满整行。代价是第一行偏短——两栏并排里
+     胶囊占 284px 栏宽的一半多，这个取舍跑不掉，想缓解就调栏宽（见 .cols2）。
+     float 元素必须排在文本之前，所以模板里胶囊写在 <h3> 前面，不要对调。 */
+  .tl-head{break-after:avoid}
+  .tl-head h3{font-size:14.5px}
+  .tl-head h3 .org{color:var(--muted);font-weight:400;font-size:13px;display:inline-block}
+  /* inline-block 是为了让灰色副标题「整块换行」而不是被从中间折断：
+     原来「惊堂木 — 虚假信息检测系统小程序 主导开发」会折成「…小程序 主 / 导开发」，
+     教育那条也会折成「…计算机科学与 / 技术」。整块后短副标题另起一行、长副标题自己内部再折。 */
+  /* 平台标（GitHub / ModelScope）：内联 SVG，外链离线打不开、也印不进 PDF */
+  .tl-head h3 svg{vertical-align:-2px;margin-right:6px}
+  /* 项目名就是链接：正文里不再重复明文 URL。下划线用虚线的弱提示，别抢标题。
+     颜色是 --brand 手工算出来的 rgba（原来跟着 #6366f1 写成 rgba(99,102,241,…)，
+     降饱和那次改成 rgba(91,100,168,…)，本轮回一半 → rgba(95,101,204,…)）。
+     改 --brand 时记得把这两处 rgba 一起改，别让它和正文的靛蓝对不上。 */
+  .tl-head h3 a{color:inherit;text-decoration:none;border-bottom:1px dashed rgba(95,101,204,.5)}
+  /* 本人要求：项目时间不换行、就在标题那一行右对齐。nowrap 保证「2026.06 · 11k+ downloads」
+     这种长胶囊也不折（当前最长的一枚，来自 MIFS）；margin-left 是胶囊与标题之间的最小间距
+     （标题绕排不会贴上去）。 */
+  /* 时间胶囊（全份出现 15+ 次）：靛蓝淡底 + 靛蓝字，2026-09-30 的中性化尝试已撤回，原样保留。 */
+  .pill-time{font-size:11px;background:#eef2ff;color:var(--brand);padding:2px 10px;border-radius:12px;
+             font-weight:700;white-space:nowrap;float:right;margin:3px 0 0 10px}
   .tl-desc{font-size:12.5px;color:#475569;margin:3px 0 6px}
   ul.detail{margin:0}
-  ul.detail li{list-style:none;font-size:12.3px;color:#334155;margin-bottom:4px;padding-left:14px;position:relative}
+  /* 行高 1.6→1.5、条目间距 4→3px：简历是要塞满一页的密集版面，正文行距松一点更耐读、
+     挤一点更省版面。省下的高度见 .hero 那条注释（为的是让实习段整个落在第 1 页）。 */
+  ul.detail li{list-style:none;font-size:12.3px;color:#334155;line-height:1.5;margin-bottom:3px;padding-left:14px;position:relative}
+  /* 单条要点不跨页：一条最多 3 行（≤45px），整体挪走的代价很小，
+     但换来的是一句话不会被劈在页缝上（实测第 1→2 页那条「…相关能力 81→89」就被劈过）。
+     注意这与「整个 .tl-item 不跨页」是两回事——实习那条有 16 行，整条 avoid 会留 1/3 页空白。 */
+  ul.detail li{break-inside:avoid}
   ul.detail li::before{content:"•";position:absolute;left:2px;color:var(--brand)}
+  /* 正文里的 **加粗**（会议/期刊名，如【NeurIPS 2026】）：琥珀 --hl。
+     2026-09-30 曾改回过墨色，本人否掉后恢复琥珀；同日第二轮又说「有些地方太亮」，
+     于是把琥珀本身降饱和（#f59e0b → #b5822f）；同日第三轮「其他柔和回调一半」→
+     回一半到 #d5901d（值在 :root 里）。仍是全份唯一的暖色高亮，但不再跳。 */
   ul.detail em{font-style:normal;color:var(--hl);font-weight:700}
-  .badge{display:inline-block;font-size:10.5px;background:#fef3c7;color:#92400e;border:1px solid #fcd34d;
+  /* 徽章（教育/实习，共 4 处）：黄底黄边，原样保留；文字色那次由 #92400e 淡到 #8a6734
+     （本人 2026-09-30：「标签/徽章/logo 颜色稍微淡一点」；此处按"只淡文字色"办），
+     第三轮「其他柔和回调一半」→ 取两者的中间色 #8e5321。
+     底色与边框始终不动 → 徽章宽高零变化、不影响折行与分页。 */
+  .badge{display:inline-block;font-size:10.5px;background:#fef3c7;color:#8e5321;border:1px solid #fcd34d;
          padding:0 8px;border-radius:10px;margin:2px 4px 2px 0;font-weight:600}
-  .gtitle{font-size:12.5px;font-weight:700;color:var(--brand);margin:7px 0 2px}
+  .gtitle{font-size:12.5px;font-weight:700;color:var(--brand);margin:6px 0 2px}
+  /* 一个 ▸ 分组（分组标题 + 它的要点）整体不跨页：2026-09-28 实测实习段的最后一条要点
+     被单独甩到下一页顶端，读者看到的是「这个分组没了」。一个分组约 100–140px，
+     整体挪走的代价远小于把分组拆开。与 .tl-item 的大范围 avoid 是两回事（那个会留 1/3 页空白）。 */
+  .tl-group{break-inside:avoid}
   .pubs{list-style:none}
-  .pubs li.pub{font-size:12px;margin-bottom:8px;padding:8px 12px;background:#f8fafc;border:1px solid #e8edf4;border-radius:10px}
+  /* 论文条目 = 卡片（2026-09-28 的往返：先按「为 3 页牺牲卡片感」改成平铺列表，
+     当天本人又要求改回卡片——理由是第 2/3 页页尾空白太大。卡片每条多 26px
+     （内边距 8+8、边框 1+1、外边距 8）：第 2 页 9 条多 234px、第 3 页 6 条多 156px，
+     正好填掉那两块空白，总页数仍是 3 页——加了显式换页（.pgbreak）之后，
+     页数不再由这点高度决定了，所以卡片能放心加回来。别再按老经验「卡片=4 页」删它。
+     层次：已录用=浅灰蓝底、在投=浅紫底，与右上角 CCF/在投 标签同色系。
+     （2026-09-30 的中性化尝试已撤回：当时把两档改成灰底/白底，本人否掉后恢复原样。） */
+  .pubs li.pub{font-size:12px;margin-bottom:8px;padding:8px 12px;background:#f8fafc;
+               border:1px solid #e8edf4;border-radius:10px}
   .pubs li.pub.pre{background:#faf5ff;border-color:#e9d5ff}
+  /* 一条论文不跨页：卡片一条约 82–100px，摊在页缝上会把「题名」和它的作者/会议行拆开 */
+  .pubs li.pub{break-inside:avoid}
+  /* CCF 等级 / 在投标签：绿/蓝/紫，底色一律不动（标签宽高完全不变 → 折行与分页不受影响）。
+     2026-09-30 的中性化尝试（三档中性灰）本人已否掉（"原来的更好一些"）；同日又「淡一档」
+     降过文字色，第三轮本人要求「**已经录用论文的 CCF-A/CCF-B 不用柔和**，其他柔和回调一半」：
+       .tag.A / .tag.Q1  → 完全还原成 #166534（Q1 是新增等级，本人要求"与 CCF-A 同色"）
+       .tag.B            → 完全还原成 #075985
+       .tag.P（在投）     → 按"其他"回一半：#6b21a8 与 #5d4b8a 的中间色 #643699
+     所以下面 A/B 的深色是**刻意**比 P 深的，不是漏改。 */
   .tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:4px;margin-right:6px}
-  .tag.A{background:#dcfce7;color:#166534}.tag.B{background:#e0f2fe;color:#075985}.tag.P{background:#ede9fe;color:#6b21a8}
+  .tag.A,.tag.Q1{background:#dcfce7;color:#166534}.tag.B{background:#e0f2fe;color:#075985}
+  .tag.P{background:#ede9fe;color:#643699}
   .pub-title{font-weight:600;color:var(--ink)}
+  /* 论文题名就是链接：与项目名同一套弱提示（虚线下划线，同样跟着 --brand 手工算 rgba，
+     见 .tl-head h3 a 那条注释——两处的透明度不同、色值必须一起改），没链接的篇目不画线，
+     免得读者点了没反应。链接来自数据里的 url（来源见数据文件头注释）。 */
+  .pub-title a{color:inherit;text-decoration:none;border-bottom:1px dashed rgba(95,101,204,.45)}
   .pub-meta{color:var(--muted);font-size:11px}
   .pub-note{color:#475569;font-size:11.5px}
-  .subhead{font-size:13px;color:var(--brand2);margin:12px 0 8px}
+  /* 「在投论文（CCF-A，6 篇）」这个小标题必须跟着它的论文列表：2026-09-28 实测它被
+     孤零零留在第 2 页末尾、下面空一大块，6 条在投论文全在第 3 页。
+     与 section>h2 的 break-after:avoid 是同一个道理，只是 h4 不是 section 的开头。
+     现在本人要求这一处直接换页（数据里 publications.pgbreak），所以它同时带 .pgbreak，
+     这条 avoid 保留是为了兜底：万一哪天把断页关掉，标题也不会与论文分家。 */
+  /* 强制换页：数据里写 pgbreak: true 的段落另起一页（order 行 → 整段；publications
+     上的 → 「在投论文」小标题）。2026-09-28 本人要求「研究方向章节前换页、在投论文前
+     换页」——这两处原本靠前面的竖向压缩凑巧对齐页缝，压多一点少一点就散了，
+     改成显式断页后与字体/度量无关，换台电脑重建也还是同一个切点。
+     代价：断点上方的页尾会留一块空白（第 1 页留约 40px、第 2 页约 270px）。
+     为什么写在数据而不是这里写死 section:nth-of-type(4)：断页位置是编辑意图，
+     换版式时该跟数据一起改（数据文件里那段注释写了怎么改）。 */
+  .pgbreak{break-before:page;padding-top:26px}
+  /* 页顶留白必须自己给：.content 的 padding-top 只作用在文档流的第一段，
+     换页后的碎片不带（实测断点后的标题顶在纸边 y≈2pt，打印机的不可打印区就能吃掉它）。
+     这里用 26px = .content 的同一个值，第 2/3 页的页顶留白与第 1 页一致。 */
+  .subhead.pgbreak{margin-top:0}   /* 「在投论文」另起一页时别把 12px 的段间距叠加上去 */
+  .subhead{font-size:13px;color:var(--brand2);margin:12px 0 8px;break-after:avoid}
   .awards li{list-style:none;font-size:12.5px;margin-bottom:6px;padding-left:20px;position:relative}
+  /* 奖项条目符：🏅 emoji。2026-09-30 曾换成单色 ◆（理由是"全份其余图标都是单色线条"），
+     本人看后要求回到原样——**保留 emoji**，别再以风格断层为由换掉它。 */
   .awards li::before{content:"🏅";position:absolute;left:0;font-size:11px}
+  /* 奖项子点（数据里的 subs）：一个奖项名下挂着多个奖。子点不能再挂 🏅——那会看成两个奖章，
+     缩进一级用品牌色短横。.awards li 是后代选择器、会命中嵌套的 li，所以这两条覆盖必须写。 */
+  .awards ul.award-subs{margin:2px 0 0}
+  .awards ul.award-subs li{padding-left:11px;font-size:12px;color:#475569;margin-bottom:2px}
+  .awards ul.award-subs li::before{content:"–";color:var(--brand);font-size:11px;left:0}
+  /* 段落说明（rail 字典里的 note）：排在该段标题下、导轨之上，左侧一道品牌色竖线。
+     它写在 .rail/.timeline 外壳之内，所以左边界天然与条目文字对齐。 */
+  .rail-note{font-size:12px;color:#475569;background:#f8fafc;border-left:3px solid var(--brand);
+             border-radius:0 8px 8px 0;padding:6px 10px;margin:-2px 0 12px}
+  /* 技能只有三行：整块不跨页，免得末页只剩「语言：…」一行 */
+  .skill-block{break-inside:avoid}
   .skill-line{font-size:12.5px;margin-bottom:5px}.skill-line b{color:var(--brand)}
-  .summary{background:linear-gradient(120deg,#eef2ff,#faf5ff);border:1px solid #e0e7ff;border-radius:12px;
+  /* 并排两栏：order 里写成数组的那一行。左栏在前，两栏等宽，栏间距 22px。
+     整行不跨页——grid 在 Chromium 打印里被切开很难看，而一行最多 300px 高，
+     挪到下一页比切开划算。两栏各自带标题，与单栏时是同一个 section。
+     两栏高度不等时矮栏下方会空一块（行高 = 高的一栏），想让空档小一点就在数据里
+     改写成 {pair: [左, 右], ratio: [0.8, 1.2]} —— 把宽的那栏加宽、它就会矮下来。
+     注意空档由「高的一栏」决定：只压矮栏是没用的，得让高栏变矮。 */
+  .cols2{display:grid;grid-template-columns:1fr 1fr;gap:0 22px;align-items:start;break-inside:avoid}
+  /* 个人简介：纯色底，不用渐变（本人要求）。2026-09-30 一度改成中性浅底 + 一道 inset 竖线，
+     本人否掉后回到原来的靛蓝淡底 + 同色系细边，那道竖线也一并撤掉。 */
+  .summary{background:#eef2ff;border:1px solid #e0e7ff;border-radius:12px;
            padding:12px 16px;font-size:12.5px;color:#334155}
   @media print{body{background:#fff}.wrap{margin:0;box-shadow:none;max-width:100%;border-radius:0}}
 </style>
 </head>
 <body>
+{# ---- 下面三个字典是纯定义（SHELL/LOGO/ICON），必须写在用它们的 hero 之前：
+   Jinja 的 {% set %} 是从上往下求值的，放在 .content 里会让上面的 hero 取到 Undefined。 ---- #}
+  {# 论文等级标签的文字：数据里 p.tier 存的是代码（A/B/Q1），标签上要写全称。
+     2026-09-30 本人定：`CCF-{{ p.tier }}` 这种拼法写不了 SCI-Q1，且 IPM 那篇从此
+     挂 Q1 不再算 CCF-B（"SCI-Q1 名头大于 CCF-B"），所以改成查表。
+     底色仍按代码取 .tag.<code>；Q1 与 A 同色（绿），见 .tag.A,.tag.Q1 那条。
+     三份模板各留一份同样的表，加新等级时三处一起改。 #}
+  {%- set TIER_LABEL = {'A': 'CCF-A', 'B': 'CCF-B', 'Q1': 'SCI-Q1'} %}
+  {# rail 外壳（版式归模板）：wrap=是否带那条竖线（.timeline / .rail，两者留白相同）；
+     style=tl-item 的内联样式 #}
+  {%- set SHELL = {
+      'education':      {'wrap': true,  'style': ''},
+      'internship':     {'wrap': true,  'style': ''},
+      'research_focus': {'wrap': false, 'style': 'margin-bottom:14px'},
+      'opensource':     {'wrap': false, 'style': 'margin-bottom:12px'},
+      'projects':       {'wrap': false, 'style': 'margin-bottom:12px'},
+    } %}
+  {# 条目 logo（数据里 e.logo 写平台名）：内联 SVG，不引外链——产物要能离线打开，
+     也要印得进 PDF。加新平台就在这里加一条。
+     这两个 logo 是**写死颜色**的（下面 ICON 那套才是 currentColor）：它们只出现在白底的
+     标题行里，颜色各自对着平台品牌。2026-09-30 本人要求「标签/徽章/logo 颜色稍微淡一点」，
+     做法是把这两个色各降一档（github #1e293b→#5b6673、modelscope #4d6bfe→#7d90f5）；
+     同日第三轮「其他柔和回调一半」→ 各回一半到中间色（#3c4757 / #657df9）。 #}
+  {%- set LOGO = {
+      'github': '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path fill="#3c4757" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>',
+      'modelscope': '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path fill="none" stroke="#657df9" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" d="M1.6 12.4V5.2c0-.6.7-.9 1.1-.5L8 9.7l5.3-5c.4-.4 1.1-.1 1.1.5v7.2"/></svg>',
+    } %}
+  {# hero 联系方式图标 + 段落标题图标：同样内联 SVG，但一律 currentColor（继承 hero 的白字，
+     也在标题的深色圆角块里当白字用，换底色不用重画）。
+     手机/邮箱/导师/实验室 四项的图标由模板定（它们是固定字段，不是列表）；
+     三个外链的图标写在数据的 hero.links[].icon 里；
+     段落标题的图标写在数据的 order[].icon 里（见 .dot svg 那段注释）。要加就在这儿加一条。 #}
+  {%- set ICON = {
+      'phone':   '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><rect x="4.2" y="1.6" width="7.6" height="12.8" rx="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M6.9 3.7h2.2M7.2 12.3h1.6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>',
+      'mail':    '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><rect x="1.4" y="3.5" width="13.2" height="9" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M2.3 4.5 8 8.6l5.7-4.1" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>',
+      'advisor': '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><circle cx="8" cy="5.1" r="2.7" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M2.9 13.8c0-2.7 2.3-4.4 5.1-4.4s5.1 1.7 5.1 4.4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>',
+      'lab':     '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M8 1.9 1.8 5.6v1.2h12.4V5.6z" fill="currentColor"/><path d="M3.6 8.4v4.4M6.7 8.4v4.4M9.3 8.4v4.4M12.4 8.4v4.4M2.2 14.1h11.6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>',
+      'home':    '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.25"/><path d="M1.9 8h12.2M8 1.9c1.7 2 2.6 3.9 2.6 6.1S9.7 12.1 8 14.1C6.3 12.1 5.4 10.2 5.4 8s.9-4.1 2.6-6.1z" fill="none" stroke="currentColor" stroke-width="1.25"/></svg>',
+      'scholar': '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M8 2.1 15 5.6 8 9.1 1 5.6z" fill="currentColor"/><path d="M4.2 7.3v3.4c0 1.2 1.7 2.2 3.8 2.2s3.8-1 3.8-2.2V7.3" fill="none" stroke="currentColor" stroke-width="1.25"/><path d="M14.4 5.9v4.2" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>',
+      'github':  '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>',
+      'summary':    '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 1.6l1.7 4.4 4.4 1.7-4.4 1.7L8 13.8 6.3 9.4 1.9 7.7l4.4-1.7z"/></svg>',
+      'pubs':       '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.2" y="1.8" width="9.6" height="12.4" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M5.6 5.2h4.8M5.6 7.8h4.8M5.6 10.4h3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>',
+      'awards':     '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.6 1.9h6.8v4.3a3.4 3.4 0 01-6.8 0z" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M4.6 3.1H2.4v1.2a2.4 2.4 0 002.4 2.4M11.4 3.1h2.2v1.2a2.4 2.4 0 01-2.4 2.4" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M8 9.6v2.4M5.2 14.1h5.6l-.6-2.1H5.8z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>',
+      'skills':     '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4.4" y="4.4" width="7.2" height="7.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M6.6 6.6h2.8v2.8H6.6z" fill="currentColor"/><path d="M6.4 2.2v2.2M9.6 2.2v2.2M6.4 11.6v2.2M9.6 11.6v2.2M2.2 6.4h2.2M2.2 9.6h2.2M11.6 6.4h2.2M11.6 9.6h2.2" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>',
+      'education':  '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3.4C6.7 2.5 4.7 2.1 2.4 2.4v9.2c2.3-.3 4.3.1 5.6 1 1.3-.9 3.3-1.3 5.6-1V2.4c-2.3-.3-4.3.1-5.6 1z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 3.4v9.2" stroke="currentColor" stroke-width="1.1"/></svg>',
+      'internship': '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.8" y="4.6" width="12.4" height="8.6" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M5.9 4.6V3.4c0-.6.5-1.1 1.1-1.1h1.9c.6 0 1.1.5 1.1 1.1v1.2M1.8 8.2h12.4" fill="none" stroke="currentColor" stroke-width="1.1"/></svg>',
+      'research':   '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.1" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M10.9 5.1l-1.7 4.1-4.1 1.7 1.7-4.1z" fill="currentColor"/></svg>',
+      'opensource': '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="4.2" cy="3.2" r="1.7" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="4.2" cy="12.8" r="1.7" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="11.8" cy="8" r="1.7" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M4.2 4.9v6.2M11.8 6.3c0 2.4-2.4 1.7-5.4 1.7" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>',
+      'projects':   '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 3.6h4.6l1.4 1.8h6.4v7.2H1.8z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>',
+    } %}
 <div class="wrap">
   <div class="hero">
-    <img src="{{ d.basics.photo_b64 }}" alt="照片">
+    {% if d.photo_uri %}
+    <img src="{{ d.photo_uri }}" alt="照片">
+    {% endif %}
     <div>
-      <h1>{{ d.basics.name }} <span style="font-size:16px;opacity:.85">{{ d.basics.en_name }}</span></h1>
-      <p class="role">{{ d.basics.tagline }}</p>
-      <p class="links">{{ d.basics.phone }} ｜ {{ d.basics.email }} ｜ 导师：{{ d.basics.advisor }} ｜ {{ d.basics.lab }}
-        {% for l in d.basics.links.values() %}｜ <a href="{{ l.url }}">{{ l.label }}</a>{% endfor %}</p>
+      <h1>{{ d.hero.name }} <span style="font-size:16px;opacity:.85">{{ d.hero.en_name }}</span></h1>
+      <p class="role">{{ d.hero.tagline }}</p>
+      <p class="links"><span class="hi">{{ ICON.phone }}</span>{{ d.hero.phone }} ｜ <span class="hi">{{ ICON.mail }}</span>{{ d.hero.email }} ｜ <span class="hi">{{ ICON.advisor }}</span>导师：{{ d.hero.advisor }} ｜ <span class="hi">{{ ICON.lab }}</span>{{ d.hero.lab }}
+        {% for l in d.hero.links %}｜ <span class="hi">{% if l.icon %}{{ ICON.get(l.icon, '') }}{% endif %}</span><a href="{{ l.url }}">{{ l.label }}</a>{% endfor %}</p>
+      {% if d.hero.badges %}
       <div class="hl-badges">
-        {% if ov.header_badges %}{% for x in ov.header_badges %}<span class="hl-badge">{{ x }}</span>{% endfor %}
-        {% else %}{% for c in d.chips %}<span class="hl-badge">{{ c }}</span>{% endfor %}{% endif %}
+        {% for x in d.hero.badges %}<span class="hl-badge">{{ x }}</span>{% endfor %}
       </div>
+      {% endif %}
     </div>
   </div>
 
-  {%- set order = ov.section_order | default(['highlights_bar','summary','education','internship','research_focus','publications','opensource','awards','projects','skills']) %}
-  {%- for sec in order %}
-    {%- if sec == 'highlights_bar' %}
-    <div class="kpis">{% for h in d.highlights %}<div class="kpi"><b>{{ h.num }}</b><span>{{ h.label }}</span></div>{% endfor %}</div>
-    {%- endif %}
-  {%- endfor %}
+  {# 数字横条（hero 之下那条 3 格横幅）：本人 2026-09-28 要求「不显示，但别删，
+     以注释形式留在产物里，以后可能会用到」——kpis_comment_only=true 时走注释分支。
+     注释里的标记与渲染分支逐字相同（都由 d.kpis 生成），所以以后把数据里那个开关去掉
+     就能原样启用，不必从 git 历史里翻。
+     两个坑：① HTML 注释里不能出现连续两个短横线（会提前结束注释），所以这段注释文字里
+     别写 CSS 变量名（--page-pad 那种）；② 注释不是元素、不占版面，页数不受影响。
+     {% if d.kpis %} 守卫必须包住整段，否则空数组会留下一条空边框（或一段空注释）。 #}
+  {% if d.kpis %}
+  {% if d.kpis_comment_only %}
+  <!-- 数字横条：按本人 2026-09-28 的要求暂不显示，标记保留备用。
+       要启用就改数据 data/C-talent.yaml 里的 kpis_comment_only（删掉或改 false）后重建；
+       别直接改这个产物文件，build.py 一跑就覆盖。 -->
+  <!-- <div class="kpis">{% for k in d.kpis %}<div class="kpi"><b>{{ k.num }}</b><span>{{ k.label }}</span></div>{% endfor %}</div> -->
+  {% else %}
+  <div class="kpis">{% for k in d.kpis %}<div class="kpi"><b>{{ k.num }}</b><span>{{ k.label }}</span></div>{% endfor %}</div>
+  {% endif %}
+  {% endif %}
 
   <div class="content">
-  {%- for sec in order %}
-    {%- if sec == 'highlights_bar' %}{# 已渲染 #}
-
-    {%- elif sec == 'summary' %}
-    <section><h2><span class="dot">✦</span>个人简介</h2><p class="summary">{{ d.summary }}</p></section>
-
-    {%- elif sec == 'education' %}
-    <section><h2><span class="dot">🎓</span>教育背景</h2><div class="timeline">
-      {% for ed in d.education %}
-      <div class="tl-item">
-        <div class="tl-head"><h3>{{ ed.school }} <span class="org">{{ ed.degree }} · {{ ed.major }}</span></h3><span class="pill-time">{{ ed.time }}</span></div>
-        {% if ed.bullets %}<ul class="detail">{% for x in ed.bullets %}<li>{{ x }}</li>{% endfor %}</ul>{% endif %}
+  {# 一个段落怎么渲染只写这一处：单栏与「并排两栏」调的是同一个宏，
+     否则同一段会有两种写法，改一处忘一处。
+     cls 只有 .pgbreak 一个取值（数据里 order 行上的 pgbreak）——断页类必须加在
+     <section> 自己身上：包一层 <div> 会把段落的 margin-bottom 一起包进去，
+     页尾空白会多出一个段间距。 #}
+  {%- macro section(blk, cls='') -%}
+    {%- if blk is mapping %}{# ---- rail 切片：从 timeline 取 type 命中的条目 ---- #}
+    {%- set sh = SHELL.get(blk.rail[0], {}) %}
+    <section{% if cls %} class="{{ cls }}"{% endif %}><h2><span class="dot">{{ ICON.get(blk.icon, blk.icon) }}</span>{{ blk.title }}</h2><div class="{% if sh.wrap %}timeline{% else %}rail{% endif %}">
+      {% if blk.note %}<p class="rail-note">{{ blk.note }}</p>{% endif %}
+      {% for e in d.timeline if e.type in blk.rail %}
+      <div class="tl-item"{% if sh.style %} style="{{ sh.style }}"{% endif %}>
+        <div class="tl-head"><span class="pill-time">{{ e.time }}{% if e.meta %} · {{ e.meta }}{% endif %}</span><h3>{% if e.logo %}{{ LOGO.get(e.logo, '') }}{% endif %}{% if e.link %}<a href="{{ e.link }}">{{ e.title }}</a>{% else %}{{ e.title }}{% endif %}{% if e.sub %} <span class="org">{{ e.sub }}</span>{% endif %}</h3></div>
+        {% if e.badges %}<p>{% for bd in e.badges %}<span class="badge">{{ bd }}</span>{% endfor %}</p>{% endif %}
+        {% if e.body %}<p class="tl-desc">{{ md(e.body) }}</p>{% endif %}
+        {% for g in e.groups %}<div class="tl-group"><div class="gtitle">▸ {{ g.title }}</div>
+        <ul class="detail">{% for it in g["items"] %}<li>{{ md(it) }}</li>{% endfor %}</ul></div>{% endfor %}
+        {% if e.bullets %}<ul class="detail">{% for x in e.bullets %}<li>{{ md(x) }}</li>{% endfor %}</ul>{% endif %}
       </div>{% endfor %}
     </div></section>
 
-    {%- elif sec == 'internship' %}
-    <section><h2><span class="dot">💼</span>实习经历</h2><div class="timeline">
-      <div class="tl-item">
-        <div class="tl-head"><h3>{{ d.internship.org }} <span class="org">{{ d.internship.role }}</span></h3><span class="pill-time">{{ d.internship.time }}</span></div>
-        <p>{% for bd in d.internship.badges %}<span class="badge">{{ bd }}</span>{% endfor %}</p>
-        <p class="tl-desc">{{ d.internship.lead }}</p>
-        {% for g in d.internship.groups %}
-        <div class="gtitle">▸ {{ g.title }}</div>
-        <ul class="detail">{% for it in g["items"] %}<li>{{ it.html | safe }}</li>{% endfor %}</ul>
-        {% endfor %}
-      </div>
-    </div></section>
+    {%- elif blk == 'summary' %}
+    <section{% if cls %} class="{{ cls }}"{% endif %}><h2><span class="dot">{{ ICON.summary }}</span>个人简介</h2><p class="summary">{{ d.summary }}</p></section>
 
-    {%- elif sec == 'research_focus' %}
-    <section><h2><span class="dot">🧭</span>研究方向</h2>
-      {% for r in d.research_focus %}
-      <div class="tl-item" style="margin-bottom:14px">
-        <div class="tl-head"><h3>{{ r.name }}</h3><span class="pill-time">{{ r.time }}</span></div>
-        <ul class="detail">{% for x in r.bullets %}<li>{{ x }}</li>{% endfor %}</ul>
-      </div>{% endfor %}
-    </section>
-
-    {%- elif sec == 'publications' %}
-    <section><h2><span class="dot">📄</span>发表论文（一作/共一 {{ d.publications.published | length }} 篇）</h2>
+    {%- elif blk == 'publications' %}
+    <section{% if cls %} class="{{ cls }}"{% endif %}><h2><span class="dot">{{ ICON.pubs }}</span>已录用论文（一作/共一 {{ d.publications.published | length }} 篇）</h2>
       <ol class="pubs">
         {% for p in d.publications.published %}
-        <li class="pub"><span class="tag {{ p.tier }}">CCF-{{ p.tier }}</span>
-          <span class="pub-title">[{{ loop.index }}] {{ p.title }}</span><br>
+        <li class="pub"><span class="tag {{ p.tier }}">{{ TIER_LABEL.get(p.tier, p.tier) }}</span>
+          <span class="pub-title">[{{ loop.index }}] {% if p.url %}<a href="{{ p.url }}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}</span><br>
           <span class="pub-meta">{{ p.authors }} ｜ <b>{{ p.venue }}</b>{% if p.first %} ｜ 一作{% elif p.co %} ｜ 共同一作{% endif %}</span><br>
-          <span class="pub-note">{{ p.note }}</span></li>
+          {% if p.note and not p.note_hidden %}<span class="pub-note">{{ p.note }}</span>{% endif %}</li>
         {% endfor %}
       </ol>
-      <h4 class="subhead">在投论文（CCF-A，{{ d.publications.pending | length }} 篇）</h4>
+      <h4 class="subhead{% if d.publications.pgbreak %} pgbreak{% endif %}">在投论文（CCF-A，{{ d.publications.pending | length }} 篇）</h4>
       <ol class="pubs" start="{{ d.publications.published | length + 1 }}">
         {% for p in d.publications.pending %}
         <li class="pub pre"><span class="tag P">在投</span>
-          <span class="pub-title">[{{ d.publications.published | length + loop.index }}] {{ p.title }}</span><br>
+          <span class="pub-title">[{{ d.publications.published | length + loop.index }}] {% if p.url %}<a href="{{ p.url }}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}</span><br>
           <span class="pub-meta">{{ p.authors }} ｜ <b>{{ p.venue }}</b>（在投）{% if p.first %} ｜ 一作{% elif p.co %} ｜ 共同一作{% endif %}</span><br>
-          <span class="pub-note">{{ p.note }}</span></li>
+          {% if p.note and not p.note_hidden %}<span class="pub-note">{{ p.note }}</span>{% endif %}</li>
         {% endfor %}
       </ol>
     </section>
 
-    {%- elif sec == 'opensource' %}
-    <section><h2><span class="dot">🛠</span>开源项目</h2>
-      {% for o in d.opensource %}
-      <div class="tl-item" style="margin-bottom:12px">
-        <div class="tl-head"><h3>{{ o.name }} <span class="org">{{ o.desc }}</span></h3><span class="pill-time">{{ o.time }} · {{ o.metric }}</span></div>
-        <p class="tl-desc">{{ o.detail }} ｜ {{ o.link }}</p>
-      </div>{% endfor %}
+    {%- elif blk == 'awards' %}
+    <section{% if cls %} class="{{ cls }}"{% endif %}><h2><span class="dot">{{ ICON.awards }}</span>荣誉奖项</h2>
+      <ul class="awards">{% for a in d.awards %}<li>{{ '★ ' if a.star else '' }}{{ a.text }}{% if a.year %} · {{ a.year }}{% endif %}{% if a.subs %}<ul class="award-subs">{% for s in a.subs %}<li>{{ s }}</li>{% endfor %}</ul>{% endif %}</li>{% endfor %}</ul>
     </section>
 
-    {%- elif sec == 'awards' %}
-    <section><h2><span class="dot">🏆</span>荣誉奖项</h2>
-      <ul class="awards">{% for a in d.awards %}<li>{{ '★ ' if a.star else '' }}{{ a.text }}{% if a.year %} · {{ a.year }}{% endif %}</li>{% endfor %}</ul>
+    {%- elif blk == 'skills' %}
+    <section{% if cls %} class="{{ cls }}"{% endif %}><h2><span class="dot">{{ ICON.skills }}</span>技能</h2>
+      <div class="skill-block">{% for s in d.skills %}<p class="skill-line"><b>{{ s.group }}：</b>{{ s["items"] | join('、') }}</p>{% endfor %}</div>
     </section>
+    {%- endif %}
+  {%- endmacro %}
 
-    {%- elif sec == 'projects' %}
-    <section><h2><span class="dot">🗂</span>项目经历</h2>
-      {% for p in d.projects %}
-      <div class="tl-item" style="margin-bottom:12px">
-        <div class="tl-head"><h3>{{ p.name }} <span class="org">{{ p.role }}</span></h3><span class="pill-time">{{ p.time }}</span></div>
-        <p class="tl-desc">{{ p.detail }}</p>
-      </div>{% endfor %}
-    </section>
-
-    {%- elif sec == 'skills' %}
-    <section><h2><span class="dot">⚙</span>技能</h2>
-      {% for s in d.skills %}<p class="skill-line"><b>{{ s.group }}：</b>{{ s["items"] | join('、') }}</p>{% endfor %}
-    </section>
+  {%- for row in d.order %}
+    {#- 数据里 order 行上的 pgbreak 只对单栏段落有意义（并排两栏从中间断开会把 grid 拆开），
+        所以只有下面两个单栏分支把它传给宏 -#}
+    {%- set brk = 'pgbreak' if (row is mapping and row.pgbreak) else '' %}
+    {%- if row is mapping and row.pair %}{# 数组 + 逐行栏宽比：两栏高度差多少就配多少宽，别留空档 #}
+    <div class="cols2" style="grid-template-columns:{{ row.ratio[0] }}fr {{ row.ratio[1] }}fr">{{ section(row.pair[0]) }}{{ section(row.pair[1]) }}</div>
+    {%- elif row is string or row is mapping %}
+    {{ section(row, brk) }}
+    {%- else %}{# 数组 = 并排两栏：左栏在前，两栏默认等宽 #}
+    <div class="cols2">{{ section(row[0]) }}{{ section(row[1]) }}</div>
     {%- endif %}
   {%- endfor %}
   </div>

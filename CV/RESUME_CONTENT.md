@@ -1,5 +1,11 @@
 # 曾屹荣 · 简历内容整理（基于 CV/ 两份 docx 草稿）
 
+> **本文件不参与构建，只是溯源存档。** 它是最初从 docx 草稿整理出的内容底稿（人读、追溯用）。
+> 参与构建的数据在 `build/data/` 下的三份 YAML（A/B/C 各一份，不共享字段）；
+> 要改简历请改那里，改完跑 `python build.py` 与 `python build/validate.py`。
+> 若本文件与数据文件冲突，**以数据文件为准**——这里记录的是「当初为什么这么写」，
+> 而不是「现在写的是什么」。
+
 > 用途：人才计划求职简历的内容底稿。信息以 `zeng-yirong_resume_optimized_v3.docx`（结构化优化版）为主，
 > `zeng-yirong_resume_all.docx`（原始完整版）为补充校验来源。
 
@@ -17,7 +23,7 @@
 ## 2. 核心亮点（数字速览）
 | 指标 | 数值 |
 |---|---|
-| 一作已发表论文 | **9 篇**（CCF-A 4：NeurIPS'26×2、ICLR'26、ACL'26；CCF-B 5：EMNLP'25×2、NAACL'25、COLING'24、IPM'26 SCI-Q1） |
+| 一作已发表论文 | **9 篇**（CCF-A 4：NeurIPS'26×2、ICLR'26、ACL'26；CCF-B 4：EMNLP'25×2、NAACL'25、COLING'24；SCI-Q1 1：IPM'26） |
 | CCF-A 在投 | **6 篇**（ICLR'27×4、AAAI'27 Phase II、ACL-ARR） |
 | 华为实习成果 | 12 项研究成果，**4 项落地小艺业务** |
 | 团队角色 | 首批顶尖人才计划实习生 · 部门实习生领头人（带 7 人团队） |
@@ -44,7 +50,7 @@
 6. Tool Zero: Pure RL from Scratch — **EMNLP 2025 Findings (CCF-B)**，业界首篇
 7. Moderation Matters: Rumor Detection — **NAACL 2025 (CCF-B)**
 8. RU22Fact: Multilingual Fact-Checking — **COLING 2024 (CCF-B)**
-9. Human Cognitive Aligned Rumor Detection — **IPM 2026 (SCI-Q1, CCF-B)**
+9. Human Cognitive Aligned Rumor Detection — **IPM 2026**（本人 2026-09-30 定：等级只由 SCI-Q1 标签表达，`venue` 里不再重复写 `(SCI-Q1)`；也不再算 CCF-B）
 
 ### 在投（CCF-A 6 篇）
 10. Precision Bounds Diversity: Reward Engineering for IF — ICLR 2027

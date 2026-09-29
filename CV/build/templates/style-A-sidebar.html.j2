@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>{{ d.basics.name }} · 简历 — 样式A：深蓝侧栏现代风（{{ profile_name }}）</title>
+<title>{{ d.sidebar.name }} · 简历 — 样式A：深蓝侧栏现代风（{{ d.version }}）</title>
 <style>
   @page{size:A4;margin:0}
   :root{--accent:#1e3a5f;--accent-soft:#2c5282;--ink:#1a202c;--muted:#64748b;
@@ -36,6 +36,9 @@
   section>h2::before{content:"";width:8px;height:8px;background:var(--hl);border-radius:2px;transform:rotate(45deg)}
   .entry-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap}
   .entry-head h3{font-size:14.5px}.entry-head h3 .where{color:var(--muted);font-weight:400;font-size:12.5px}
+  /* 开源项目名就是链接：正文里不再重复明文 URL（URL 变长后会把这行撑开）。
+     虚线是弱提示、不抢标题；颜色用本版强调色，别照抄 C 的靛蓝。 */
+  .entry-head h3 a{color:inherit;text-decoration:none;border-bottom:1px dashed rgba(30,58,95,.5)}
   .time{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
   .badges{margin:3px 0 5px}
   .badge{display:inline-block;background:#fef3c7;color:#92400e;border:1px solid #fcd34d;
@@ -52,60 +55,72 @@
   .pubs li.pub{font-size:12px;margin-bottom:8px;padding:6px 8px 6px 8px;border-left:3px solid #cbd5e1;background:#f8fafc;border-radius:0 6px 6px 0}
   .pubs li.pub.pre{border-left-color:#c4b5fd;background:#faf5ff}
   .tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:5px}
-  .tag.A{background:#dcfce7;color:#166534}.tag.B{background:#e0f2fe;color:#075985}.tag.P{background:#ede9fe;color:#5b21b6}
+  .tag.A,.tag.Q1{background:#dcfce7;color:#166534}.tag.B{background:#e0f2fe;color:#075985}.tag.P{background:#ede9fe;color:#5b21b6}
   .pub-title{font-weight:600}
+  /* 论文题名就是链接（数据里的 url）：同 .entry-head h3 a 的弱提示。
+     没链接的篇目不画线，免得读者点了没反应。 */
+  .pub-title a{color:inherit;text-decoration:none;border-bottom:1px dashed rgba(30,58,95,.45)}
   .pub-meta{color:var(--muted);font-size:11px}
   .pub-note{color:#475569;font-size:11.5px}
   .subhead{font-size:13px;color:var(--accent-soft);margin:12px 0 8px}
   .awards li{list-style:none;font-size:12.5px;margin-bottom:6px;padding-left:18px;position:relative}
   .awards li::before{content:"🏅";position:absolute;left:0;font-size:11px}
+  /* 奖项子点（数据里的 subs）：一个奖项名下挂着多个奖。子点不能再挂 🏅——那会看成两个奖章，
+     缩进一级用强调色短横。.awards li 是后代选择器、会命中嵌套的 li，所以这两条覆盖必须写。 */
+  .awards ul.award-subs{margin:2px 0 0}
+  .awards ul.award-subs li{padding-left:11px;font-size:12px;color:#475569;margin-bottom:2px}
+  .awards ul.award-subs li::before{content:"–";color:var(--accent);font-size:11px;left:0}
   .skill-line{font-size:12.5px;margin-bottom:6px}.skill-line b{color:var(--accent)}
   .summary{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#2a2f38}
   @media print{body{background:#fff}.page{margin:0;box-shadow:none;max-width:100%;min-height:100vh}}
 </style>
 </head>
 <body>
+{# 论文等级标签的文字：数据里 p.tier 存的是代码（A/B/Q1），标签上要写全称。
+    2026-09-30 本人定：`CCF-{{ p.tier }}` 这种拼法写不了 SCI-Q1，且 IPM 那篇从此
+    挂 Q1 不再算 CCF-B（"SCI-Q1 名头大于 CCF-B"），所以改成查表。
+    底色仍按代码取 .tag.<code>；Q1 与 A 同色，见 .tag.A,.tag.Q1 那条。
+    三份模板各留一份同样的表，加新等级时三处一起改。 -#}
+{% set TIER_LABEL = {'A': 'CCF-A', 'B': 'CCF-B', 'Q1': 'SCI-Q1'} %}
 <div class="page">
   <aside>
-    <img class="avatar" src="{{ d.basics.photo_b64 }}" alt="照片">
-    <h1>{{ d.basics.name }}</h1>
-    <p class="tagline">{{ d.basics.en_name }}<br>{{ d.basics.tagline }}</p>
+    {% if d.photo_uri %}
+    <img class="avatar" src="{{ d.photo_uri }}" alt="照片">
+    {% endif %}
+    <h1>{{ d.sidebar.name }}</h1>
+    <p class="tagline">{{ d.sidebar.en_name }}<br>{{ d.sidebar.tagline }}</p>
 
-    {% if ov.header_badges %}
+    {% if d.sidebar.title_chips %}
     <div class="side-sec"><h2>头 衔</h2>
-      <div class="chips">{% for x in ov.header_badges %}<span class="chip">{{ x }}</span>{% endfor %}</div>
+      <div class="chips">{% for x in d.sidebar.title_chips %}<span class="chip">{{ x }}</span>{% endfor %}</div>
     </div>
     {% endif %}
 
     <div class="side-sec"><h2>数 字 亮 点</h2>
       <div class="stat-grid">
-        {% for h in d.highlights %}<div class="stat"><b>{{ h.num }}</b><span>{{ h.label }}</span></div>{% endfor %}
+        {% for h in d.sidebar.stats %}<div class="stat"><b>{{ h.num }}</b><span>{{ h.label }}</span></div>{% endfor %}
       </div>
     </div>
 
     <div class="side-sec"><h2>联 系 方 式</h2>
-      <p>📱 {{ d.basics.phone }}</p>
-      <p>✉️ {{ d.basics.email }}</p>
-      <p>🏫 {{ d.basics.school_line }}</p>
-      <p>导师：{{ d.basics.advisor }}</p>
-      <p>{{ d.basics.lab }}</p>
-      {% for l in d.basics.links.values() %}<p>🔗 <a href="{{ l.url }}">{{ l.label }}：{{ l.url | replace('https://','') }}</a></p>{% endfor %}
+      {% for c in d.sidebar.contact %}
+      <p>{% if c.icon %}{{ c.icon }} {% endif %}{{ c.text }}</p>
+      {% endfor %}
+      {% for l in d.sidebar.links %}<p>🔗 <a href="{{ l.url }}">{{ l.label }}：{{ l.url | replace('https://','') }}</a></p>{% endfor %}
     </div>
 
     <div class="side-sec"><h2>关 键 词</h2>
-      <div class="chips">{% for c in d.chips %}<span class="chip">{{ c }}</span>{% endfor %}</div>
+      <div class="chips">{% for c in d.sidebar.keywords %}<span class="chip">{{ c }}</span>{% endfor %}</div>
     </div>
 
     <div class="side-sec"><h2>技 能</h2>
-      {% for s in d.skills %}<p><b style="color:#ffd77a">{{ s.group }}：</b>{{ s["items"] | join('、') }}</p>{% endfor %}
+      {% for s in d.sidebar.skills %}<p><b style="color:#ffd77a">{{ s.group }}：</b>{{ s["items"] | join('、') }}</p>{% endfor %}
     </div>
   </aside>
 
   <main>
-    {%- set order = ov.section_order | default(['summary','education','internship','research_focus','publications','opensource','awards','projects']) %}
-    {%- for sec in order %}
-      {%- if sec == 'highlights_bar' %}{# A版已在侧栏展示，跳过 #}
-      {%- elif sec == 'summary' %}
+    {%- for sec in d.main_sections %}
+      {%- if sec == 'summary' %}
       <section><h2>个人简介</h2><p class="summary">{{ d.summary }}</p></section>
 
       {%- elif sec == 'education' %}
@@ -113,6 +128,7 @@
         {% for ed in d.education %}
         <div class="entry">
           <div class="entry-head"><h3>{{ ed.school }} <span class="where">{{ ed.degree }} · {{ ed.major }}</span></h3><span class="time">{{ ed.time }}</span></div>
+          {% if ed.badges %}<p class="badges">{% for bd in ed.badges %}<span class="badge">{{ bd }}</span>{% endfor %}</p>{% endif %}
           {% if ed.bullets %}<ul class="detail">{% for x in ed.bullets %}<li>{{ x }}</li>{% endfor %}</ul>{% endif %}
         </div>{% endfor %}
       </section>
@@ -125,7 +141,7 @@
           <p class="lead">{{ d.internship.lead }}</p>
           {% for g in d.internship.groups %}
           <div class="gtitle">▸ {{ g.title }}</div>
-          <ul class="detail">{% for it in g["items"] %}<li>{{ it.html | safe }}</li>{% endfor %}</ul>
+          <ul class="detail">{% for it in g["items"] %}<li>{{ md(it) }}</li>{% endfor %}</ul>
           {% endfor %}
         </div>
       </section>
@@ -143,19 +159,19 @@
       <section><h2>发表论文（一作/共一 {{ d.publications.published | length }} 篇）</h2>
         <ol class="pubs">
           {% for p in d.publications.published %}
-          <li class="pub"><span class="tag {{ p.tier }}">CCF-{{ p.tier }}</span>
-            <span class="pub-title">[{{ loop.index }}] {{ p.title }}</span><br>
+          <li class="pub"><span class="tag {{ p.tier }}">{{ TIER_LABEL.get(p.tier, p.tier) }}</span>
+            <span class="pub-title">[{{ loop.index }}] {% if p.url %}<a href="{{ p.url }}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}</span><br>
             <span class="pub-meta">{{ p.authors }} ｜ <b>{{ p.venue }}</b>{% if p.first %} ｜ 一作{% elif p.co %} ｜ 共同一作{% endif %}</span><br>
-            <span class="pub-note">{{ p.note }}</span></li>
+            {% if p.note and not p.note_hidden %}<span class="pub-note">{{ p.note }}</span>{% endif %}</li>
           {% endfor %}
         </ol>
         <h4 class="subhead">在投论文（CCF-A，{{ d.publications.pending | length }} 篇）</h4>
         <ol class="pubs" start="{{ d.publications.published | length + 1 }}">
           {% for p in d.publications.pending %}
           <li class="pub pre"><span class="tag P">在投</span>
-            <span class="pub-title">[{{ d.publications.published | length + loop.index }}] {{ p.title }}</span><br>
+            <span class="pub-title">[{{ d.publications.published | length + loop.index }}] {% if p.url %}<a href="{{ p.url }}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}</span><br>
             <span class="pub-meta">{{ p.authors }} ｜ <b>{{ p.venue }}</b>（在投）{% if p.first %} ｜ 一作{% elif p.co %} ｜ 共同一作{% endif %}</span><br>
-            <span class="pub-note">{{ p.note }}</span></li>
+            {% if p.note and not p.note_hidden %}<span class="pub-note">{{ p.note }}</span>{% endif %}</li>
           {% endfor %}
         </ol>
       </section>
@@ -164,14 +180,14 @@
       <section><h2>开源项目</h2>
         {% for o in d.opensource %}
         <div class="entry">
-          <div class="entry-head"><h3>{{ o.name }} <span class="where">{{ o.desc }}</span></h3><span class="time">{{ o.time }} · {{ o.metric }}</span></div>
-          <p class="desc">{{ o.detail }} ｜ {{ o.link }}</p>
+          <div class="entry-head"><h3>{% if o.link %}<a href="{{ o.link }}">{{ o.name }}</a>{% else %}{{ o.name }}{% endif %} <span class="where">{{ o.desc }}</span></h3><span class="time">{{ o.time }} · {{ o.metric }}</span></div>
+          <p class="desc">{{ o.detail }}</p>
         </div>{% endfor %}
       </section>
 
       {%- elif sec == 'awards' %}
       <section><h2>荣誉奖项</h2>
-        <ul class="awards">{% for a in d.awards %}<li>{{ '★ ' if a.star else '' }}{{ a.text }}{% if a.year %} · {{ a.year }}{% endif %}</li>{% endfor %}</ul>
+        <ul class="awards">{% for a in d.awards %}<li>{{ '★ ' if a.star else '' }}{{ a.text }}{% if a.year %} · {{ a.year }}{% endif %}{% if a.subs %}<ul class="award-subs">{% for s in a.subs %}<li>{{ s }}</li>{% endfor %}</ul>{% endif %}</li>{% endfor %}</ul>
       </section>
 
       {%- elif sec == 'projects' %}
