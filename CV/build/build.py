@@ -191,15 +191,23 @@ def check(style: str, d: dict, path: Path) -> list:
                         "将来想启用这条横条时无从下手（要么把 kpis 填上，要么删掉这个开关）")
 
     # 页码开关（见 PAGE_FOOTER 那段注释）。两类静默问题都要挡：
-    # 写 "false" 会被当成真、页码凭空出现；而 A/C 的 @page 下边距是 0，
-    # 底部没有页脚带子，页脚会被画到正文上——那是个非致命但很难看的静默故障。
+    # 写 "false" 会被当成真、页码凭空出现；而 @page 下边距为 0 的版式底部没有页脚带子，
+    # 页脚会被画到正文上——那是个非致命但很难看的静默故障。
     if "page_numbers" in d and not isinstance(d["page_numbers"], bool):
         errs.append(f"page_numbers 必须是 true/false，现在是 {d['page_numbers']!r}"
                     "——写成字符串会被当成真，页码会凭空出现")
-    if d.get("page_numbers") and style != "B":
-        errs.append(f"{style} 版模板的 @page 下边距是 0（留白靠元素自身 padding），"
-                    "页面底部没有页脚带子；打开 page_numbers 前要先让出底部留白，"
-                    "并重新量分页（那会真的挤掉正文高度）")
+    if d.get("page_numbers"):
+        rule = FOOTER_BAND.get(style)
+        if rule is None:
+            errs.append(f"{style} 版模板的 @page 下边距是 0（留白靠元素自身 padding），"
+                        "页面底部没有页脚带子；打开 page_numbers 前要先让出底部留白，"
+                        "并重新量分页（那会真的挤掉正文高度）")
+        else:
+            tpl_text = (TPL_DIR / VARIANTS[style]["tpl"]).read_text(encoding="utf-8")
+            if rule not in tpl_text:
+                errs.append(f"{style} 版开着 page_numbers，但模板里的 @page 已经不是 "
+                            f"{rule!r}——页脚带子没了，页码会压到正文上。"
+                            "改了模板的 @page 就要同步 FOOTER_BAND 这条登记")
     return errs
 
 
@@ -223,6 +231,17 @@ PAGE_HEADER = '<div style="height:0"></div>'
 PAGE_FOOTER = ('<div style="width:100%;font-size:8pt;color:#5b6472;text-align:center;'
                'font-family:Arial,Helvetica,sans-serif">'
                '第 <span class="pageNumber"></span> 页 / 共 <span class="totalPages"></span> 页</div>')
+
+# 页脚带子的登记表：**这个版式的模板里 @page 那条规则的原文**。
+# 有登记 = 该版 @page 留了非 0 的下边距，页码画得进那条带子、不吃正文高度；
+# 没登记 = 下边距为 0，开 page_numbers 会静默把页脚压到正文上，check() 直接挡掉。
+# 值必须与模板逐字相符，check() 会去模板里找——这样「有人把 @page 改回 margin:0」
+# 或「模板改了这里忘了改」都会当场报错，而不是等印出来才发现页码叠在字上。
+# A 没登记：A 的 @page 也是 margin:0，且 A 本人没要页码。
+FOOTER_BAND = {
+    "B": "@page{size:A4;margin:14mm 0}",
+    "C": "@page{size:A4;margin:0 0 10mm}",
+}
 
 
 def to_pdf(html_path: Path, pdf_path: Path, page_numbers: bool = False):

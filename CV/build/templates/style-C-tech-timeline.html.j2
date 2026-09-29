@@ -4,7 +4,17 @@
 <meta charset="UTF-8">
 <title>{{ d.hero.name }} · 简历 — 样式C：科技风 · 时间轴（{{ d.version }}）</title>
 <style>
-  @page{size:A4;margin:0}
+  /* @page 下边距 = 给页脚让出的那条带子（2026-09-30 本人要求给 C 加页码）。
+     原先是 margin:0，留白全靠元素自身 padding，页脚没有地方落。
+     ⚠️ **页脚的位置不随这个值变**：Chromium 把页脚画在固定的 y≈819pt（实测 B 的 14mm
+     与 C 的 7mm/10mm 都落在同一个 y），这个 margin 唯一的作用是**压低内容盒的底**，
+     让正文够不着页脚。所以它不能小气：7mm 时内容盒底是 824pt，已经低于页脚的 819pt，
+     正文一旦写满就会压在页码上。10mm（内容盒底 805pt、离页脚 14pt）是实测能用的最小值。
+     为什么不能像 B 那样用 14mm：C 的内容比 B 满得多，每页少 11pt 就多出一页
+     （14mm 实测 4 页、10mm 3 页）。三页的余量只剩 p1 20 / p2 47 / p3 33pt，
+     往 C 里加字、松间距或把这个值改大，都会掉到 4 页——改完必须复核页数。
+     改这一行要同步 build.py 的 FOOTER_BAND 登记，否则 check() 会报「模板 @page 对不上」。 */
+  @page{size:A4;margin:0 0 10mm}
   /* --page-pad  = 正文左右留白（纸面到文字），hero 与 .content 共用，改一个数就整体变宽窄；
      --rail-pad  = 时间轴左侧留白，行首圆点与内容缩进都按它算，同样改一处即可 */
   /* 调色板（2026-09-30 定稿）：**回到原来那套靛蓝 + 紫 + 琥珀的彩色取向**。
@@ -24,7 +34,7 @@
                 但它只落在加粗的会议名上（不是正文），别再往深里压。
      加新颜色前先问一句：这一处是不是真的需要第 4 个色相。 */
   :root{--brand:#5f65cc;--brand2:#8b5cf6;--ink:#1e293b;--muted:#64748b;--bg:#f8fafc;--card:#fff;--hl:#d5901d;
-        --page-pad:80px;--rail-pad:22px}
+        --page-pad:64px;--rail-pad:22px}
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
   .wrap{max-width:920px;margin:0 auto 40px;background:var(--card);border-radius:16px;overflow:hidden;
@@ -63,7 +73,7 @@
   .kpi b{font-size:18px;color:var(--brand2)}
   .kpi span{display:block;font-size:10px;color:var(--muted);margin-top:1px}
   /* 正文左右留白：与 .hero 用同一个 --page-pad，否则横幅里的姓名会与正文错开 */
-  .content{padding:26px var(--page-pad)}
+  .content{padding:20px var(--page-pad)}
   section{margin-bottom:23px}
   /* 段落标题不与其内容分家：否则「荣誉奖项」标题会孤零零留在上一页末行 */
   section>h2{break-after:avoid;font-size:17px;display:flex;align-items:center;gap:10px;margin-bottom:12px}
@@ -145,7 +155,19 @@
      被单独甩到下一页顶端，读者看到的是「这个分组没了」。一个分组约 100–140px，
      整体挪走的代价远小于把分组拆开。与 .tl-item 的大范围 avoid 是两回事（那个会留 1/3 页空白）。 */
   .tl-group{break-inside:avoid}
-  .pubs{list-style:none}
+  /* 续页页顶留白（本人 2026-09-30：「第二页上边距太小」）。
+     .pubs 会被分页切开，**碎片不带 .content/.pgbreak 的页顶留白**——第 2 页那张卡片
+     原来是贴着纸边起的（实测文字 y=8.1pt，而第 3 页是 16.4pt）。
+     碎片是 CSS 管不到的，但 box-decoration-break:clone 能让 padding 在**每个碎片上各画一份**，
+     于是续页的列表也从 padding-top 处开始。20px = .content/.pgbreak 的同一个值，三页页顶对齐。
+     代价：第 1 页那段（h2 下面）也多出这 20px 间距。 */
+  /* 论文标题与列表之间不再叠一层：ol.pubs 自带 20px 的碎片留白（见下一条），
+     若 h2 的 12px 也留着，第 1 页那道缝会变成 32px。用 :has 只挑论文段的 h2。
+     这样第 1 页那道缝是 20px（比原来的 12px 略松），第 2 页页顶仍是 20px——
+     代价只有 8px 而不是 20px，第 1 页才保得住那点余量。 */
+  section:has(>ol.pubs)>h2{margin-bottom:0}
+  .pubs{list-style:none;padding-top:20px;
+        -webkit-box-decoration-break:clone;box-decoration-break:clone}
   /* 论文条目 = 卡片（2026-09-28 的往返：先按「为 3 页牺牲卡片感」改成平铺列表，
      当天本人又要求改回卡片——理由是第 2/3 页页尾空白太大。卡片每条多 26px
      （内边距 8+8、边框 1+1、外边距 8）：第 2 页 9 条多 234px、第 3 页 6 条多 156px，
@@ -187,10 +209,13 @@
      代价：断点上方的页尾会留一块空白（第 1 页留约 40px、第 2 页约 270px）。
      为什么写在数据而不是这里写死 section:nth-of-type(4)：断页位置是编辑意图，
      换版式时该跟数据一起改（数据文件里那段注释写了怎么改）。 */
-  .pgbreak{break-before:page;padding-top:26px}
+  .pgbreak{break-before:page;padding-top:20px}
   /* 页顶留白必须自己给：.content 的 padding-top 只作用在文档流的第一段，
      换页后的碎片不带（实测断点后的标题顶在纸边 y≈2pt，打印机的不可打印区就能吃掉它）。
-     这里用 26px = .content 的同一个值，第 2/3 页的页顶留白与第 1 页一致。 */
+     这里用 20px = .content 的同一个值，第 2/3 页的页顶留白与第 1 页一致。
+     **两处必须同值**——26→20px 是 2026-09-30 加页码时一起调的：页脚让出 10mm 后
+     第 3 页差了约 5pt 装不下最后那行并排，从这儿省出来的（改一个不改另一个，
+     各页页顶就会差 4pt，肉眼能看出来）。 */
   .subhead.pgbreak{margin-top:0}   /* 「在投论文」另起一页时别把 12px 的段间距叠加上去 */
   .subhead{font-size:13px;color:var(--brand2);margin:12px 0 8px;break-after:avoid}
   .awards li{list-style:none;font-size:12.5px;margin-bottom:6px;padding-left:20px;position:relative}

@@ -21,7 +21,8 @@ version: "研究院版"
 # 页脚页码（本人 2026-09-30 要求）。**这是开关，不是内容**：删掉这行就没有页码。
 # 由 build.py 的 PAGE_FOOTER 渲染成「第 x 页 / 共 y 页」，画在页面底部那条页边距带子里
 # （B 的 @page 下边距 14mm，原本就空着），所以不吃正文高度、不动分页——实测页数不变。
-# 只有 B 能开：A/C 的 @page 下边距是 0，没有那条带子，check() 会直接报错挡住。
+# 能不能开由 @page 有没有留出底部带子决定（见 build.py 的 FOOTER_BAND 登记）：
+# 2026-09-30 起 B/C 都开了；A 的 @page 下边距是 0，开着会被 check() 直接报错挡住。
 page_numbers: true
 
 header:
@@ -173,7 +174,7 @@ publications:
 # link 写完整 URL（https://…），模板渲染成名称上的超链接，正文里不再出现明文 URL。
 opensource:
   - {name: "ClawLoop", desc: "轻量化 Harness 及 RL 训练框架", time: "2026.06", metric: "⭐ 33", link: "https://github.com/zeng-yirong/clawloop", detail: "轻量化专门用于 Agentic RL 训练的 harness 及其训练代码 in Verl，支撑大规模在线 In-Harness RL 训练"}
-  - {name: "ClawForge (EnvCraft)", desc: "Agentic RL 交互环境、配套训练代码及模型", time: "2026.07", metric: "⭐ 46", link: "https://github.com/zeng-yirong/EnvCraft", detail: "139 个沙箱隔离交互环境、约 2 万复杂任务，支持 claw-like agent RL 训练"}
+  - {name: "ClawForge (EnvCraft)", desc: "Agentic RL 交互环境、配套训练代码及模型", time: "2026.06", metric: "⭐ 60", link: "https://github.com/zeng-yirong/EnvCraft", detail: "139 个沙箱隔离交互环境、约 2 万复杂任务，支持 claw-like agent RL 训练"}
   - {name: "MIFS", desc: "多模态指令遵循数据集", time: "2026.06", metric: "11k+ downloads", link: "https://modelscope.cn/datasets/asdqfad/MIFS", detail: "支持 RLVR 训练的多模态指令遵循数据集"}
 
 awards:

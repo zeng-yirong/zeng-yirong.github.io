@@ -69,19 +69,34 @@ kpis_hidden:
   - {num: "4",  label: "成果落地小艺"}
   - {num: "7",  label: "带教实习生(领头人)"}
 
+# 页脚页码（本人 2026-09-30 要求，与 B 同步）。**这是开关，不是内容**：删掉这行就没有页码。
+# 2026-09-30 为它改了 C 模板的 @page：`margin:0` → `margin:0 0 14mm`，
+# 让出页面底部 10mm 给页脚落位（B 是 14mm；C 内容更满，14mm 会多出一页）。
+# 原来 C 的 @page 下边距是 0，页脚会被画到正文上——build.py 的 check() 现在
+# 登记了每版的带子，不让再踩。带宽的选取与实测余量见模板里 @page 那条注释。
+page_numbers: true
+
 order:
   - summary
   # icon = 段落标题圆角块里的图标名（模板 ICON 字典）：education / internship / research /
   #   opensource / projects / awards / skills；个人简介的图标由模板定（summary）。
   #   写不认识的名字会原样输出（旧的 emoji 也还能用），但别混用——2026-09-28 起统一成单色 SVG。
+  #
+  # 2026-09-30：核心四段改成与 B 同一顺序——教育背景 → 研究方向 → 发表论文 → 实习经历。
+  #   原顺序是「教育 → 实习 → 研究方向 → 论文」（当时按「先讲干了什么、再讲研究方向」排的）。
+  #   只动核心四段：下面两行并排的搭配与 ratio 保持原样（荣誉奖项｜开源项目、其他项目｜技能），
+  #   那两组栏宽比是按两栏实际高度配平过的，别顺手改（见 ratio 那两行的注释）。
   - {rail: [education],      icon: "education",  title: "教育背景"}
-  - {rail: [internship],     icon: "internship", title: "实习经历"}
-  # pgbreak: true = 这一段另起一页（本人要求：研究方向、在投论文前换页）。
-  #   第 1 页到实习经历结束（含）；第 2 页从研究方向开始；在投论文的断点写在
-  #   下面 publications 段的 pgbreak 上（它不是独立段落，只是论文卡里的小标题）。
-  #   断页是排版指令、不是事实，所以写在数据里而不是模板里——换版式/换页数时改这里。
-  - {rail: [research_focus], icon: "research",   title: "研究方向", pgbreak: true}
+  - {rail: [research_focus], icon: "research",   title: "研究方向"}
   - publications                      # ← 论文卡片保持独立，不并入导轨
+  # pgbreak: true = 这一段另起一页（本人 2026-09-30 定：调顺序后换页点从「研究方向」
+  #   移到这里）。放在实习经历上，第 3 页就是「实习经历 → 荣誉奖项｜开源项目 →
+  #   其他项目｜技能」，页顶带 26px 留白、不贴着纸边。
+  #   断页是排版指令、不是事实，所以写在数据里而不是模板里——换版式/换页数时改这里。
+  #   ⚠️ 断页位置与页脚带子（@page 下边距 10mm）是算出来的：C 各块实测高度合计约 2381.7pt，
+  #   3 页容量 3×805.2=2415.6pt，三页各余 29 / 32 / 80pt。再往 C 里加字、
+  #   松间距、或把带宽加到 14mm（那要再吃掉 3×11pt），都会掉到 4 页。改完必须复核页数。
+  - {rail: [internship],     icon: "internship", title: "实习经历", pgbreak: true}
   # 并排一行两栏的两种写法（栏内写法与单栏时完全一样）：
   #   [左, 右]                         两栏等宽
   #   {pair: [左, 右], ratio: [a, b]}   逐行栏宽比 a:b
@@ -165,8 +180,8 @@ timeline:
     body: "轻量化专门用于 Agentic RL 训练的 harness 及其训练代码 in Verl，支撑大规模在线 In-Harness RL 训练"
     link: "https://github.com/zeng-yirong/clawloop"
   - type: opensource
-    time: "2026.07"
-    meta: "⭐ 46"
+    time: "2026.06"
+    meta: "⭐ 60"
     logo: "github"
     title: "ClawForge (EnvCraft)"
     sub: "Agentic RL 交互环境、配套训练代码及模型"
@@ -204,9 +219,12 @@ summary: >
 #      那儿没有链接的篇目（2 篇 NeurIPS 2026 + 3 篇在投）就不写 url，标题照常显示、只是不可点。
 # note_hidden: 该条只留事实、页面不显示 note（对应 validate.py 的 UNRENDERED["C"]）
 publications:
-  # pgbreak: true = 「在投论文」这个小标题另起一页（本人要求）。它不是独立段落，
-  #   所以断页开关挂在这里而不是 order 上；已录用/在投的条目本身不动。
-  pgbreak: true
+  # pgbreak: false（2026-09-30 由 true 改来）。原先是「在投论文」另起一页（本人 2026-09-28 要求），
+  #   但那是**旧顺序下**的要求：调成「教育→研究方向→论文→实习」后，论文段整体前移，
+  #   在投前面换页会在第 2 页末尾空出约 400pt（半页多），直接把总页数顶到 4 页。
+  #   断页位置随顺序走——现在换页点移到「实习经历」（见 order 里的 pgbreak），
+  #   已录用与在投的条目本身没动，只是不再从中间断开。
+  pgbreak: false
   published:
     - {title: "Unveiling Entropy-Performance Decoupling in Agentic RL for Tool-Integrated Reasoning", authors: "Yirong Zeng, Shen You, et al.", venue: "NeurIPS 2026", tier: "A", first: true,  note: "发现轨迹中的无效交互是长程 Agentic RL 训练后期性能停滞的关键原因；通过在训练中监控无效交互次数，并提前截断轨迹，实现提升训练稳定性；减少 34% 的无效交互，同时性能上限提升 3%"}
     - {title: "ClawBenchPro: Benchmarking How Well Agent Harnesses Work", authors: "Yufei Liu*, Yirong Zeng*（共一）, et al.", venue: "NeurIPS 2026", tier: "A", co: true, note: "设计 Harness 的数据生产线，合成多样化的测试数据集，评测不同 Agent 在不同 Harness 下的表现与差异"}
