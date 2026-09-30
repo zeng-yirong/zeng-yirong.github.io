@@ -1,6 +1,37 @@
 
                 <div class="resume-header">
 
+                    <!-- 语言切换器（本仓库加的，模板原本没有）。单独占一整行、放在
+                         姓名/联系方式那行之上，为的是不动下面 8/4 的栅格。
+                         链到各语言的首页：英文在 /、中文在 /zh/（defaultContentLanguageInSubdir=false）。
+                         当前语言渲染成不可点的 <span>，避免点自己刷新一遍。 -->
+                    {{ if gt (len .Site.Languages) 1 }}
+                    {{ $cur := .Site.Language.Lang }}
+                    <div class="row">
+                        <div class="col-12 text-right mb-2">
+                            <ul class="list-inline mb-0 lang-switch">
+                                {{ range .Site.Languages }}
+                                {{ $lang := . }}
+                                {{ if eq $lang.Lang $cur }}
+                                <li class="list-inline-item">
+                                    <span class="text-muted font-weight-bold">{{ $lang.LanguageName }}</span>
+                                </li>
+                                {{ else }}
+                                {{/* 注意不能用 `"/" | relLangURL`：那个函数永远按**当前**语言拼前缀，
+                                     在循环里对每种语言都会拼出当前语言自己的地址。
+                                     必须从 .Translations 里取目标语言那一页的 .Permalink。 */}}
+                                {{ range where $.Translations "Lang" $lang.Lang }}
+                                <li class="list-inline-item">
+                                    <a class="resume-link" href="{{ .Permalink }}">{{ $lang.LanguageName }}</a>
+                                </li>
+                                {{ end }}
+                                {{ end }}
+                                {{ end }}
+                            </ul>
+                        </div>
+                    </div><!--//row-->
+                    {{ end }}
+
                     <div class="row align-items-center">
 
                         {{ if .Site.Params.profile.enable }}

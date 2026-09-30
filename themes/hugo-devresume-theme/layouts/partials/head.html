@@ -8,24 +8,25 @@
     <meta name="description" content="{{ .Site.Params.description }}">
     <meta name="author" content="{{ .Site.Params.author }}">
 
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="favicon.ico">
+    <!-- Favicon：必须走 relURL。写成相对的 "favicon.ico" 时，/zh/ 页会去找
+         /zh/favicon.ico（那里没有这个文件，中文页就没有图标） -->
+    <link rel="shortcut icon" href="{{ "favicon.ico" | relURL }}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900">
 
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph / Facebook：og:url 用 .Permalink，中文页才指向 /zh/ 而不是英文页 -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ .Site.BaseURL }}">
+    <meta property="og:url" content="{{ .Permalink }}">
     <meta property="og:title" content="{{ .Site.Title }}">
     <meta property="og:description" content="{{ .Site.Params.description }}">
     <meta property="og:image" content="{{ .Site.BaseURL }}assets/images/me.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="{{ .Site.BaseURL }}">
+    <meta property="twitter:url" content="{{ .Permalink }}">
     <meta property="twitter:title" content="{{ .Site.Title }}">
     <meta property="twitter:description" content="{{ .Site.Params.description }}">
     <meta property="twitter:image" content="{{ .Site.BaseURL }}assets/images/me.png">

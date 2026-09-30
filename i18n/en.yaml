@@ -1,0 +1,29 @@
+# 页面上的固定文案（段落标题等）。**两份语言文件必须键集相同**：
+# 项目级 i18n 会整体覆盖主题自带的 i18n/en.yaml，缺的键不会回退，会直接印出键名。
+# 加新键时记得 en.yaml 与 zh.yaml 一起加。
+
+- id: education
+  translation: Education
+- id: experiences
+  translation: Industry Experience
+- id: internships
+  translation: Earlier Internships
+- id: information
+  translation: Publications
+- id: interests
+  translation: Research Interests
+- id: software
+  translation: Software & Datasets
+- id: hobbies
+  translation: Hobby
+- id: awards
+  translation: Awards
+- id: projects
+  translation: Projects
+- id: skills
+  translation: Skills
+- id: languages
+  translation: Languages
+# information.html 里作者那行的前缀（中文学术惯例也用「作者」，所以两边不一样）
+- id: authors
+  translation: Authors

@@ -1,168 +1,530 @@
 # Page settings
 baseURL = "https://zeng-yirong.github.io/"
-languageCode = "en"
-title = "Hi, I'm Yirong"
 theme = "hugo-devresume-theme"
 publishDir = "docs"
 
-[params]
-    author = "Yirong Zeng"
-    description = "Yirong Zeng's Academic Resume"
+# ============================================================
+# 中英双语（2026-10-01 改造）
+#
+#   defaultContentLanguage = "en"  → 英文是默认语言，站点根 / 就是英文页
+#   defaultContentLanguageInSubdir = false → 英文不放进 /en/ 子目录，中文在 /zh/
+#
+# **内容的两棵树都写全**：`[languages.en.params]` 与 `[languages.zh.params]` 各自是一棵
+# 完整的 params 树，根上**不留** `[params]`。为什么不写成「根上放共用项、语言里只覆盖文字」
+# 那种省一半字的写法：Hugo 对**数组**（`[[…information.list]]` 这些）的合并语义在版本间
+# 不一致（覆盖还是追加说不准），一旦它变成追加，英文那 15 篇论文就会出现在中文页上。
+# 两棵写全 = 不依赖任何合并行为，两个页面完全可预期。
+# 代价：改内容要改两处，跟 CV/build/data/ 下那三份 YAML 是同一个套路、同一套纪律。
+#
+# 改完必须 `hugo --minify` 重建 docs/ 并提交——线上（zeng-yirong.github.io）服务的就是
+# 仓库里的 docs/ 目录，只改本文件不上线。
+#
+# 键集必须两边一致：段落开关（enable）、colors、结构。**文本**按语言各写各的。
+# ============================================================
 
-    primaryColor = "#2563eb"
-    textPrimaryColor = "#1e293b"
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
 
-    [params.profile]
-        enable = true
-        name = "Yirong Zeng (曾屹荣)"
-        tagline = "PhD Student"
-        avatar = "me.png"
+[languages]
 
-    [params.contact]
-        enable = true
-        location = "Harbin"
+# ------------------------------------------------------------
+# 英文（默认）
+# ------------------------------------------------------------
+[languages.en]
+    languageName = "English"
+    languageCode = "en"
+    title = "Hi, I'm Yirong"
+    weight = 1
 
-        [[params.contact.list]]
-        icon = "fas fa-envelope-square"
-        url = "mailto:yrzeng@ir.hit.edu.cn"
-        text = "Mail"
-        [[params.contact.list]]
-        icon = "fab fa-google"
-        url = "https://scholar.google.com/citations?user=HZgQfW0AAAAJ"
-        text = "Google Scholar"
+    [languages.en.params]
+        author = "Yirong Zeng"
+        description = "Yirong Zeng's Academic Resume"
+        primaryColor = "#2563eb"
+        textPrimaryColor = "#1e293b"
 
-    [params.skills]
-        enable = false
+        [languages.en.params.profile]
+            enable = true
+            name = "Yirong Zeng (曾屹荣)"
+            tagline = "Ph.D. Candidate · Agentic RL / Long-Horizon Agent Training"
+            avatar = "me.png"
 
-    [params.education]
-        enable = true
+        [languages.en.params.contact]
+            enable = true
+            location = "Harbin"
 
-        [[params.education.list]]
-        degree = "PhD - Computer Science"
-        university = "Harbin Institute of Technology"
-        dates = "2022 - Present"
-        [[params.education.list]]
-        degree = "Bachelor - Computer Science"
-        university = "Harbin Engineering University"
-        dates = "2018 - 2022"
+            [[languages.en.params.contact.list]]
+            icon = "fas fa-envelope-square"
+            url = "mailto:yrzeng@ir.hit.edu.cn"
+            text = "Mail"
+            [[languages.en.params.contact.list]]
+            icon = "fab fa-google"
+            url = "https://scholar.google.com/citations?user=HZgQfW0AAAAJ"
+            text = "Google Scholar"
 
-    [params.awards]
-        enable = false
+        [languages.en.params.summary]
+            enable = true
+            text = "I am a fifth-year Ph.D. student at Harbin Institute of Technology (advisor: Prof. Ting Liu), in the Research Center for Social Computing and Information Retrieval (SCIR). My research focuses on Agentic RL, Harness Agent training and instruction following for large language models. I have published 9 first-author (incl. co-first) papers at NeurIPS, ICLR, ACL, EMNLP, NAACL, COLING and IPM — 4 CCF-A, 4 CCF-B, 1 SCI-Q1 — with 6 more CCF-A papers under review. I was among the first batch of Huawei Xiaoyi Top-Talent Program interns, and served as the intern lead of the department."
 
-    [params.internships]
-        enable = true
+        [languages.en.params.education]
+            enable = true
 
-        [[params.internships.list]]
-        name = "2024.9-present Huawei Technologies Co., Ltd"
-        [[params.internships.list]]
-        name = "2023.7-2023.12 China Academy of Cyber"
-        [[params.internships.list]]
-        name = "2021.12-2022.5 NEC"
+            [[languages.en.params.education.list]]
+            degree = "Ph.D. - Computer Science"
+            university = "Harbin Institute of Technology"
+            dates = "2022.09 - 2027.09 (expected)"
+            [[languages.en.params.education.list]]
+            degree = "Bachelor - Computer Science"
+            university = "Harbin Engineering University"
+            dates = "2018.09 - 2022.07"
 
-    [params.hobbies]
-        enable = true
+        # 华为那段在主栏 Experience（详细，三组共 9 条），所以侧栏这里只留更早的两段，
+        # 不再重复一行 Huawei——两处都写会让人以为是两段经历。
+        [languages.en.params.internships]
+            enable = true
 
-        [[params.hobbies.list]]
-        name = "Skiing/Badminton"
+            [[languages.en.params.internships.list]]
+            name = "2023.7 - 2023.12  China Academy of Cyber"
+            [[languages.en.params.internships.list]]
+            name = "2021.12 - 2022.5  NEC"
 
-    [params.languages]
-        enable = false
+        [languages.en.params.interests]
+            enable = true
 
-    [params.interests]
-        enable = true
+            [[languages.en.params.interests.list]]
+            name = "Agentic RL (2024.09-)"
+            [[languages.en.params.interests.list]]
+            name = "Harness Agent Training (2024-)"
+            [[languages.en.params.interests.list]]
+            name = "Instruction Following (2025.06-)"
+            [[languages.en.params.interests.list]]
+            name = "Misinformation Detection (2022-2024)"
 
-        [[params.interests.list]]
-        name = "Tool Learning (2024-)"
-        [[params.interests.list]]
-        name = "Agentic RL (2024-)"
-        [[params.interests.list]]
-        name = "Instruction Following (2025-)"
-        [[params.interests.list]]
-        name = "Misinformation Detection (2022-2024)"
+        [languages.en.params.hobbies]
+            enable = true
 
-    [params.summary]
-        enable = true
-        text = "I'm a 4th Ph.D. student in Research Center for Social Computing and Information Retrieval (SCIR), at Harbin Institute of Technology (HIT, China). I am advised by Prof. Liu Ting. I obtained my bachelor degree in June 2022. My research interests include Tool Learning, Agentic RL, Instruction Following, misinformation detection."
+            [[languages.en.params.hobbies.list]]
+            name = "Skiing / Badminton"
 
-    [params.experience]
-        enable = false
+        # 主栏第一段：华为实习（本人 2026-10-01 要求展开）。
+        # 模板只支持「一段 = 一段 details + 一个扁平 <ul>」，所以三个分组用一条**只有粗体组名**
+        # 的条目当小标题（`**Agentic RL Algorithm R&D**`），模板会把它 markdownify 成 <em>。
+        [languages.en.params.experience]
+            enable = true
 
-    [params.projects]
-        enable = false
+            [[languages.en.params.experience.list]]
+            title = "AI Algorithm Engineer (Research Intern)"
+            company = "Huawei (Beijing) · Xiaoyi Foundation Algorithm Dept."
+            dates = "2024.09 - 2026.09"
+            details = "As a research intern, led the pioneer exploration of system-level training techniques for Xiaoyi's omni-modal large models: 12 research outcomes across Agentic RL, Harness Agent training and instruction following, 4 of which shipped in Xiaoyi's production business."
 
-    [params.information]
-        enable = true
+                [[languages.en.params.experience.list.items]]
+                details = "**Agentic RL Algorithm R&D**"
+                [[languages.en.params.experience.list.items]]
+                details = "Identified excessive invalid interactions in trajectories as a key cause of late-stage performance stagnation / collapse in long-horizon Agentic RL; improved training stability and the performance ceiling via early trajectory truncation + token masking 【**NeurIPS 2026**, ICLR 2027 under review】"
+                [[languages.en.params.experience.list.items]]
+                details = "Proposed a decoupled entropy-constraint strategy, letting the model adaptively switch between fast and slow thinking according to problem difficulty while using tools 【**AutoTool, ICLR 2026**】"
+                [[languages.en.params.experience.list.items]]
+                details = "Completed training adaptation for the Huawei Ascend NPU ecosystem; initial exploration of credit assignment for RL training feedback 【iTool EMNLP 2025; Tool Zero EMNLP 2025】"
 
-        [[params.information.list]]
-        title = "AutoTool: Automatic Scaling of Tool-Use Capabilities in RL via Decoupled Entropy Constraints."
-        name = "Yirong Zeng, Xiao Ding, Yufei Liu, Yuxian Wang, Qunyao Du, Yutai Hou, Wu Ning, Haonan Song, Duyu Tang, Dandan Tu, et al."
-        publisher = "ICLR 2026"
-        href = "https://iclr.cc/virtual/2026/poster/10006467"
-        details = ""
+                [[languages.en.params.experience.list.items]]
+                details = "**Harness Agent Training Pipeline**"
+                [[languages.en.params.experience.list.items]]
+                details = "Built an SFT data production pipeline yielding 20k+ samples covering 42 categories of Harness usage scenarios, supporting large-scale agent training data supply 【NeurIPS 2026】"
+                [[languages.en.params.experience.list.items]]
+                details = "Led the construction of 139 Agentic RL tool environments, supporting the business unit's pioneer Agentic RL exploration 【ICLR 2027 under review】"
+                [[languages.en.params.experience.list.items]]
+                details = "Designed a lightweight Harness supporting large-scale online In-Harness RL training: 8× lower training cost and 32% lower inference cost 【AAAI 2027 under review】"
 
-        [[params.information.list]]
-        title = "TinyJudge: Unverifiable Constraint Alignment via Lightweight Specialist Ensembles."
-        name = "Yirong Zeng, Yufei Liu, Xiao Ding, Yutai Hou, Yuxian Wang, Wu Ning, Haonan Song, Dandan Tu, Qixun Zhang, et al."
-        publisher = "ACL 2026"
-        href = "https://openreview.net/forum?id=YNAqD3eYPw&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3Daclweb.org%2FACL%2F2026%2FConference%2FAuthors%23your-submissions)"
-        details = ""
+                [[languages.en.params.experience.list.items]]
+                details = "**Instruction-Following Performance**"
+                [[languages.en.params.experience.list.items]]
+                details = "Found feedback-signal quality to be the key bottleneck of instruction following under RL; proposed density control under multiple constraints, raising the performance ceiling at low cost. Deployed to Xiaoyi's in-house model with dialogue satisfaction **81→89** 【ICLR 2027 under review】"
+                [[languages.en.params.experience.list.items]]
+                details = "A lightweight specialist ensemble to mitigate reward hacking in multi-constraint RL: +10% average performance, +12% reward precision, 3× training speed 【**TinyJudge, ACL 2026**】"
+                [[languages.en.params.experience.list.items]]
+                details = "Explored on-policy distillation (OPD) for instruction following: decoupled-aggregated correction of the teacher's distribution under multiple constraints, +4% performance 【ICLR 2027 under review】"
 
+        # 论文：9 篇已发表 + 6 篇在投，**顺序与 CV 一致**（已发表在前）。
+        # 标题/作者/venue 两个语言页都保持英文（学术惯例，中文页也不翻译标题）。
+        # 只有「在投」这个状态词按语言写：英文 | Under Review，中文 ｜ 在投。
+        # 作者的两种写法：本来就有的 7 条保留完整作者名单；新增的 8 条用 CV 里的缩写写法
+        # （CV 的 authors 字段就是这个形式）。要统一的话以 CV 为准。
+        [languages.en.params.information]
+            enable = true
 
-        [[params.information.list]]
-        title = "Precision over Diversity: High-Precision Reward Generalizes to Robust Instruction Following."
-        name = "Yirong Zeng, Yufei Liu, Xiao Ding, Yutai Hou, Yuxian Wang, Haonan Song, Wu Ning, Dandan Tu, Qixun Zhang, Bibo Cai, et al."
-        publisher = "arXiv 2026"
-        href = "https://arxiv.org/abs/2601.04954"
-        details = ""
+            [[languages.en.params.information.list]]
+            title = "Unveiling Entropy-Performance Decoupling in Agentic RL for Tool-Integrated Reasoning."
+            name = "Yirong Zeng, Shen You, et al."
+            publisher = "NeurIPS 2026 | CCF-A, First Author"
+            details = ""
+            [[languages.en.params.information.list]]
+            title = "ClawBenchPro: Benchmarking How Well Agent Harnesses Work."
+            name = "Yufei Liu*, Yirong Zeng* (co-first), et al."
+            publisher = "NeurIPS 2026 | CCF-A, Co-First Author"
+            details = ""
+            [[languages.en.params.information.list]]
+            title = "AutoTool: Automatic Scaling of Tool-Use Capabilities in RL via Decoupled Entropy Constraints."
+            name = "Yirong Zeng, Xiao Ding, Yufei Liu, Yuxian Wang, Qunyao Du, Yutai Hou, Wu Ning, Haonan Song, Duyu Tang, Dandan Tu, et al."
+            publisher = "ICLR 2026 | CCF-A, First Author"
+            href = "https://proceedings.iclr.cc/paper_files/paper/2026/hash/65ea878cb90b440e8b4cd34fe0959914-Abstract-Conference.html"
+            details = ""
+            [[languages.en.params.information.list]]
+            title = "TinyJudge: Unverifiable Constraint Alignment via Lightweight Specialist Ensembles."
+            name = "Yirong Zeng, Yufei Liu, Xiao Ding, Yutai Hou, Yuxian Wang, Wu Ning, Haonan Song, Dandan Tu, Qixun Zhang, et al."
+            publisher = "ACL 2026 | CCF-A, First Author"
+            href = "https://aclanthology.org/2026.acl-long.1204/"
+            details = ""
+            [[languages.en.params.information.list]]
+            title = "Tool Zero: Training Tool-Augmented LLMs via Pure RL from Scratch."
+            name = "Yirong Zeng, Xiao Ding, Yutai Hou, Yuxian Wang, Li Du, Juyi Dai, Qiuyang Ding, Duyu Tang, Dandan Tu, Weiwen Liu, Bing Qin, Ting Liu"
+            publisher = "EMNLP 2025 | Findings, CCF-B, First Author"
+            href = "https://aclanthology.org/2025.findings-emnlp.485/"
+            details = ""
+            [[languages.en.params.information.list]]
+            title = "iTool: Reinforced Fine-Tuning with Dynamic Deficiency Calibration for Advanced Tool Use."
+            name = "Yirong Zeng, Xiao Ding, Yuxian Wang, Weiwen Liu, Wu Ning, Xu Huang, Duyu Tang, Dandan Tu, Bing Qin, Ting Liu"
+            publisher = "EMNLP 2025 | Main, CCF-B, First Author"
+            href = "https://aclanthology.org/2025.emnlp-main.701/"
+            details = ""
+            [[languages.en.params.information.list]]
+            title = "Moderation Matters: Exploring Large Language Models for Effective Rumor Detection on Social Media."
+            name = "Yirong Zeng, Xiao Ding, Bibo Cai, Ting Liu and Bing Qin"
+            publisher = "NAACL 2025 | Main, CCF-B, First Author"
+            href = "https://aclanthology.org/2025.naacl-long.128.pdf"
+            details = ""
+            [[languages.en.params.information.list]]
+            title = "RU22Fact: Optimizing Evidence for Multilingual Explainable Fact-Checking on Russia-Ukraine Conflict."
+            name = "Yirong Zeng, Xiao Ding, Yi Zhao, Xiangyu Li, Jie Zhang, Chao Yao, Ting Liu and Bing Qin"
+            publisher = "COLING 2024 | CCF-B, First Author"
+            href = "https://aclanthology.org/2024.lrec-main.1239/"
+            details = ""
+            [[languages.en.params.information.list]]
+            title = "Human Cognitive Process Aligned Rumor Detection with Small Language Models Enhanced Large Language Models."
+            name = "Yirong Zeng, Xiao Ding, Bibo Cai, Bing Qin, Ting Liu"
+            publisher = "IPM 2026 | SCI-Q1, First Author"
+            href = "https://www.sciencedirect.com/science/article/pii/S0306457326000518"
+            details = ""
 
-        [[params.information.list]]
-        title = "iTool: Reinforced Fine-Tuning with Dynamic Deficiency Calibration for Advanced Tool Use."
-        name = "Yirong Zeng, Xiao Ding, Yuxian Wang, Weiwen Liu, Wu Ning, Xu Huang, Duyu Tang, Dandan Tu, Bing Qin, Ting Liu"
-        publisher = "EMNLP 2025 | Main"
-        href = "https://aclanthology.org/2025.emnlp-main.701.pdf"
-        details = ""
+            # ↓ 以下 6 篇在投（原先把 Precision 误列在已发表里，2026-10-01 归位）
+            [[languages.en.params.information.list]]
+            title = "Less Harness, More Signal: Efficient In-Harness RL for Autonomous Agents."
+            name = "Yufei Liu*, Yirong Zeng* (co-first), et al."
+            publisher = "AAAI 2027 | Under Review, CCF-A"
+            details = ""
+            [[languages.en.params.information.list]]
+            title = "Precision Bounds Diversity: Reward Engineering for Instruction Following via RLVR."
+            name = "Yirong Zeng, Yufei Liu, et al."
+            publisher = "ICLR 2027 | Under Review, CCF-A"
+            href = "https://arxiv.org/abs/2601.04954"
+            details = ""
+            [[languages.en.params.information.list]]
+            title = "EnvCraft: Synthesizing Executable Environments in Agentic RL for Claw-like Agent."
+            name = "Yirong Zeng, Shen You, et al."
+            publisher = "ICLR 2027 | Under Review, CCF-A"
+            href = "https://arxiv.org/abs/2609.05576"
+            details = ""
+            [[languages.en.params.information.list]]
+            title = "Constraint-Decoupled On-Policy Distillation for Multi-Constraint Instruction Following."
+            name = "Yirong Zeng, Weian Yu, et al."
+            publisher = "ICLR 2027 | Under Review, CCF-A"
+            details = ""
+            [[languages.en.params.information.list]]
+            title = "Not Every Tool Call Helps: Fine-Grained Credit Assignment for Efficient Tool-Integrated Reasoning."
+            name = "Shen You*, Yirong Zeng* (co-first), et al."
+            publisher = "ICLR 2027 | Under Review, CCF-A"
+            details = ""
+            [[languages.en.params.information.list]]
+            title = "Towards Scalable RLVR: Multimodal Instruction Following Data Synthesis and Distillation."
+            name = "Yirong Zeng, Sai Zhang, et al."
+            publisher = "ACL-ARR | Under Review, CCF-A"
+            href = "https://arxiv.org/abs/2609.16059"
+            details = ""
 
-        [[params.information.list]]
-        title = "Tool Zero: Training Tool-Augmented LLMs via Pure RL from Scratch."
-        name = "Yirong Zeng, Xiao Ding, Yutai Hou, Yuxian Wang, Li Du, Juyi Dai, Qiuyang Ding, Duyu Tang, Dandan Tu, Weiwen Liu, Bing Qin, Ting Liu"
-        publisher = "EMNLP 2025 | Finding"
-        href = "https://aclanthology.org/2025.findings-emnlp.485.pdf"
-        details = ""
+        # 开源：`title` 写「名称 — 一句话简介」，`name` 那行留作者（模板的图标是 fa-users，
+        # 是给作者名单用的），`meta` 是那颗彩色徽章（放 star 数/下载量）。
+        [languages.en.params.software]
+            enable = true
 
-        [[params.information.list]]
-        title = "Human Cognitive Process Aligned Rumor Detection with Small Language Models Enhanced Large Language Models."
-        name = "Yirong Zeng, Xiao Ding, Bibo Cai, Bing Qin, Ting Liu"
-        publisher = "Information Processing & Management 2026"
-        href = "https://www.sciencedirect.com/science/article/abs/pii/S0306457326000518"
-        details = ""
+            [[languages.en.params.software.list]]
+            title = "ClawLoop - Lightweight Harness & RL Training Framework"
+            name = "Yirong Zeng, et al."
+            meta = "⭐ 33 · GitHub"
+            href = "https://github.com/zeng-yirong/clawloop"
+            [[languages.en.params.software.list]]
+            title = "ClawForge (EnvCraft) - Agentic RL Environments, Training Code & Models"
+            name = "Yirong Zeng, et al."
+            meta = "⭐ 60 · GitHub"
+            href = "https://github.com/zeng-yirong/EnvCraft"
+            [[languages.en.params.software.list]]
+            title = "MIFS - Multimodal Instruction-Following Dataset"
+            name = "Yirong Zeng, et al."
+            meta = "11k+ downloads"
+            href = "https://modelscope.cn/datasets/asdqfad/MIFS"
+            [[languages.en.params.software.list]]
+            title = "Misinformation Detection - Real-time Rumor Identification & Evidence Tracing"
+            name = "Yirong Zeng, Juyi Dai, Shen You"
+            meta = "Demo System"
+            href = "https://huggingface.co/spaces/You-shen/React"
 
-        [[params.information.list]]
-        title = "Moderation Matters: Exploring Large Language Models for Effective Rumor Detection on Social Media."
-        name = "Yirong Zeng, Xiao Ding, Bibo Cai, Ting Liu and Bing Qin"
-        publisher = "NAACL 2025 | Main"
-        href = "https://aclanthology.org/2025.naacl-long.128.pdf"
-        details = ""
+        # 以下几段本人 2026-10-01 未勾选，保持关闭；数据留着，打开 enable 就能用
+        [languages.en.params.awards]
+            enable = false
+        [languages.en.params.projects]
+            enable = false
+        [languages.en.params.skills]
+            enable = false
+        [languages.en.params.languages]
+            enable = false
 
-        [[params.information.list]]
-        title = "RU22Fact: Optimizing Evidence for Multilingual Explainable Fact-Checking on Russia-Ukraine Conflict."
-        name = "Yirong Zeng, Xiao Ding, Yi Zhao, Xiangyu Li, Jie Zhang, Chao Yao, Ting Liu and Bing Qin"
-        publisher = "Coling 2024"
-        href = "https://aclanthology.org/2024.lrec-main.1239/"
-        details = ""
+        [languages.en.params.social]
+            enable = true
 
-    [params.software]
-        enable = true
+            [[languages.en.params.social.list]]
+            icon = "fab fa-github-square"
+            url = "https://github.com/zeng-yirong"
+            title = "zeng-yirong"
 
-        [[params.software.list]]
-        title = "Misinformation Detection"
-        name = "Yirong Zeng, Juyi Dai, Shen You"
-        meta = "Demo System"
-        href = "https://huggingface.co/spaces/You-shen/React"
+# ------------------------------------------------------------
+# 中文（/zh/）—— 内容与 CV/build/data/A-general.yaml 逐条对应
+# ------------------------------------------------------------
+[languages.zh]
+    languageName = "中文"
+    languageCode = "zh"
+    title = "曾屹荣 · 个人主页"
+    weight = 2
 
-    [params.social]
-        enable = true
+    [languages.zh.params]
+        author = "曾屹荣"
+        description = "曾屹荣的个人主页 · 哈尔滨工业大学博士生，研究方向为 Agentic RL 与 Harness Agent 训练"
+        primaryColor = "#2563eb"
+        textPrimaryColor = "#1e293b"
 
-        [[params.social.list]]
-        icon = "fab fa-github-square"
-        url = "https://github.com/zeng-yirong"
-        title = "zeng-yirong"
+        [languages.zh.params.profile]
+            enable = true
+            name = "曾屹荣 (Yirong Zeng)"
+            tagline = "博士候选人 · 智能体强化学习 / 长程 Agent 训练"
+            avatar = "me.png"
+
+        [languages.zh.params.contact]
+            enable = true
+            location = "哈尔滨"
+
+            [[languages.zh.params.contact.list]]
+            icon = "fas fa-envelope-square"
+            url = "mailto:yrzeng@ir.hit.edu.cn"
+            text = "邮件"
+            [[languages.zh.params.contact.list]]
+            icon = "fab fa-google"
+            url = "https://scholar.google.com/citations?user=HZgQfW0AAAAJ"
+            text = "谷歌学术"
+
+        [languages.zh.params.summary]
+            enable = true
+            text = "哈尔滨工业大学直博五年级（导师刘挺教授），社会计算与交互机器人研究中心（SCIR）。研究方向为大模型 Agentic RL、Harness Agent 训练与指令遵循。以第一作者（含共一）在 NeurIPS、ICLR、ACL、EMNLP、NAACL、COLING、IPM 等顶级会议/期刊发表论文 9 篇（CCF-A 4 篇、CCF-B 4 篇、SCI-Q1 1 篇），另有 6 篇 CCF-A 在投。华为小艺首批顶尖人才计划实习生、部门实习生领头人。"
+
+        [languages.zh.params.education]
+            enable = true
+
+            [[languages.zh.params.education.list]]
+            degree = "博士 - 计算机科学与技术"
+            university = "哈尔滨工业大学"
+            dates = "2022.09 - 2027.09（预计）"
+            [[languages.zh.params.education.list]]
+            degree = "本科 - 计算机科学与技术"
+            university = "哈尔滨工程大学"
+            dates = "2018.09 - 2022.07"
+
+        # 机构名保留英文原名：这两段的正式中文名没有权威来源，不去猜（NEC 本身就是英文名）
+        [languages.zh.params.internships]
+            enable = true
+
+            [[languages.zh.params.internships.list]]
+            name = "2023.7 - 2023.12  China Academy of Cyber"
+            [[languages.zh.params.internships.list]]
+            name = "2021.12 - 2022.5  NEC"
+
+        [languages.zh.params.interests]
+            enable = true
+
+            [[languages.zh.params.interests.list]]
+            name = "智能体强化学习（Agentic RL）(2024.09-)"
+            [[languages.zh.params.interests.list]]
+            name = "Harness Agent 训练 (2024-)"
+            [[languages.zh.params.interests.list]]
+            name = "指令遵循 (2025.06-)"
+            [[languages.zh.params.interests.list]]
+            name = "虚假信息检测 (2022-2024)"
+
+        [languages.zh.params.hobbies]
+            enable = true
+
+            [[languages.zh.params.hobbies.list]]
+            name = "滑雪 / 羽毛球"
+
+        [languages.zh.params.experience]
+            enable = true
+
+            [[languages.zh.params.experience.list]]
+            title = "AI 算法工程师（研究型实习生）"
+            company = "华为（北京）小艺 · 基础算法开发部"
+            dates = "2024.09 - 2026.09"
+            details = "作为研究型实习生，负责小艺的全模态大模型系统训练技术的先导探索：在 Agentic RL、Harness Agent 训练、指令遵循方向产出 12 项研究成果，其中 4 项落地小艺业务。"
+
+                [[languages.zh.params.experience.list.items]]
+                details = "**Agentic RL 算法研发**"
+                [[languages.zh.params.experience.list.items]]
+                details = "发现长程 Agentic RL 训练后期性能停滞/崩溃的一个关键原因是轨迹中的大量无效交互，通过提前截断轨迹 + token 掩码提升训练稳定性与上限【**NeurIPS 2026**, ICLR 2027 在投】"
+                [[languages.zh.params.experience.list.items]]
+                details = "提出解耦熵约束策略，实现大模型使用工具时依据问题复杂度自适应调整快慢思考模式【**AutoTool, ICLR 2026**】"
+                [[languages.zh.params.experience.list.items]]
+                details = "完成华为昇腾生态训练适配，初步探索 RL 训练反馈信用分配机制【iTool EMNLP 2025；Tool Zero EMNLP 2025】"
+
+                [[languages.zh.params.experience.list.items]]
+                details = "**Harness Agent 训练体系搭建**"
+                [[languages.zh.params.experience.list.items]]
+                details = "构建 SFT 数据生产流水线，产出 2+ 万条数据、覆盖 42 类 Harness 使用场景，支撑大规模 Agent 训练数据供给【NeurIPS 2026】"
+                [[languages.zh.params.experience.list.items]]
+                details = "主导搭建 139 个 Agentic RL Tool 环境，支撑业务 Agentic RL 先导探索【ICLR 2027 在投】"
+                [[languages.zh.params.experience.list.items]]
+                details = "设计轻量化 Harness，支撑大规模在线 In-Harness RL 训练，训练资源开销减少 8 倍、推理开销减少 32%【AAAI 2027 在投】"
+
+                [[languages.zh.params.experience.list.items]]
+                details = "**Agent 指令遵循性能提升**"
+                [[languages.zh.params.experience.list.items]]
+                details = "发现 RL 影响指令遵从能力的关键瓶颈是反馈信号质量，提出多约束下的密度控制，低成本提升指令遵从性能上限，落地小艺自研模型，对话满意度 **81→89**【ICLR 2027 在投】"
+                [[languages.zh.params.experience.list.items]]
+                details = "轻量专家集成方法缓解多约束场景下强化学习的 reward hack 问题：平均性能 +10%、奖励精度 +12%、训练速度 3×【**TinyJudge, ACL 2026**】"
+                [[languages.zh.params.experience.list.items]]
+                details = "探索在线策略蒸馏（OPD）在指令遵从中的应用，解耦-聚合修正教师在多约束下的分布，性能 +4%【ICLR 2027 在投】"
+
+        # 标题/作者/venue 与英文页**完全一致**（学术惯例不译标题），只有状态词用中文
+        [languages.zh.params.information]
+            enable = true
+
+            [[languages.zh.params.information.list]]
+            title = "Unveiling Entropy-Performance Decoupling in Agentic RL for Tool-Integrated Reasoning."
+            name = "Yirong Zeng, Shen You, et al."
+            publisher = "NeurIPS 2026 ｜ CCF-A，一作"
+            details = ""
+            [[languages.zh.params.information.list]]
+            title = "ClawBenchPro: Benchmarking How Well Agent Harnesses Work."
+            name = "Yufei Liu*, Yirong Zeng* (co-first), et al."
+            publisher = "NeurIPS 2026 ｜ CCF-A，共一"
+            details = ""
+            [[languages.zh.params.information.list]]
+            title = "AutoTool: Automatic Scaling of Tool-Use Capabilities in RL via Decoupled Entropy Constraints."
+            name = "Yirong Zeng, Xiao Ding, Yufei Liu, Yuxian Wang, Qunyao Du, Yutai Hou, Wu Ning, Haonan Song, Duyu Tang, Dandan Tu, et al."
+            publisher = "ICLR 2026 ｜ CCF-A，一作"
+            href = "https://proceedings.iclr.cc/paper_files/paper/2026/hash/65ea878cb90b440e8b4cd34fe0959914-Abstract-Conference.html"
+            details = ""
+            [[languages.zh.params.information.list]]
+            title = "TinyJudge: Unverifiable Constraint Alignment via Lightweight Specialist Ensembles."
+            name = "Yirong Zeng, Yufei Liu, Xiao Ding, Yutai Hou, Yuxian Wang, Wu Ning, Haonan Song, Dandan Tu, Qixun Zhang, et al."
+            publisher = "ACL 2026 ｜ CCF-A，一作"
+            href = "https://aclanthology.org/2026.acl-long.1204/"
+            details = ""
+            [[languages.zh.params.information.list]]
+            title = "Tool Zero: Training Tool-Augmented LLMs via Pure RL from Scratch."
+            name = "Yirong Zeng, Xiao Ding, Yutai Hou, Yuxian Wang, Li Du, Juyi Dai, Qiuyang Ding, Duyu Tang, Dandan Tu, Weiwen Liu, Bing Qin, Ting Liu"
+            publisher = "EMNLP 2025 ｜ Findings，CCF-B，一作"
+            href = "https://aclanthology.org/2025.findings-emnlp.485/"
+            details = ""
+            [[languages.zh.params.information.list]]
+            title = "iTool: Reinforced Fine-Tuning with Dynamic Deficiency Calibration for Advanced Tool Use."
+            name = "Yirong Zeng, Xiao Ding, Yuxian Wang, Weiwen Liu, Wu Ning, Xu Huang, Duyu Tang, Dandan Tu, Bing Qin, Ting Liu"
+            publisher = "EMNLP 2025 ｜ Main，CCF-B，一作"
+            href = "https://aclanthology.org/2025.emnlp-main.701/"
+            details = ""
+            [[languages.zh.params.information.list]]
+            title = "Moderation Matters: Exploring Large Language Models for Effective Rumor Detection on Social Media."
+            name = "Yirong Zeng, Xiao Ding, Bibo Cai, Ting Liu and Bing Qin"
+            publisher = "NAACL 2025 ｜ Main，CCF-B，一作"
+            href = "https://aclanthology.org/2025.naacl-long.128.pdf"
+            details = ""
+            [[languages.zh.params.information.list]]
+            title = "RU22Fact: Optimizing Evidence for Multilingual Explainable Fact-Checking on Russia-Ukraine Conflict."
+            name = "Yirong Zeng, Xiao Ding, Yi Zhao, Xiangyu Li, Jie Zhang, Chao Yao, Ting Liu and Bing Qin"
+            publisher = "COLING 2024 ｜ CCF-B，一作"
+            href = "https://aclanthology.org/2024.lrec-main.1239/"
+            details = ""
+            [[languages.zh.params.information.list]]
+            title = "Human Cognitive Process Aligned Rumor Detection with Small Language Models Enhanced Large Language Models."
+            name = "Yirong Zeng, Xiao Ding, Bibo Cai, Bing Qin, Ting Liu"
+            publisher = "IPM 2026 ｜ SCI-Q1，一作"
+            href = "https://www.sciencedirect.com/science/article/pii/S0306457326000518"
+            details = ""
+
+            [[languages.zh.params.information.list]]
+            title = "Less Harness, More Signal: Efficient In-Harness RL for Autonomous Agents."
+            name = "Yufei Liu*, Yirong Zeng* (co-first), et al."
+            publisher = "AAAI 2027 ｜ 在投，CCF-A"
+            details = ""
+            [[languages.zh.params.information.list]]
+            title = "Precision Bounds Diversity: Reward Engineering for Instruction Following via RLVR."
+            name = "Yirong Zeng, Yufei Liu, et al."
+            publisher = "ICLR 2027 ｜ 在投，CCF-A"
+            href = "https://arxiv.org/abs/2601.04954"
+            details = ""
+            [[languages.zh.params.information.list]]
+            title = "EnvCraft: Synthesizing Executable Environments in Agentic RL for Claw-like Agent."
+            name = "Yirong Zeng, Shen You, et al."
+            publisher = "ICLR 2027 ｜ 在投，CCF-A"
+            href = "https://arxiv.org/abs/2609.05576"
+            details = ""
+            [[languages.zh.params.information.list]]
+            title = "Constraint-Decoupled On-Policy Distillation for Multi-Constraint Instruction Following."
+            name = "Yirong Zeng, Weian Yu, et al."
+            publisher = "ICLR 2027 ｜ 在投，CCF-A"
+            details = ""
+            [[languages.zh.params.information.list]]
+            title = "Not Every Tool Call Helps: Fine-Grained Credit Assignment for Efficient Tool-Integrated Reasoning."
+            name = "Shen You*, Yirong Zeng* (co-first), et al."
+            publisher = "ICLR 2027 ｜ 在投，CCF-A"
+            details = ""
+            [[languages.zh.params.information.list]]
+            title = "Towards Scalable RLVR: Multimodal Instruction Following Data Synthesis and Distillation."
+            name = "Yirong Zeng, Sai Zhang, et al."
+            publisher = "ACL-ARR ｜ 在投，CCF-A"
+            href = "https://arxiv.org/abs/2609.16059"
+            details = ""
+
+        [languages.zh.params.software]
+            enable = true
+
+            [[languages.zh.params.software.list]]
+            title = "ClawLoop —— 轻量化 Harness 与 RL 训练框架"
+            name = "曾屹荣 等"
+            meta = "⭐ 33 · GitHub"
+            href = "https://github.com/zeng-yirong/clawloop"
+            [[languages.zh.params.software.list]]
+            title = "ClawForge (EnvCraft) —— Agentic RL 交互环境、训练代码与模型"
+            name = "曾屹荣 等"
+            meta = "⭐ 60 · GitHub"
+            href = "https://github.com/zeng-yirong/EnvCraft"
+            [[languages.zh.params.software.list]]
+            title = "MIFS —— 多模态指令遵循数据集"
+            name = "曾屹荣 等"
+            meta = "11k+ downloads"
+            href = "https://modelscope.cn/datasets/asdqfad/MIFS"
+            [[languages.zh.params.software.list]]
+            title = "虚假信息检测 —— 实时谣言识别与证据溯源"
+            name = "Yirong Zeng, Juyi Dai, Shen You"
+            meta = "Demo System"
+            href = "https://huggingface.co/spaces/You-shen/React"
+
+        [languages.zh.params.awards]
+            enable = false
+        [languages.zh.params.projects]
+            enable = false
+        [languages.zh.params.skills]
+            enable = false
+        [languages.zh.params.languages]
+            enable = false
+
+        [languages.zh.params.social]
+            enable = true
+
+            [[languages.zh.params.social.list]]
+            icon = "fab fa-github-square"
+            url = "https://github.com/zeng-yirong"
+            title = "zeng-yirong"

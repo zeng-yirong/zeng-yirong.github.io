@@ -1,0 +1,26 @@
+# 中文页面的固定文案。键集必须与 i18n/en.yaml 完全一致（见那份文件的注释）。
+
+- id: education
+  translation: 教育背景
+- id: experiences
+  translation: 业界经历
+- id: internships
+  translation: 早期实习
+- id: information
+  translation: 发表论文
+- id: interests
+  translation: 研究方向
+- id: software
+  translation: 开源项目与数据集
+- id: hobbies
+  translation: 兴趣爱好
+- id: awards
+  translation: 荣誉奖项
+- id: projects
+  translation: 项目经历
+- id: skills
+  translation: 技能
+- id: languages
+  translation: 语言
+- id: authors
+  translation: 作者
