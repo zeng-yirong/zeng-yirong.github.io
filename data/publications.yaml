@@ -1,0 +1,116 @@
+# ==========================================================
+# 论文（已发表在前，顺序与 CV 一致）
+#
+# 自动生成，请勿手改 —— 改 CV/build/data/A-general.yaml 里的源数据后跑
+#     python scripts/sync-homepage.py
+# 本文件会被整个覆盖。
+# 标题 / 作者 / venue 两个语言页共用（学术惯例不译标题），
+# 只有徽章措辞按语言各一份：badge.en / badge.zh。
+#
+# 三处对 CV 的规整（都在 sync-homepage.py 顶上写着）：
+#   标题补结尾句点（CV 不带、主页带）
+#   作者行的「（共一）」写成 ASCII 的 (co-first)
+#   7 篇的完整作者名单来自 scripts/homepage-en.yaml —— CV 的 authors 是缩写式，
+#   直接用会把名单截短
+# ==========================================================
+
+
+- title: "Unveiling Entropy-Performance Decoupling in Agentic RL for Tool-Integrated Reasoning."
+  authors: "Yirong Zeng, Shen You, et al."
+  badge:
+    en: "NeurIPS 2026 | CCF-A, First Author"
+    zh: "NeurIPS 2026 ｜ CCF-A，一作"
+
+- title: "ClawBenchPro: Benchmarking How Well Agent Harnesses Work."
+  authors: "Yufei Liu*, Yirong Zeng* (co-first), et al."
+  badge:
+    en: "NeurIPS 2026 | CCF-A, Co-First Author"
+    zh: "NeurIPS 2026 ｜ CCF-A，共一"
+
+- title: "AutoTool: Automatic Scaling of Tool-Use Capabilities in RL via Decoupled Entropy Constraints."
+  authors: "Yirong Zeng, Xiao Ding, Yufei Liu, Yuxian Wang, Qunyao Du, Yutai Hou, Wu Ning, Haonan Song, Duyu Tang, Dandan Tu, et al."
+  badge:
+    en: "ICLR 2026 | CCF-A, First Author"
+    zh: "ICLR 2026 ｜ CCF-A，一作"
+  href: "https://proceedings.iclr.cc/paper_files/paper/2026/hash/65ea878cb90b440e8b4cd34fe0959914-Abstract-Conference.html"
+
+- title: "TinyJudge: Unverifiable Constraint Alignment via Lightweight Specialist Ensembles."
+  authors: "Yirong Zeng, Yufei Liu, Xiao Ding, Yutai Hou, Yuxian Wang, Wu Ning, Haonan Song, Dandan Tu, Qixun Zhang, et al."
+  badge:
+    en: "ACL 2026 | CCF-A, First Author"
+    zh: "ACL 2026 ｜ CCF-A，一作"
+  href: "https://aclanthology.org/2026.acl-long.1204/"
+
+- title: "Tool Zero: Training Tool-Augmented LLMs via Pure RL from Scratch."
+  authors: "Yirong Zeng, Xiao Ding, Yutai Hou, Yuxian Wang, Li Du, Juyi Dai, Qiuyang Ding, Duyu Tang, Dandan Tu, Weiwen Liu, Bing Qin, Ting Liu"
+  badge:
+    en: "EMNLP 2025 | Findings, CCF-B, First Author"
+    zh: "EMNLP 2025 ｜ Findings，CCF-B，一作"
+  href: "https://aclanthology.org/2025.findings-emnlp.485/"
+
+- title: "iTool: Reinforced Fine-Tuning with Dynamic Deficiency Calibration for Advanced Tool Use."
+  authors: "Yirong Zeng, Xiao Ding, Yuxian Wang, Weiwen Liu, Wu Ning, Xu Huang, Duyu Tang, Dandan Tu, Bing Qin, Ting Liu"
+  badge:
+    en: "EMNLP 2025 | Main, CCF-B, First Author"
+    zh: "EMNLP 2025 ｜ Main，CCF-B，一作"
+  href: "https://aclanthology.org/2025.emnlp-main.701/"
+
+- title: "Moderation Matters: Exploring Large Language Models for Effective Rumor Detection on Social Media."
+  authors: "Yirong Zeng, Xiao Ding, Bibo Cai, Ting Liu and Bing Qin"
+  badge:
+    en: "NAACL 2025 | Main, CCF-B, First Author"
+    zh: "NAACL 2025 ｜ Main，CCF-B，一作"
+  href: "https://aclanthology.org/2025.naacl-long.128.pdf"
+
+- title: "RU22Fact: Optimizing Evidence for Multilingual Explainable Fact-Checking on Russia-Ukraine Conflict."
+  authors: "Yirong Zeng, Xiao Ding, Yi Zhao, Xiangyu Li, Jie Zhang, Chao Yao, Ting Liu and Bing Qin"
+  badge:
+    en: "COLING 2024 | CCF-B, First Author"
+    zh: "COLING 2024 ｜ CCF-B，一作"
+  href: "https://aclanthology.org/2024.lrec-main.1239/"
+
+- title: "Human Cognitive Process Aligned Rumor Detection with Small Language Models Enhanced Large Language Models."
+  authors: "Yirong Zeng, Xiao Ding, Bibo Cai, Bing Qin, Ting Liu"
+  badge:
+    en: "IPM 2026 | SCI-Q1, First Author"
+    zh: "IPM 2026 ｜ SCI-Q1，一作"
+  href: "https://www.sciencedirect.com/science/article/pii/S0306457326000518"
+
+- title: "Less Harness, More Signal: Efficient In-Harness RL for Autonomous Agents."
+  authors: "Yufei Liu*, Yirong Zeng* (co-first), et al."
+  badge:
+    en: "AAAI 2027 | Under Review, CCF-A"
+    zh: "AAAI 2027 ｜ 在投，CCF-A"
+
+- title: "Precision Bounds Diversity: Reward Engineering for Instruction Following via RLVR."
+  authors: "Yirong Zeng, Yufei Liu, et al."
+  badge:
+    en: "ICLR 2027 | Under Review, CCF-A"
+    zh: "ICLR 2027 ｜ 在投，CCF-A"
+  href: "https://arxiv.org/abs/2601.04954"
+
+- title: "EnvCraft: Synthesizing Executable Environments in Agentic RL for Claw-like Agent."
+  authors: "Yirong Zeng, Shen You, et al."
+  badge:
+    en: "ICLR 2027 | Under Review, CCF-A"
+    zh: "ICLR 2027 ｜ 在投，CCF-A"
+  href: "https://arxiv.org/abs/2609.05576"
+
+- title: "Constraint-Decoupled On-Policy Distillation for Multi-Constraint Instruction Following."
+  authors: "Yirong Zeng, Weian Yu, et al."
+  badge:
+    en: "ICLR 2027 | Under Review, CCF-A"
+    zh: "ICLR 2027 ｜ 在投，CCF-A"
+
+- title: "Not Every Tool Call Helps: Fine-Grained Credit Assignment for Efficient Tool-Integrated Reasoning."
+  authors: "Shen You*, Yirong Zeng* (co-first), et al."
+  badge:
+    en: "ICLR 2027 | Under Review, CCF-A"
+    zh: "ICLR 2027 ｜ 在投，CCF-A"
+
+- title: "Towards Scalable RLVR: Multimodal Instruction Following Data Synthesis and Distillation."
+  authors: "Yirong Zeng, Sai Zhang, et al."
+  badge:
+    en: "ACL-ARR | Under Review, CCF-A"
+    zh: "ACL-ARR ｜ 在投，CCF-A"
+  href: "https://arxiv.org/abs/2609.16059"

@@ -1,0 +1,82 @@
+# ============================================================
+# 主页英文文案（手工维护）—— sync-homepage.py 的输入之一
+#
+# 为什么需要这个文件：CV/build/data/*.yaml 全是中文，主页的英文版是**译文**，
+#   没有哪份数据能推出它来。所以事实（标题/作者/venue/链接/时间/数字）由脚本从
+#   CV 生成，**译文**放在这里手工维护。
+#
+# 脚本只读不写本文件：改英文措辞直接改这里，然后跑
+#     python scripts/sync-homepage.py
+# 重新生成 data/ 下的产物。
+#
+# 键的约定：凡是按「CV 里的中文名」索引的地方（experience.groups、software），
+#   键必须与 CV 里的写法**逐字相同**。对不上时脚本会报错并列出没匹配上的键，
+#   不会静默丢掉内容。
+# ============================================================
+
+# 华为实习（主栏 Experience）。中文侧由脚本从 CV 生成，这里只提供英文。
+experience:
+  title: "AI Algorithm Engineer (Research Intern)"
+  company: "Huawei (Beijing) · Xiaoyi Foundation Algorithm Dept."
+  details: >-
+    As a research intern, led the pioneer exploration of system-level training
+    techniques for Xiaoyi's omni-modal large models: 12 research outcomes across
+    Agentic RL, Harness Agent training and instruction following, 4 of which
+    shipped in Xiaoyi's production business.
+  # 键 = CV internship.groups[].title（中文组名）。数组顺序 = 该组的条目顺序，
+  # 与 CV 里的 items 一一对应（条数对不上时脚本报错）。
+  groups:
+    "Agentic RL 算法研发":
+      title: "Agentic RL Algorithm R&D"
+      items:
+        - "Identified excessive invalid interactions in trajectories as a key cause of late-stage performance stagnation / collapse in long-horizon Agentic RL; improved training stability and the performance ceiling via early trajectory truncation + token masking 【**NeurIPS 2026**, ICLR 2027 under review】"
+        - "Proposed a decoupled entropy-constraint strategy, letting the model adaptively switch between fast and slow thinking according to problem difficulty while using tools 【**AutoTool, ICLR 2026**】"
+        - "Completed training adaptation for the Huawei Ascend NPU ecosystem; initial exploration of credit assignment for RL training feedback 【iTool EMNLP 2025; Tool Zero EMNLP 2025】"
+    "Harness Agent 训练体系搭建":
+      title: "Harness Agent Training Pipeline"
+      items:
+        - "Built an SFT data production pipeline yielding 20k+ samples covering 42 categories of Harness usage scenarios, supporting large-scale agent training data supply 【NeurIPS 2026】"
+        - "Led the construction of 139 Agentic RL tool environments, supporting the business unit's pioneer Agentic RL exploration 【ICLR 2027 under review】"
+        - "Designed a lightweight Harness supporting large-scale online In-Harness RL training: 8× lower training cost and 32% lower inference cost 【AAAI 2027 under review】"
+    "Agent 指令遵循性能提升":
+      title: "Instruction-Following Performance"
+      items:
+        - "Found feedback-signal quality to be the key bottleneck of instruction following under RL; proposed density control under multiple constraints, raising the performance ceiling at low cost. Deployed to Xiaoyi's in-house model with dialogue satisfaction **81→89** 【ICLR 2027 under review】"
+        - "A lightweight specialist ensemble to mitigate reward hacking in multi-constraint RL: +10% average performance, +12% reward precision, 3× training speed 【**TinyJudge, ACL 2026**】"
+        - "Explored on-policy distillation (OPD) for instruction following: decoupled-aggregated correction of the teacher's distribution under multiple constraints, +4% performance 【ICLR 2027 under review】"
+
+# 开源/数据集。键 = CV opensource[].name（逐字相同）。
+# 英文标题按 "{name} - {desc}" 拼、中文按 "{name} —— {desc}" 拼，所以这里只给英文 desc。
+software:
+  "ClawLoop":
+    desc: "Lightweight Harness & RL Training Framework"
+  "ClawForge (EnvCraft)":
+    desc: "Agentic RL Environments, Training Code & Models"
+  "MIFS":
+    desc: "Multimodal Instruction-Following Dataset"
+
+# ------------------------------------------------------------
+# 论文作者名单：**完整版**（键 = 论文标题的开头，能唯一认出来就行）
+#
+# 为什么需要：CV 的 authors 字段是缩写式（"Yirong Zeng, Xiao Ding, et al."），
+#   主页这 7 篇一直显示的是**完整名单**。直接从 CV 生成会把名单截短、丢掉信息，
+#   所以这 7 篇的完整名单写在这里覆盖 CV 的值。两个语言页用的是同一份（不变）。
+#
+# CV 里剩下一半论文本来就是缩写式，主页也是缩写式，那些不用列在这里。
+# 列在这里的开头如果匹配不到任何论文，脚本会报错。
+# ------------------------------------------------------------
+authors:
+  "AutoTool":
+    "Yirong Zeng, Xiao Ding, Yufei Liu, Yuxian Wang, Qunyao Du, Yutai Hou, Wu Ning, Haonan Song, Duyu Tang, Dandan Tu, et al."
+  "TinyJudge":
+    "Yirong Zeng, Yufei Liu, Xiao Ding, Yutai Hou, Yuxian Wang, Wu Ning, Haonan Song, Dandan Tu, Qixun Zhang, et al."
+  "Tool Zero":
+    "Yirong Zeng, Xiao Ding, Yutai Hou, Yuxian Wang, Li Du, Juyi Dai, Qiuyang Ding, Duyu Tang, Dandan Tu, Weiwen Liu, Bing Qin, Ting Liu"
+  "iTool":
+    "Yirong Zeng, Xiao Ding, Yuxian Wang, Weiwen Liu, Wu Ning, Xu Huang, Duyu Tang, Dandan Tu, Bing Qin, Ting Liu"
+  "Moderation Matters":
+    "Yirong Zeng, Xiao Ding, Bibo Cai, Ting Liu and Bing Qin"
+  "RU22Fact":
+    "Yirong Zeng, Xiao Ding, Yi Zhao, Xiangyu Li, Jie Zhang, Chao Yao, Ting Liu and Bing Qin"
+  "Human Cognitive Process":
+    "Yirong Zeng, Xiao Ding, Bibo Cai, Bing Qin, Ting Liu"

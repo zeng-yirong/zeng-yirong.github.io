@@ -1,0 +1,30 @@
+# ==========================================================
+# 华为实习（主栏 Experience）
+#
+# 自动生成，请勿手改 —— 改 CV/build/data/A-general.yaml 里的源数据后跑
+#     python scripts/sync-homepage.py
+# 本文件会被整个覆盖。
+# 中文 侧全部从 CV 生成。
+#
+# 三个分组在 CV 里是 internship.groups，主页模板只支持「一段 details +
+# 一个扁平 <ul>」，所以每组用一条**只有粗体组名**的条目当小标题（模板会 markdownify 成 <em>）。
+# ==========================================================
+
+
+- title: "AI 算法工程师（研究型实习生）"
+  company: "华为（北京）小艺 · 基础算法开发部"
+  dates: "2024.09 - 2026.09"
+  details: "作为研究型实习生，负责小艺的全模态大模型系统训练技术的先导探索：在 Agentic RL、Harness Agent 训练、指令遵循方向产出 12 项研究成果，其中 4 项落地小艺业务。"
+  items:
+    - details: "**Agentic RL 算法研发**"
+    - details: "发现长程 Agentic RL 训练后期性能停滞/崩溃的一个关键原因是轨迹中的大量无效交互，通过提前截断轨迹 + token 掩码提升训练稳定性与上限【**NeurIPS 2026**, ICLR2027 在投】"
+    - details: "提出解耦熵约束策略，实现大模型使用工具时依据问题复杂度自适应调整快慢思考模式 【**AutoTool, ICLR 2026**】"
+    - details: "完成华为昇腾生态训练适配，初步探索 RL 训练反馈信用分配机制【iTool EMNLP 2025；Tool Zero EMNLP 2025】"
+    - details: "**Harness Agent 训练体系搭建**"
+    - details: "构建 SFT 数据生产流水线，产出 2+ 万条数据、覆盖 42 类 Harness 使用场景，支撑大规模 Agent 训练数据供给【NeurIPS 2026】"
+    - details: "主导搭建 139 个 Agentic RL Tool 环境，支撑业务 Agentic RL 先导探索【ICLR 2027 在投】"
+    - details: "设计轻量化 Harness，支撑大规模在线 In-Harness RL 训练，训练资源开销减少 8 倍、推理开销减少 32%【AAAI 2027 在投】"
+    - details: "**Agent 指令遵循性能提升**"
+    - details: "发现 RL 影响指令遵从能力的关键瓶颈是反馈信号质量，提出多约束下的密度控制，低成本提升指令遵从性能上限，落地小艺自研模型，对话满意度 **81→89**【ICLR 2027 在投】"
+    - details: "轻量专家集成方法缓解多约束场景下强化学习的 reward hack 问题：平均性能 +10%、奖励精度 +12%、训练速度 3× 【**TinyJudge, ACL 2026**】"
+    - details: "探索在线策略蒸馏（OPD）在指令遵从中的应用，解耦-聚合修正教师在多约束下的分布，性能 +4%【ICLR 2027 在投】"

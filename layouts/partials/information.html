@@ -3,21 +3,23 @@
 
                                 <h3 class="text-uppercase resume-section-heading mb-4">{{ i18n "information" }}</h3>
 
-                                {{ range .Site.Params.information.list }}
+                                {{/* 数据来自 data/publications.yaml（由 scripts/sync-homepage.py 从 CV 生成）。
+                                     标题/作者/venue 两语言共用，只有徽章按语言取 badge.en / badge.zh。 */}}
+                                {{ range .Site.Data.publications }}
                                 <div class="information-item">
                                     <div class="paper-title mb-2">
                                         {{ .title }}
                                     </div>
                                     <div class="paper-authors mb-2">
-                                        <strong>{{ i18n "authors" }}:</strong> {{ .name }}
+                                        <strong>{{ i18n "authors" }}:</strong> {{ .authors }}
                                     </div>
                                     <div>
                                         {{ if .href }}
                                         <a href="{{ .href }}" target="_blank" rel="noopener" class="paper-venue">
-                                            {{ .publisher }}
+                                            {{ index .badge $.Site.Language.Lang }}
                                         </a>
                                         {{ else }}
-                                        <span class="paper-venue">{{ .publisher }}</span>
+                                        <span class="paper-venue">{{ index .badge $.Site.Language.Lang }}</span>
                                         {{ end }}
                                     </div>
                                 </div><!--//information-item-->

@@ -6,7 +6,14 @@ hugo
 
 # Hugo build output (not applicable since we commit docs/, but good for reference)
 /public/
-/resources/_gen/
+
+# 注意 `**/`：gitignore 里带斜杠的模式是锚定到本文件所在目录的，
+# 写成 `resources/_gen/` 只匹配根目录那份，匹配不到 themes/*/resources/_gen/。
+**/resources/_gen/
+
+# Hugo 的构建锁与资源缓存。这两个曾被跟踪（gitignore 对已跟踪文件无效，
+# 得有 git rm --cached 才行），2026-10-01 已从索引摘掉。每次重建都会改动它们，别再提交。
+.hugo_build.lock
 /assets/jsconfig.json
 hugo_stats.json
 

@@ -1,0 +1,30 @@
+# ==========================================================
+# 华为实习（主栏 Experience）
+#
+# 自动生成，请勿手改 —— 改 CV/build/data/A-general.yaml 里的源数据后跑
+#     python scripts/sync-homepage.py
+# 本文件会被整个覆盖。
+# 英文 侧结构从 CV 生成、文案来自 scripts/homepage-en.yaml。
+#
+# 三个分组在 CV 里是 internship.groups，主页模板只支持「一段 details +
+# 一个扁平 <ul>」，所以每组用一条**只有粗体组名**的条目当小标题（模板会 markdownify 成 <em>）。
+# ==========================================================
+
+
+- title: "AI Algorithm Engineer (Research Intern)"
+  company: "Huawei (Beijing) · Xiaoyi Foundation Algorithm Dept."
+  dates: "2024.09 - 2026.09"
+  details: "As a research intern, led the pioneer exploration of system-level training techniques for Xiaoyi's omni-modal large models: 12 research outcomes across Agentic RL, Harness Agent training and instruction following, 4 of which shipped in Xiaoyi's production business."
+  items:
+    - details: "**Agentic RL Algorithm R&D**"
+    - details: "Identified excessive invalid interactions in trajectories as a key cause of late-stage performance stagnation / collapse in long-horizon Agentic RL; improved training stability and the performance ceiling via early trajectory truncation + token masking 【**NeurIPS 2026**, ICLR 2027 under review】"
+    - details: "Proposed a decoupled entropy-constraint strategy, letting the model adaptively switch between fast and slow thinking according to problem difficulty while using tools 【**AutoTool, ICLR 2026**】"
+    - details: "Completed training adaptation for the Huawei Ascend NPU ecosystem; initial exploration of credit assignment for RL training feedback 【iTool EMNLP 2025; Tool Zero EMNLP 2025】"
+    - details: "**Harness Agent Training Pipeline**"
+    - details: "Built an SFT data production pipeline yielding 20k+ samples covering 42 categories of Harness usage scenarios, supporting large-scale agent training data supply 【NeurIPS 2026】"
+    - details: "Led the construction of 139 Agentic RL tool environments, supporting the business unit's pioneer Agentic RL exploration 【ICLR 2027 under review】"
+    - details: "Designed a lightweight Harness supporting large-scale online In-Harness RL training: 8× lower training cost and 32% lower inference cost 【AAAI 2027 under review】"
+    - details: "**Instruction-Following Performance**"
+    - details: "Found feedback-signal quality to be the key bottleneck of instruction following under RL; proposed density control under multiple constraints, raising the performance ceiling at low cost. Deployed to Xiaoyi's in-house model with dialogue satisfaction **81→89** 【ICLR 2027 under review】"
+    - details: "A lightweight specialist ensemble to mitigate reward hacking in multi-constraint RL: +10% average performance, +12% reward precision, 3× training speed 【**TinyJudge, ACL 2026**】"
+    - details: "Explored on-policy distillation (OPD) for instruction following: decoupled-aggregated correction of the teacher's distribution under multiple constraints, +4% performance 【ICLR 2027 under review】"

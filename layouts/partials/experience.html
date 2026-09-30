@@ -3,7 +3,10 @@
 
                                 <h3 class="text-uppercase resume-section-heading mb-4">{{ i18n "experiences" }}</h3>
 
-                                {{ range .Site.Params.experience.list }}
+                                {{/* 数据来自 data/<lang>/experience.yaml（由 scripts/sync-homepage.py 从 CV 生成）。
+                                    Hugo 的 data 是「先目录后文件名」：data/en/experience.yaml
+                                    对应 .Site.Data.en.experience，所以是两层 index，不是 .Site.Data.experience.en。 */}}
+                                {{ range index (index .Site.Data .Site.Language.Lang) "experience" }}
                                 <div class="item mb-3">
                                     <div class="item-heading row align-items-center mb-2">
                                         <h4 class="item-title col-12 col-md-6 col-lg-6 mb-2 mb-md-0">{{ .title }}</h4>

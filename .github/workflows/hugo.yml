@@ -26,7 +26,10 @@ jobs:
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
-          hugo-version: '0.74.3'
+          # 必须和本地构建用的版本一致（hugo version 可查），否则 CSS 指纹和
+          # 渲染结果会和本地提交的 docs/ 对不上。原先是 0.74.3（2020 年的版本，
+          # 跑不动现在这套模板/配置），所以这个 Action 实际从未产出线上页面。
+          hugo-version: '0.157.0'
           extended: true
 
       - name: Build
