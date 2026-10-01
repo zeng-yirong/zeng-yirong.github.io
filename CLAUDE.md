@@ -5,18 +5,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 这是一个学术主页（Hugo 静态站），中英双语，托管在 GitHub Pages。
-输出目录是 `docs/`（不是默认的 `public/`），并且 **`docs/` 是提交进仓库的**。
+输出目录是 `docs/`（不是默认的 `public/`），**但不提交进仓库** —— 2026-10-01 起
+Pages 由 GitHub Actions 部署，仓库里不再保存构建产物。
 
 ## Common Commands
 
 ```bash
 # 本地预览 —— 必须带 -M
 #   publishDir = "docs"，不加 -M 的话 dev server 会把带 localhost:1313 和 livereload
-#   的开发构建直接写进 docs/，覆盖掉待提交的产物，然后被一起 commit 上线。
+#   的开发构建直接写进 docs/，覆盖掉本地那份产物，核对时容易看走眼。
 hugo server -M
 
-# 构建（产出 docs/）—— 必须带 --minify
-#   线上那份 docs/ 就是 minify 过的；漏了这个参数会让整个 docs/ 全量重写一遍。
+# 本地构建（产出 docs/，已被 gitignore）—— 带 --minify 是为了和 CI 一致
+#   workflow 里跑的就是 hugo --minify；本地用同一条命令，出问题才复现得出来。
+#   线上不由这条命令上线，见下面「上线路径」。
 hugo --minify
 
 # 从 CV 的数据重新生成主页内容（改了 CV/build/data/ 之后跑）
@@ -25,16 +27,32 @@ python scripts/sync-homepage.py
 
 ### 上线路径
 
-**本地 `hugo --minify` → 提交 `docs/` → push main。** GitHub Pages 服务的是仓库里的
-`docs/` 目录。只改模板/配置而不重建、不提交，线上不会变。
+**push main → GitHub Actions 自动构建并部署。** 没有别的步骤。
+
+`.github/workflows/hugo.yml` 在 CI 里跑 `hugo --minify`，把 `./docs` 作为 artifact
+交给 `actions/deploy-pages`。**仓库里不保存构建产物**（`docs/` 已 gitignore），所以：
+
+> ⚠️ **手改 `docs/` 对线上没有任何影响。** 要改样式或文案，必须改源文件 ——
+> `layouts/`、`assets/`、`data/`、`config.toml`。这条对以前「改产物再提交」的习惯
+> 是个反转，见记忆 cv-edits-in-output-html。
+
+历史：2026-10-01 之前 Pages 是「Deploy from a branch / docs」模式，线上服务的直接
+就是仓库里提交的 `docs/`，所以当时必须本地构建后提交。那天用户把 source 切成了
+「GitHub Actions」，`docs/` 随之出库（提交 `a579927`）。
 
 几个坑：
 
-- `hugo server` **一定要加 `-M`**（`--renderToMemory`），否则污染 `docs/`（见上）。
-- 构建产物提交前先扫一遍：`grep -rl -e localhost -e livereload docs/` 应该没有输出。
-- `.github/workflows/hugo.yml` 钉的 Hugo 版本必须与本地一致（`hugo version` 可查）。
-  它原先写的 0.74.3 是 2020 年的版本，跑不动现在的模板/配置 —— 那个 Action 从未产出线上页面。
-  目前 Pages 的 source 仍可能是「分支 /docs」，**别以为推代码就会自动部署**。
+- **workflow 钉的 Hugo 版本必须与本地一致**（`hugo version` 可查）。它原先写的
+  0.74.3 是 2020 年的版本，跑不动现在的模板/配置 —— 在 branch 模式下这没造成问题
+  （线上走的是提交的 `docs/`），但切到 Actions 后会直接构建失败。
+- `hugo server` **一定要加 `-M`**（`--renderToMemory`），否则 dev server 的产物
+  （带 `http://localhost:1313` 和 livereload `<script>`）会覆盖本地 `docs/`。
+  本地 `docs/` 现在不上线，但覆盖了会让你本地核对时看走眼。
+- **怎么确认 Actions 真在部署**：workflow 的 badge 是纯 SVG，可以直接 curl ——
+  `curl -s https://github.com/zeng-yirong/zeng-yirong.github.io/actions/workflows/hugo.yml/badge.svg`
+  返回 `<title>… - passing</title>` 就说明默认分支上最近一次运行成功（切到 Actions
+  之前 `actions/deploy-pages` 必然失败，badge 会是 failing）。
+  **Actions 页面本身是 JS 渲染的，抓 HTML 拿不到任何运行数据，别走那条路。**
 
 ## Architecture
 
@@ -54,7 +72,7 @@ layouts/         本站的模板（原 themes/hugo-devresume-theme/layouts，已
 assets/scss/     SCSS 源
 static/          favicon.ico、assets/images/{me,avatar}.png
 i18n/            en.yaml / zh.yaml，12 个键，两语言各一套全套键
-docs/            构建产物，**提交进仓库**，Pages 直接服务这里
+docs/            本地构建产物，**已 gitignore**（线上由 CI 构建，见「上线路径」）
 CV/              简历构建系统（独立的一套，见 CV/build/README.md）
 ```
 
