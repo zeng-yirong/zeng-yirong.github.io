@@ -4,7 +4,12 @@ hugo_bin/
 hugo.exe
 hugo
 
-# Hugo build output (not applicable since we commit docs/, but good for reference)
+# Hugo 构建产物。
+# 2026-10-01 起 Pages 的 source 改成了「GitHub Actions」，由 .github/workflows/hugo.yml
+# 在 CI 里跑 `hugo --minify` 再部署 —— 仓库里那份 docs/ 不再参与上线，已从索引摘掉。
+# 它仍然是本地的构建输出（publishDir = "docs"），只是不用提交了。
+# ⚠️ 手改 docs/ 不再会出现在线上；要改样子得改 layouts/ assets/ data/ config.toml。
+/docs/
 /public/
 
 # 注意 `**/`：gitignore 里带斜杠的模式是锚定到本文件所在目录的，
