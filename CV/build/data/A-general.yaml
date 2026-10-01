@@ -21,12 +21,17 @@ sidebar:
   en_name: "Yirong Zeng"
   tagline: "博士候选人 · 智能体强化学习 / 长程 Agent 训练"
   title_chips: []                 # 「头衔」区块；空数组 = 整块不渲染（通用版现状）
-  stats:                          # 「数字亮点」2 列网格，6 条 = 3 行
+  # 「数字亮点」2 列网格，条目数必须是偶数（奇数会剩半行）
+  # 2026-10-01：本人要求撤掉「华为研究成果 / 成果落地小艺」两项，6 条 → 4 条 = 2 行。
+  #   这两个数字没有丢——实习经历的 lead 里仍写着「产出 12 项研究成果，其中 4 项落地小艺业务」。
+  #   撤掉的行留在下面以注释保存（想恢复就取消注释），B 的 highlights / C 的 kpis_hidden
+  #   里也还各留着一份（那两版本来就不显示这条横条）。
+  stats:
     - {num: "9",  label: "一作已发表论文"}
     - {num: "4",  label: "CCF-A 已发表"}
     - {num: "6",  label: "CCF-A 在投"}
-    - {num: "12", label: "华为研究成果"}
-    - {num: "4",  label: "成果落地小艺"}
+    # - {num: "12", label: "华为研究成果"}
+    # - {num: "4",  label: "成果落地小艺"}
     - {num: "7",  label: "带教实习生(领头人)"}
   contact:                        # 逐行渲染；icon 留空则只有文字（导师/实验室行）
     - {icon: "📱", text: "18845723437"}
@@ -47,7 +52,12 @@ sidebar:
     - {group: "语言", items: ["中文", "English"]}
 
 # 右侧正文显示顺序（改这一行即可调整版面）
-main_sections: [summary, education, internship, research_focus, publications, opensource, awards, projects]
+# 2026-10-01：与 B/C 的正文顺序对齐——研究方向提到实习之前、论文紧跟研究方向，
+#   即「先讲研究主线，再亮论文硬指标，然后才是实习」，实习之后一路是开源/荣誉/项目。
+#   B 是 summary→教育→研究方向→论文→实习→开源→(荣誉|项目)→技能；
+#   C 是 summary→教育→研究方向→论文→实习→(荣誉|开源)→(项目|技能)。
+#   两份的公共前缀正是下面这一行（A 无并排、无技能段，技能在侧栏末尾，位置本就最后）。
+main_sections: [summary, education, research_focus, publications, internship, opensource, awards, projects]
 
 summary: >
   哈尔滨工业大学直博五年级（导师刘挺教授），研究方向为大模型 Agentic RL、
@@ -81,7 +91,7 @@ internship:
   role: "AI算法工程师"
   time: "2024.09 – 2026.09"
   badges: ["首批顶尖人才计划实习生", "部门实习生领头人（带 7 人实习生团队）"]
-  lead: "作为研究型实习生，负责小艺中控模型的后训练技术相关先导探索：在 Agentic RL、Harness Agent 训练、指令遵循方向产出 12 项研究成果，其中 4 项落地小艺业务。"
+  lead: "作为研究型实习生，负责小艺的全模态大模型系统训练技术的先导探索：在 Agentic RL、Harness Agent 训练、指令遵循方向产出 12 项研究成果，其中 4 项落地小艺业务。"
   # 分组顺序 = C 版：Agentic RL 提到第一位（它是这段经历最想让人看到的部分）。
   groups:
     - title: "Agentic RL 算法研发"
