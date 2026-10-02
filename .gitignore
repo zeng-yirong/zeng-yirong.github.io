@@ -37,5 +37,10 @@ Thumbs.db
 *.swo
 *~
 
+# Claude Code 的本机权限白名单：含本机绝对路径和一次性命令，
+# 且每次跑命令都可能被追加内容，不该进版本库。
+# （只忽略这一个文件，.claude/ 下的其它配置仍可提交。）
+.claude/settings.local.json
+
 # Logs
 *.log
