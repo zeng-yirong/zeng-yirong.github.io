@@ -3,7 +3,9 @@
 
                     <!-- 语言切换器（本仓库加的，模板原本没有）。单独占一整行、放在
                          姓名/联系方式那行之上，为的是不动下面 8/4 的栅格。
-                         链到各语言的首页：英文在 /、中文在 /zh/（defaultContentLanguageInSubdir=false）。
+                         链到各语言的首页：中文在 /、英文在 /en/（defaultContentLanguageInSubdir=false，
+                         当前默认语言是 zh）。**顺序由 config.toml 里各语言的 weight 决定**，
+                         中文 weight=1 所以在前面。切换默认语言时记得把 weight 一起对调。
                          当前语言渲染成不可点的 <span>，避免点自己刷新一遍。 -->
                     {{ if gt (len .Site.Languages) 1 }}
                     {{ $cur := .Site.Language.Lang }}

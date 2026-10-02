@@ -8,8 +8,8 @@
     <meta name="description" content="{{ .Site.Params.description }}">
     <meta name="author" content="{{ .Site.Params.author }}">
 
-    <!-- Favicon：必须走 relURL。写成相对的 "favicon.ico" 时，/zh/ 页会去找
-         /zh/favicon.ico（那里没有这个文件，中文页就没有图标） -->
+    <!-- Favicon：必须走 relURL。写成相对的 "favicon.ico" 时，/en/ 页会去找
+         /en/favicon.ico（那里没有这个文件，英文页就没有图标） -->
     <link rel="shortcut icon" href="{{ "favicon.ico" | relURL }}">
 
     <!-- Google Fonts -->
@@ -17,7 +17,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900">
 
-    <!-- Open Graph / Facebook：og:url 用 .Permalink，中文页才指向 /zh/ 而不是英文页 -->
+    <!-- Open Graph / Facebook：og:url 用 .Permalink，英文页才指向 /en/ 而不是指回中文页 -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ .Permalink }}">
     <meta property="og:title" content="{{ .Site.Title }}">

@@ -72,7 +72,7 @@ scripts/         仓库自己的小工具
   homepage-en.yaml       英文译文（手工维护）—— CV 数据全是中文，译文推不出来
 layouts/         本站的模板（原 themes/hugo-devresume-theme/layouts，已提升到根）
 assets/scss/     SCSS 源
-static/          favicon.ico、assets/images/{me,avatar}.png
+static/          favicon.ico、assets/images/me.png（头像）
 i18n/            en.yaml / zh.yaml，12 个键，两语言各一套全套键
 public/          本地构建产物，**已 gitignore**（线上由 CI 构建，见「上线路径」）
 CV/              简历构建系统（独立的一套，见 CV/build/README.md）
@@ -90,15 +90,21 @@ CV/              简历构建系统（独立的一套，见 CV/build/README.md�
 ### 双语
 
 ```toml
-defaultContentLanguage = "en"                 # 英文是默认语言，站点根 / 就是英文页
-defaultContentLanguageInSubdir = false        # 英文不放进 /en/，中文在 /zh/
+defaultContentLanguage = "zh"                 # 中文是默认语言，站点根 / 就是中文页
+defaultContentLanguageInSubdir = false        # 中文不放进 /zh/，英文在 /en/
 ```
 
 **两棵 params 树都写全**（`[languages.en.params]` / `[languages.zh.params]`），根上不留
 `[params]`。不写成「根上放共用项、语言里只覆盖文字」，是因为 Hugo 对**数组**的合并语义
 在版本间不一致（覆盖还是追加说不准）—— 一旦变成追加，英文那 15 篇论文就会出现在中文页上。
 
-`public/en/` 是 Hugo 为「默认语言不进子目录」自动生成的跳转页（跳回 `/`），删了会重新生成，不用管。
+`public/zh/` 是 Hugo 为「默认语言不进子目录」自动生成的跳转页（跳回 `/`），删了会重新生成，不用管。
+它顺带兜住了一个坑：2026-10-03 之前中文在 `/zh/`，改默认语言后那个地址会失效 —— 正因为 Hugo
+生成这份跳转页，老书签才没死。反过来说，**默认语言的旧子目录永远会是跳转页**，别把它当成
+「中文页还在 /zh/」的证据。
+
+⚠️ 改 `defaultContentLanguage` 会**同时改变 URL 布局**，不只是换默认显示。2026-10-03 从 en 改成 zh
+时，`/` 从英文页变成中文页、英文挪到 `/en/`。改之前先确认没有对外发过的链接依赖 `/` 是英文。
 
 ### 输出 kind 与 404（两处反直觉，改前先看）
 
@@ -139,8 +145,12 @@ CV 的三份数据里只有 **A**（`A-general.yaml`）与主页同形（有 `in
 
 ### Partial 契约（改模板前先看）
 
-- `layouts/index.html` 主栏顺序写死：**experience → projects → information → software**；
-  侧栏（`sidebar.html`）：interests → education → internships → awards → skills → hobbies → languages。
+- `layouts/index.html` 主栏顺序写死：**interests → information → experience → projects → software**；
+  侧栏（`sidebar.html`）：education → internships → awards → skills → hobbies → languages。
+  - 2026-10-03 调整：`interests`（研究方向）从侧栏移到主栏顶部，位置在**头像+简介之后、论文之前**；
+    `experience` 从原先打头退到**论文之后**。理由：学术主页以论文为重心，且实习已简化成一段总述。
+  - 简化只发生在模板层：`experience.html` 里的 9 条要点用 `{{ if false }}` 挂着，数据仍完整保留在
+    `data/<lang>/experience.yaml`。要恢复就把那个 `if false` 换成 `if .items` —— 别去手改 yaml，它下次生成会被覆盖。
 - 段落是否渲染由 `config.toml` 的 `enable` 控制；**数据来源**在 partial 里：
   `experience.html` / `information.html` / `software.html` 读 `.Site.Data`，其余读 `.Site.Params`。
 - `experience.html` 只支持「一段 details + 一个扁平 `<ul>`」，所以实习的三个分组是用一条

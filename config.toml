@@ -8,10 +8,15 @@ publishDir = "public"
 # 挂在 themes/ 下只会让所有站点文件白白深一层。
 
 # ============================================================
-# 中英双语（2026-10-01 改造）
+# 中英双语（2026-10-01 改造，2026-10-03 改为中文优先）
 #
-#   defaultContentLanguage = "en"  → 英文是默认语言，站点根 / 就是英文页
-#   defaultContentLanguageInSubdir = false → 英文不放进 /en/ 子目录，中文在 /zh/
+#   defaultContentLanguage = "zh"  → 中文是默认语言，站点根 / 就是中文页
+#   defaultContentLanguageInSubdir = false → 中文不放进 /zh/ 子目录，英文在 /en/
+#
+# ⚠️ 改这个键会**同时改变 URL 布局**，不只是换默认显示：原来 / 是英文、/zh/ 是中文，
+#    现在是 / 中文、/en/ 英文。Hugo 会为默认语言的那个旧子目录自动生成跳转页
+#    （现在是 public/zh/index.html → 跳回 /），所以老书签不会死，但指向 / 的老链接
+#    会从英文变成中文。改之前先想清楚有没有对外发过的链接依赖 / 是英文。
 #
 # **内容的两棵树都写全**：`[languages.en.params]` 与 `[languages.zh.params]` 各自是一棵
 # 完整的 params 树，根上**不留** `[params]`。为什么不写成「根上放共用项、语言里只覆盖文字」
@@ -37,7 +42,7 @@ publishDir = "public"
 #   （头像、联系方式、教育、兴趣、爱好、社交）。
 # ============================================================
 
-defaultContentLanguage = "en"
+defaultContentLanguage = "zh"
 defaultContentLanguageInSubdir = false
 
 # 这个站没有 content/ 目录，但 Hugo 默认仍会生成 taxonomy（tags/categories）和 RSS
@@ -55,13 +60,13 @@ disableKinds = ["taxonomy", "term", "rss"]
 [languages]
 
 # ------------------------------------------------------------
-# 英文（默认）
+# 英文（/en/）
 # ------------------------------------------------------------
 [languages.en]
     languageName = "English"
     languageCode = "en"
     title = "Hi, I'm Yirong"
-    weight = 1
+    weight = 2
 
     [languages.en.params]
         author = "Yirong Zeng"
@@ -164,13 +169,13 @@ disableKinds = ["taxonomy", "term", "rss"]
             title = "zeng-yirong"
 
 # ------------------------------------------------------------
-# 中文（/zh/）—— 事实与 CV/build/data/A-general.yaml 一致（长内容同样在 data/ 下）
+# 中文（默认语言，站点根 /）—— 事实与 CV/build/data/A-general.yaml 一致（长内容同样在 data/ 下）
 # ------------------------------------------------------------
 [languages.zh]
     languageName = "中文"
     languageCode = "zh"
     title = "曾屹荣 · 个人主页"
-    weight = 2
+    weight = 1
 
     [languages.zh.params]
         author = "曾屹荣"
