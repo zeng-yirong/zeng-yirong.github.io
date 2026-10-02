@@ -5,18 +5,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 这是一个学术主页（Hugo 静态站），中英双语，托管在 GitHub Pages。
-输出目录是 `docs/`（不是默认的 `public/`），**但不提交进仓库** —— 2026-10-01 起
+输出目录是 Hugo 默认的 `public/`，**但不提交进仓库** —— 2026-10-01 起
 Pages 由 GitHub Actions 部署，仓库里不再保存构建产物。
 
 ## Common Commands
 
 ```bash
 # 本地预览 —— 必须带 -M
-#   publishDir = "docs"，不加 -M 的话 dev server 会把带 localhost:1313 和 livereload
-#   的开发构建直接写进 docs/，覆盖掉本地那份产物，核对时容易看走眼。
+#   publishDir = "public"，不加 -M 的话 dev server 会把带 localhost:1313 和 livereload
+#   的开发构建直接写进 public/，覆盖掉本地那份产物，核对时容易看走眼。
 hugo server -M
 
-# 本地构建（产出 docs/，已被 gitignore）—— 带 --minify 是为了和 CI 一致
+# 本地构建（产出 public/，已被 gitignore）—— 带 --minify 是为了和 CI 一致
 #   workflow 里跑的就是 hugo --minify；本地用同一条命令，出问题才复现得出来。
 #   线上不由这条命令上线，见下面「上线路径」。
 hugo --minify
@@ -29,16 +29,18 @@ python scripts/sync-homepage.py
 
 **push main → GitHub Actions 自动构建并部署。** 没有别的步骤。
 
-`.github/workflows/hugo.yml` 在 CI 里跑 `hugo --minify`，把 `./docs` 作为 artifact
-交给 `actions/deploy-pages`。**仓库里不保存构建产物**（`docs/` 已 gitignore），所以：
+`.github/workflows/hugo.yml` 在 CI 里跑 `hugo --minify`，把 `./public` 作为 artifact
+交给 `actions/deploy-pages`。**仓库里不保存构建产物**（`public/` 已 gitignore），所以：
 
-> ⚠️ **手改 `docs/` 对线上没有任何影响。** 要改样式或文案，必须改源文件 ——
+> ⚠️ **手改 `public/` 对线上没有任何影响。** 要改样式或文案，必须改源文件 ——
 > `layouts/`、`assets/`、`data/`、`config.toml`。这条对以前「改产物再提交」的习惯
 > 是个反转，见记忆 cv-edits-in-output-html。
 
 历史：2026-10-01 之前 Pages 是「Deploy from a branch / docs」模式，线上服务的直接
 就是仓库里提交的 `docs/`，所以当时必须本地构建后提交。那天用户把 source 切成了
 「GitHub Actions」，`docs/` 随之出库（提交 `a579927`）。
+输出目录原先一直叫 `docs/`（branch 模式的遗留），2026-10-03 改回 Hugo 默认的 `public/`
+—— 「docs」这名字和「文档」的直觉相反，留着每次都要解释一遍。
 
 几个坑：
 
@@ -46,8 +48,8 @@ python scripts/sync-homepage.py
   0.74.3 是 2020 年的版本，跑不动现在的模板/配置 —— 在 branch 模式下这没造成问题
   （线上走的是提交的 `docs/`），但切到 Actions 后会直接构建失败。
 - `hugo server` **一定要加 `-M`**（`--renderToMemory`），否则 dev server 的产物
-  （带 `http://localhost:1313` 和 livereload `<script>`）会覆盖本地 `docs/`。
-  本地 `docs/` 现在不上线，但覆盖了会让你本地核对时看走眼。
+  （带 `http://localhost:1313` 和 livereload `<script>`）会覆盖本地 `public/`。
+  本地 `public/` 不上线，但覆盖了会让你本地核对时看走眼。
 - **怎么确认 Actions 真在部署**：workflow 的 badge 是纯 SVG，可以直接 curl ——
   `curl -s https://github.com/zeng-yirong/zeng-yirong.github.io/actions/workflows/hugo.yml/badge.svg`
   返回 `<title>… - passing</title>` 就说明默认分支上最近一次运行成功（切到 Actions
@@ -72,7 +74,7 @@ layouts/         本站的模板（原 themes/hugo-devresume-theme/layouts，已
 assets/scss/     SCSS 源
 static/          favicon.ico、assets/images/{me,avatar}.png
 i18n/            en.yaml / zh.yaml，12 个键，两语言各一套全套键
-docs/            本地构建产物，**已 gitignore**（线上由 CI 构建，见「上线路径」）
+public/          本地构建产物，**已 gitignore**（线上由 CI 构建，见「上线路径」）
 CV/              简历构建系统（独立的一套，见 CV/build/README.md）
 ```
 
@@ -96,7 +98,7 @@ defaultContentLanguageInSubdir = false        # 英文不放进 /en/，中文在
 `[params]`。不写成「根上放共用项、语言里只覆盖文字」，是因为 Hugo 对**数组**的合并语义
 在版本间不一致（覆盖还是追加说不准）—— 一旦变成追加，英文那 15 篇论文就会出现在中文页上。
 
-`docs/en/` 是 Hugo 为「默认语言不进子目录」自动生成的跳转页（跳回 `/`），删了会重新生成，不用管。
+`public/en/` 是 Hugo 为「默认语言不进子目录」自动生成的跳转页（跳回 `/`），删了会重新生成，不用管。
 
 ### 内容的分工
 

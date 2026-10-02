@@ -319,7 +319,7 @@ def main():
     gen_experience(cv, prose)
     print("完成：论文 %d 条、开源 %d 条、实习 %d 组。"
           % (n_pub, n_soft, len(cv["internship"]["groups"])))
-    print("记得重建并提交 docs/：hugo --minify")
+    print("本地预览：hugo server -M；上线：push main（CI 构建，不用提交产物）")
 
 
 if __name__ == "__main__":

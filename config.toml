@@ -1,6 +1,6 @@
 # Page settings
 baseURL = "https://zeng-yirong.github.io/"
-publishDir = "docs"
+publishDir = "public"
 
 # 这里原先有 theme = "hugo-devresume-theme"。2026-10-01 把主题从 themes/ 提升到了仓库根
 # （layouts/ assets/ static/），不再作为主题加载 —— 理由见 CLAUDE.md「主题已本地化」一节：
@@ -19,8 +19,8 @@ publishDir = "docs"
 # 一旦它变成追加，英文那 15 篇论文就会出现在中文页上。
 # 两棵写全 = 不依赖任何合并行为，两个页面完全可预期。
 #
-# 改完必须 `hugo --minify` 重建 docs/ 并提交——线上（zeng-yirong.github.io）服务的就是
-# 仓库里的 docs/ 目录，只改本文件不上线。
+# 改完用 `hugo --minify` 重建 public/ 本地核对；上线是 push main 由 CI 构建，
+# 仓库里不保存构建产物。
 #
 # 键集必须两边一致：段落开关（enable）、colors、结构。**文本**按语言各写各的。
 #

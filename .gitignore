@@ -6,18 +6,17 @@ hugo
 
 # Hugo 构建产物。
 # 2026-10-01 起 Pages 的 source 改成了「GitHub Actions」，由 .github/workflows/hugo.yml
-# 在 CI 里跑 `hugo --minify` 再部署 —— 仓库里那份 docs/ 不再参与上线，已从索引摘掉。
-# 它仍然是本地的构建输出（publishDir = "docs"），只是不用提交了。
-# ⚠️ 手改 docs/ 不再会出现在线上；要改样子得改 layouts/ assets/ data/ config.toml。
-/docs/
+# 在 CI 里跑 `hugo --minify` 再部署 —— 仓库里不再保存构建产物。
+# 这里是本地的构建输出（publishDir = "public"），只用于本地核对，不用提交。
+# ⚠️ 手改 public/ 不会出现在线上；要改样子得改 layouts/ assets/ data/ config.toml。
 /public/
 
-# 注意 `**/`：gitignore 里带斜杠的模式是锚定到本文件所在目录的，
-# 写成 `resources/_gen/` 只匹配根目录那份，匹配不到 themes/*/resources/_gen/。
+# 注意 `**/`：gitignore 里带斜杠的模式是锚定到本文件所在目录的。
+# （原先是给 themes/*/resources/_gen/ 兜底的；themes/ 已在 2026-10-01 移除。）
 **/resources/_gen/
 
-# Hugo 的构建锁与资源缓存。这两个曾被跟踪（gitignore 对已跟踪文件无效，
-# 得有 git rm --cached 才行），2026-10-01 已从索引摘掉。每次重建都会改动它们，别再提交。
+# Hugo 的构建锁与资源缓存。曾经被跟踪过（gitignore 对已跟踪文件无效，
+# 得有 git rm --cached 才行）。每次重建都会改动它们，别再提交。
 .hugo_build.lock
 /assets/jsconfig.json
 hugo_stats.json
