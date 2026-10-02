@@ -40,6 +40,18 @@ publishDir = "public"
 defaultContentLanguage = "en"
 defaultContentLanguageInSubdir = false
 
+# 这个站没有 content/ 目录，但 Hugo 默认仍会生成 taxonomy（tags/categories）和 RSS
+# 的 kind —— 它们没有对应的 index.html（本站没有 list 模板），于是 GitHub Pages
+# 把那份 index.xml 直接当目录页返回：/categories/ /tags/ 线上是 200 + application/xml，
+# 访客点进去看到的是裸 RSS。而 sitemap 每语言只列 3 个 URL，其中 2 个正是这些伪页面。
+#
+# 关掉之后这些 URL 变成真正的 404，交给自定义 404 页（layouts/404.html）。
+# sitemap 本身保留（不列入 disableKinds），全站模板也没有任何地方引用 RSS。
+#
+# ⚠️ 必须写在 [languages] 之前：TOML 里裸键只属于第一张表头之前的根表，
+#    写进去会变成 languages.disableKinds，Hugo 连警告都不会给。
+disableKinds = ["taxonomy", "term", "rss"]
+
 [languages]
 
 # ------------------------------------------------------------
