@@ -100,6 +100,28 @@ defaultContentLanguageInSubdir = false        # 英文不放进 /en/，中文在
 
 `public/en/` 是 Hugo 为「默认语言不进子目录」自动生成的跳转页（跳回 `/`），删了会重新生成，不用管。
 
+### 输出 kind 与 404（两处反直觉，改前先看）
+
+**`disableKinds = ["taxonomy", "term", "rss"]` 必须写在 `[languages]` 之前。**
+TOML 里裸键只属于第一张表头之前的根表，写到 `[languages]` 底下会变成
+`languages.disableKinds`，而且 **Hugo 连警告都不会发**，只是静默不生效。
+
+为什么关：本站没有 `content/`，但 Hugo 默认仍生成 tags/categories 的 kind。它们没有
+对应的 `index.html`（本站没有 list 模板），于是 GitHub Pages 把那份 `index.xml` 直接
+当目录页返回 —— 修之前线上 `/categories/` `/tags/` 是 **200 + `application/xml`**，
+访客看到的是裸 RSS，而 sitemap 每语言只列 3 个 URL、其中 2 个正是这些伪页面。
+关掉后它们变成真 404。`sitemap` 不列入（要保留），全站模板也没有任何地方引用 RSS。
+
+**404 页只有发布根那一份会被 GitHub Pages 当回退。** `public/zh/404.html` 由 Hugo
+照常生成，但只作为普通静态文件被直接访问到（返回 200），**永远不参与 404 回退**。
+所以 `layouts/404.html` 必须自带两个语言的入口，也就**不能用 `header.html` 那个语言
+切换器** —— 它依赖 `.Translations`，而 404 页没有译文，循环会空转。改用
+`.Site.Home.AllTranslations`（注意 `.Sites` 自 v0.156 起已弃用）。
+
+顺带一条：0 字节的模板 **不产出任何文件**。原先 `layouts/404.html` 是空的，所以线上
+一份 404.html 都没有，走的是 GitHub 默认英文页 —— 排查「模板写了但线上没变化」时先看
+文件是不是空的。
+
 ### 内容的分工
 
 | 数据 | 在哪 | 谁维护 |
