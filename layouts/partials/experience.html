@@ -14,11 +14,19 @@
                                     </div>
                                     <div class="item-content">
                                         <p>{{ with .details }}{{ . | markdownify }}{{ end }}</p>
+
+                                        {{/* 2026-10-03：按要求简化，只保留上面那段总述 ——
+                                            华为实习的 3 组 9 条要点不再渲染，让论文成为视觉重心。
+                                            数据没有被删，仍完整躺在 data/<lang>/experience.yaml
+                                            （由 scripts/sync-homepage.py 从 CV 生成）；
+                                            要恢复就把下面的 if false 换成 if .items。 */}}
+                                        {{ if false }}
                                         <ul class="resume-list">
                                             {{ range .items }}
                                             <li>{{ with .details }}{{ . | markdownify }}{{ end }}</li>
                                             {{ end }}
                                         </ul>
+                                        {{ end }}
                                     </div>
                                 </div><!--//item-->
                                 {{ end }}

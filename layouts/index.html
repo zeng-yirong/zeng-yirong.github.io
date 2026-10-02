@@ -24,6 +24,13 @@
                 {{ partial "summary.html" . }}
                 {{ end }}
 
+                {{/* 研究方向原在侧栏，2026-10-03 移到主栏 —— 位置是「头像+简介之后、
+                    论文之前」：先自我介绍，再点明方向，然后用论文展开。
+                    在窄侧栏里它只是个附注，在主栏里才是访客视线自然落点。 */}}
+                {{ if .Site.Params.interests.enable }}
+                {{ partial "interests.html" . }}
+                {{ end }}
+
                 <hr>
 
                 <div class="resume-body">
@@ -32,16 +39,19 @@
 
                         <div class="resume-main col-12 col-lg-8 col-xl-9 pr-0 pr-lg-5">
 
+                            {{/* 主栏顺序（2026-10-03 调整）：论文在前，经历退到论文之后。
+                                原先 experience 打头，但主页是学术主页，论文才是重心；
+                                实习已简化成一段总述，压在论文后面正合适。 */}}
+                            {{ if .Site.Params.information.enable }}
+                            {{ partial "information.html" . }}
+                            {{ end }}
+
                             {{ if .Site.Params.experience.enable }}
                             {{ partial "experience.html" . }}
                             {{ end }}
 
                             {{ if .Site.Params.projects.enable }}
                             {{ partial "projects.html" . }}
-                            {{ end }}
-
-                            {{ if .Site.Params.information.enable }}
-                            {{ partial "information.html" . }}
                             {{ end }}
 
                             {{ if .Site.Params.software.enable }}
