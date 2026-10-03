@@ -44,8 +44,10 @@ livereload 脚本的开发版产物写进 `public/`，覆盖掉你本地那份�
 config.toml      站点配置：段落开关、颜色、语言设置，以及短到不值得外置的内容
                  （头像、联系方式、教育、研究方向、爱好、社交链接）
 data/            长内容，**由脚本生成，不要手改**（见下节）
-  publications.yaml       论文（标题/作者/venue 两语言共用，徽章分语言）
+  publications.yaml       论文（两语言共用；status 区分已录用/在投）
   software.yaml           开源项目与数据集
+  en/interests.yaml       研究方向（英文）
+  zh/interests.yaml       研究方向（中文）
   en/experience.yaml      实习经历（英文）
   zh/experience.yaml      实习经历（中文）
 layouts/         页面模板
@@ -70,7 +72,7 @@ public/          本地构建产物，已 gitignore
 
 | 你要改的东西 | 改哪里 |
 |---|---|
-| 论文、开源项目、实习经历 | `CV/build/data/A-general.yaml`，然后重跑生成脚本（见下） |
+| 论文、开源项目、研究方向、实习经历 | `CV/build/data/A-general.yaml`，然后重跑生成脚本（见下） |
 | 上面这些的**英文**表述 | `scripts/homepage-en.yaml`（译文推不出来，只能手工写） |
 | 段落开关、颜色、头像、联系方式、教育、研究方向、爱好、社交 | `config.toml` |
 
@@ -81,9 +83,12 @@ python scripts/sync-homepage.py
 ```
 
 脚本从 `CV/build/data/A-general.yaml` 读事实，从 `scripts/homepage-en.yaml` 读英文译文，
-写出 `data/` 下的四个文件。
+写出 `data/` 下的六个文件。
 
 - **不要手改 `data/` 下的文件** —— 它们每次都会被整个覆盖。
+- ⚠️ **`data/` 是提交进仓库的，而 CI 不跑这个脚本。** 忘了重跑、或者跑了却忘了
+  `git add` 新文件，Hugo 不会报错（取不到的键静默为空），线上会安静地少一整段。
+  改完务必 `python scripts/sync-homepage.py && git status --short` 确认干净。
 - 排版规则（日期格式、标题补句点、作者行归一、venue 拆分等）集中在
   `scripts/sync-homepage.py` 文件顶部，以及一张显式的覆盖表。
 - **组名/条数对不上时脚本会直接报错**，不会静默漏内容。

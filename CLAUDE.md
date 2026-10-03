@@ -63,8 +63,11 @@ python scripts/sync-homepage.py
 ```
 config.toml      配置：段落开关、颜色、以及短到不值得外置的几行内容（双语两棵树）
 data/            **内容产物**，由 scripts/sync-homepage.py 从 CV 生成，不要手改
-  publications.yaml      论文 15 条（标题/作者/venue/链接两语言共用，徽章分语言）
-  software.yaml          开源与数据集 4 条
+  publications.yaml      论文 15 条（标题/作者/venue/链接两语言共用，徽章分语言；
+                         status 分 published/pending，决定徽章是实心还是描边）
+  software.yaml          开源与数据集 4 条（name/desc/authors 分语言）
+  en/interests.yaml      研究方向（英文）—— 分文件而非 en:/zh: 子键，因为每句都是译文
+  zh/interests.yaml      研究方向（中文）
   en/experience.yaml     华为实习（英文）
   zh/experience.yaml     华为实习（中文）
 scripts/         仓库自己的小工具
@@ -132,9 +135,13 @@ TOML 里裸键只属于第一张表头之前的根表，写到 `[languages]` 底
 
 | 数据 | 在哪 | 谁维护 |
 |---|---|---|
-| 论文、开源、华为实习 | `data/` | **脚本生成**，改 `CV/build/data/A-general.yaml` 后重跑 |
+| 论文、开源、研究方向、华为实习 | `data/` | **脚本生成**，改 `CV/build/data/A-general.yaml` 后重跑 |
 | 英文译文 | `scripts/homepage-en.yaml` | 手工（译文无法从 CV 推出） |
-| 段落开关、颜色、头像、联系方式、教育、兴趣 | `config.toml` | 手工 |
+| 段落开关、颜色、头像、联系方式、教育、爱好、社交、两段早期实习 | `config.toml` | 手工 |
+
+⚠️ **`data/` 是提交进仓库的，而 CI 不跑 `sync-homepage.py`。** 忘了重跑、或者跑了却忘了
+`git add` 新文件，Hugo 不会报错（`index` 取不到的键静默为空），线上会安静地少一整段。
+改完务必 `python scripts/sync-homepage.py && git status --short` 确认干净。
 
 `scripts/sync-homepage.py` 顶部集中放着「CV 字段 → 主页写法」的排版规则（日期连字符、
 标题补句点、作者行 `（共一）` 归一、venue 的 Findings/Main 拆分、7 篇的完整作者名单覆盖等），
@@ -152,21 +159,48 @@ CV 的三份数据里只有 **A**（`A-general.yaml`）与主页同形（有 `in
   - 简化只发生在模板层：`experience.html` 里的 9 条要点用 `{{ if false }}` 挂着，数据仍完整保留在
     `data/<lang>/experience.yaml`。要恢复就把那个 `if false` 换成 `if .items` —— 别去手改 yaml，它下次生成会被覆盖。
 - 段落是否渲染由 `config.toml` 的 `enable` 控制；**数据来源**在 partial 里：
-  `experience.html` / `information.html` / `software.html` 读 `.Site.Data`，其余读 `.Site.Params`。
+  `experience.html` / `information.html` / `software.html` / `interests.html` 读 `.Site.Data`，
+  其余读 `.Site.Params`。
 - `experience.html` 只支持「一段 details + 一个扁平 `<ul>`」，所以实习的三个分组是用一条
   **只有粗体组名**的条目当小标题（`**组名**`），`markdownify` 渲染成 `<strong>`。
+  注意那 9 条要点现在被 `{{ if false }}` 挂起来了（见上一条的「简化只发生在模板层」）。
 - Hugo 的 data 是「先目录后文件名」：`data/en/experience.yaml` → `.Site.Data.en.experience`，
   所以是 `index (index .Site.Data .Site.Language.Lang) "experience"` 两层。
-- `information.html` 渲染 `title` / `authors` / `badge.<lang>`，有 `href` 就用 `<a class="paper-venue">`，
-  没有就退化成 `<span class="paper-venue">`（**两者样式相同，外观上区分不出可不可点**）。
+- `information.html` 把两个维度分成**两条互不干扰的视觉通道**：
+  `status`（published/pending）→ 徽章的填充方式（实心 vs 描边）；
+  有没有 `href` → **标题**带不带下划线。早先徽章兼任链接、且有无链接样式完全相同，
+  结果「录用了没」和「能不能点」糊在一起 —— 别再合并回去。
+- `interests.html` 用**原生 `<details open>`** 渲染研究方向，无 JS，默认展开可收起。
+  两个坑：① Bootstrap 4 只给 `summary` 加了 `display:list-item`，原生三角一定会显示，
+  要显式关掉再自己画（`.interest-summary` 那段）；② `summary` 里放 `<span>` 而不是 `<h3>` ——
+  规范上放标题合法，但读屏对「按钮里的标题」暴露不一致，按键浏览常找不到。
+- `internships.html` 里华为那条读 `data/<lang>/experience.yaml` 的 `sidebar_org` /
+  `sidebar_dates`，**不往 `config.toml` 再抄一份** —— 抄了的话 CV 改日期时侧栏会和主栏
+  并存两个不同的日期，没有任何机制拦得住。config 里只留主页独有、CV 里没有的两段。
 - 语言切换器在 `header.html` 顶部，自己占一行。**不能用 `"/" | relLangURL`** ——
   那个函数永远按*当前*语言拼前缀，在 `range .Site.Languages` 里对每种语言都会拼出当前语言的地址；
   必须从 `.Translations` 取目标语言那一页的 `.Permalink`。
-- `head.html` 的 favicon 必须走 `relURL`（写成相对的 `favicon.ico` 时 `/zh/` 页会去找
-  `/zh/favicon.ico` 而 404）；`og:url` / `twitter:url` 用 `.Permalink`，否则中文页指回英文页。
+- `head.html` 的 favicon 必须走 `relURL`（写成相对的 `favicon.ico` 时 `/en/` 页会去找
+  `/en/favicon.ico` 而 404）；`og:url` / `twitter:url` 用 `.Permalink`，否则英文页指回中文页。
+- `head.html` **不再加载任何 webfont**（2026-10-03 删掉）。原先那个 Google Fonts 的
+  Roboto 从来没生效过（见「视觉约定」），别再把它加回来。
 
 ### 视觉约定
 
-- 主色 `primaryColor` / `textPrimaryColor` 在 `config.toml` 的两个语言下各写一份，值相同。
+2026-10-03 做过一次重设计，配色与版式都换过。改样式前先读 `assets/scss/devresume.scss`
+顶部的 token 块。
+
+- **只有两个值由 `config.toml` 注入**：`primaryColor` 与 `textPrimaryColor`，两个语言下各写
+  一份、值相同。其余 token（正文色、次要色、强调色、纸面底、细线）在 SCSS 里写死。
+- **不要用 `lighten()` 从主色推派生色**。旧版就是这么做的，推出来的浅色在正文尺寸下
+  普遍不达 WCAG AA —— `.item-meta` 的 `lighten(主色, 40%)` = `#6f8ab6`，白底只有 3.51:1，
+  而它是 12px。SCSS 里每个色值后面括号里标了白底对比度，改色照那个底线走。
+- **字体只用系统栈**（`$font-family-sans-serif` 显式列了 CJK）。衬线 `$font-family-serif`
+  **只给论文标题**，因为两个语言页里它都是英文。⚠️ 不要把含中文的元素放进衬线栈：
+  Windows 上中文衬线默认落到宋体（SimSun），没有真 Bold，大字号会笔画发虚。
+- **别用 `shadow-lg` 之类的 Bootstrap `!important` 工具类去叠卡片阴影** —— 它会静默压掉
+  SCSS 里同属性的规则（`.resume-wrapper:hover` 就这么失效了整整一段时间没人发现）。
 - 不显示的部件**以 HTML 注释保留**在模板里，不删除（以后可能还要用）。
 - 改版式的请求常常是「只动被点名的那一项」—— 别顺手扩大范围。
+- **模板里的 class 必须在 SCSS 里有定义**。此前 `.theme-bg-light` / `.lang-switch` /
+  `.resume-list` 三个都是原主题残留的空类，白挂了好几年。
