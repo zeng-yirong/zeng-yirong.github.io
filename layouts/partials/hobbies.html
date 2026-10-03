@@ -1,14 +1,25 @@
 
                             <section class="hobbies-section py-3">
 
-                                <h3 class="resume-section-heading mb-4">{{ i18n "hobbies" }}</h3>
+                                {{/* 段落折叠，约定见 CLAUDE.md「段落折叠」。
+                                     2026-10-03 按要求从侧栏去掉了（config 里 enable = false），
+                                     整个 partial 与数据都留着 —— 想恢复把那个开关打开即可。 */}}
+                                {{ $title := i18n "hobbies" }}
+                                <h3 class="sr-only">{{ $title }}</h3>
+                                <details class="section-fold" open>
+                                    <summary class="resume-section-heading mb-4">
+                                        <span>{{ $title }}</span>
+                                        <span class="fold-caret" aria-hidden="true"></span>
+                                    </summary>
 
-                                <div class="item">
-                                    <ul class="list-unstyled resume-skills-list">
-                                        {{ range .Site.Params.hobbies.list }}
-                                        <li class="mb-2">{{ .name }}</li>
-                                        {{ end }}
-                                    </ul>
-                                </div>
+                                    <div class="item">
+                                        <ul class="list-unstyled resume-skills-list">
+                                            {{ range .Site.Params.hobbies.list }}
+                                            <li class="mb-2">{{ .name }}</li>
+                                            {{ end }}
+                                        </ul>
+                                    </div>
+
+                                </details>
 
                             </section><!--//hobbies-section-->

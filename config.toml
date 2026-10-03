@@ -85,6 +85,8 @@ disableKinds = ["taxonomy", "term", "rss"]
 
         [languages.en.params.contact]
             enable = true
+            # location 留着，但模板里那一行现在被 HTML 注释保留着（本仓约定：不显示的部件
+            # 以注释留在模板里）。2026-10-03 按要求把地点位置换成 GitHub，想恢复改模板一行即可。
             location = "Harbin"
 
             [[languages.en.params.contact.list]]
@@ -95,10 +97,35 @@ disableKinds = ["taxonomy", "term", "rss"]
             icon = "fab fa-google"
             url = "https://scholar.google.com/citations?user=HZgQfW0AAAAJ"
             text = "Google Scholar"
+            # ⚠️ 这个 URL 与 social.list 里那份是刻意重复的 —— 头部和页脚都要显示 GitHub。
+            #    改的时候两处一起改，别让它变成无人察觉的第二事实源。
+            [[languages.en.params.contact.list]]
+            icon = "fab fa-github-square"
+            url = "https://github.com/zeng-yirong"
+            text = "GitHub"
+
+            # 三个版本的简历（HTML）。产物在 static/cv/，Hugo 原样发布到 /cv/。
+            # ⚠️ 模板里必须用 relURL（不是 relLangURL）—— 后者在 /en/ 页会拼出 /en/cv/… 而 404。
+            # ⚠️ 这三份都是**中文**简历，所以即使英文页也标出语言，别让读者以为点了会看到英文版。
+            [languages.en.params.contact.cv]
+                icon = "fas fa-file-alt"
+                prefix = "CV (中文)"
+                [[languages.en.params.contact.cv.list]]
+                url = "/cv/resume-A-general.html"
+                text = "General"
+                [[languages.en.params.contact.cv.list]]
+                url = "/cv/resume-B-institute.html"
+                text = "Institute"
+                [[languages.en.params.contact.cv.list]]
+                url = "/cv/resume-C-talent.html"
+                text = "Talent"
 
         [languages.en.params.summary]
             enable = true
-            text = "I am a fifth-year Ph.D. student at Harbin Institute of Technology (advisor: Prof. Ting Liu), in the Research Center for Social Computing and Information Retrieval (SCIR). My research focuses on Agentic RL, Harness Agent training and instruction following for large language models. I have published 9 first-author (incl. co-first) papers at NeurIPS, ICLR, ACL, EMNLP, NAACL, COLING and IPM — 4 CCF-A, 4 CCF-B, 1 SCI-Q1 — with 6 more CCF-A papers under review. I was among the first batch of Huawei Xiaoyi Top-Talent Program interns, and served as the intern lead of the department."
+            # 这里允许 markdown：模板走 `| markdownify`（layouts/partials/summary.html）。
+            # ⚠️ 别在字符串里加空行 —— 空行会让 markdownify 返回 <p>，嵌进外层 <p class="mb-0">
+            #    是非法嵌套，浏览器会把外层 <p> 拆掉。
+            text = "I am a fifth-year Ph.D. student at Harbin Institute of Technology (advisor: Prof. Ting Liu), in the [Research Center for Social Computing and Information Retrieval (SCIR)](https://ir.hit.edu.cn/). My research focuses on Agentic RL, Harness Agent training and instruction following for large language models. I have published 9 first-author (incl. co-first) papers at NeurIPS, ICLR, ACL, EMNLP, NAACL, COLING and IPM — 4 CCF-A, 4 CCF-B, 1 SCI-Q1 — with 6 more CCF-A papers under review. I was among the first batch of Huawei Xiaoyi Top-Talent Program interns, and served as the intern lead of the department."
 
         [languages.en.params.education]
             enable = true
@@ -130,8 +157,9 @@ disableKinds = ["taxonomy", "term", "rss"]
         [languages.en.params.interests]
             enable = true
 
+        # 2026-10-03 按要求从侧栏去掉。partial 与下面的数据都留着 —— 想恢复把 enable 打开即可。
         [languages.en.params.hobbies]
-            enable = true
+            enable = false
 
             [[languages.en.params.hobbies.list]]
             name = "Skiing / Badminton"
@@ -193,6 +221,7 @@ disableKinds = ["taxonomy", "term", "rss"]
 
         [languages.zh.params.contact]
             enable = true
+            # 见英文侧同样的说明：location 留着，模板里那行被注释保留。
             location = "哈尔滨"
 
             [[languages.zh.params.contact.list]]
@@ -203,10 +232,29 @@ disableKinds = ["taxonomy", "term", "rss"]
             icon = "fab fa-google"
             url = "https://scholar.google.com/citations?user=HZgQfW0AAAAJ"
             text = "谷歌学术"
+            [[languages.zh.params.contact.list]]
+            icon = "fab fa-github-square"
+            url = "https://github.com/zeng-yirong"
+            text = "GitHub"
+
+            # 三个版本的简历（HTML）。说明与坑见英文侧同样的注释。
+            [languages.zh.params.contact.cv]
+                icon = "fas fa-file-alt"
+                prefix = "CV"
+                [[languages.zh.params.contact.cv.list]]
+                url = "/cv/resume-A-general.html"
+                text = "通用"
+                [[languages.zh.params.contact.cv.list]]
+                url = "/cv/resume-B-institute.html"
+                text = "研究院"
+                [[languages.zh.params.contact.cv.list]]
+                url = "/cv/resume-C-talent.html"
+                text = "人才计划"
 
         [languages.zh.params.summary]
             enable = true
-            text = "哈尔滨工业大学直博五年级（导师刘挺教授），社会计算与交互机器人研究中心（SCIR）。研究方向为大模型 Agentic RL、Harness Agent 训练与指令遵循。以第一作者（含共一）在 NeurIPS、ICLR、ACL、EMNLP、NAACL、COLING、IPM 等顶级会议/期刊发表论文 9 篇（CCF-A 4 篇、CCF-B 4 篇、SCI-Q1 1 篇），另有 6 篇 CCF-A 在投。华为小艺首批顶尖人才计划实习生、部门实习生领头人。"
+            # 这里允许 markdown（模板走 `| markdownify`），用法见英文侧同样的注释。
+            text = "哈尔滨工业大学直博五年级（导师刘挺教授），[社会计算与交互机器人研究中心（SCIR）](https://ir.hit.edu.cn/)。研究方向为大模型 Agentic RL、Harness Agent 训练与指令遵循。以第一作者（含共一）在 NeurIPS、ICLR、ACL、EMNLP、NAACL、COLING、IPM 等顶级会议/期刊发表论文 9 篇（CCF-A 4 篇、CCF-B 4 篇、SCI-Q1 1 篇），另有 6 篇 CCF-A 在投。华为小艺顶尖人才计划首批实习生、部门实习生领头人。"
 
         [languages.zh.params.education]
             enable = true
@@ -236,8 +284,9 @@ disableKinds = ["taxonomy", "term", "rss"]
         [languages.zh.params.interests]
             enable = true
 
+        # 2026-10-03 按要求从侧栏去掉（同英文侧）。
         [languages.zh.params.hobbies]
-            enable = true
+            enable = false
 
             [[languages.zh.params.hobbies.list]]
             name = "滑雪 / 羽毛球"

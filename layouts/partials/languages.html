@@ -1,12 +1,24 @@
 
                             <section class="languages-section py-3">
 
-                                <h3 class="resume-section-heading mb-4">{{ i18n "languages" }}</h3>
+                                {{/* 段落折叠，约定见 CLAUDE.md「段落折叠」。标题**不放** <summary> 里：
+                                     <summary> 的隐含角色是 button，而 ARIA 里 button 的子元素是
+                                     presentational —— 放进去的话读屏的标题导航在 Firefox/WebKit
+                                     和 JAWS 上会失效。大纲由外面这个 .sr-only 的 <h3> 承担。 */}}
+                                {{ $title := i18n "languages" }}
+                                <h3 class="sr-only">{{ $title }}</h3>
+                                <details class="section-fold" open>
+                                    <summary class="resume-section-heading mb-4">
+                                        <span>{{ $title }}</span>
+                                        <span class="fold-caret" aria-hidden="true"></span>
+                                    </summary>
 
-                                <ul class="list-unstyled resume-lang-list">
-                                    {{ range .Site.Params.languages.list }}
-                                    <li class="mb-2">{{ .name }} <span class="text-muted">({{ .level }})</span></li>
-                                    {{ end }}
-                                </ul>
+                                    <ul class="list-unstyled resume-lang-list">
+                                        {{ range .Site.Params.languages.list }}
+                                        <li class="mb-2">{{ .name }} <span class="text-muted">({{ .level }})</span></li>
+                                        {{ end }}
+                                    </ul>
 
-                            </section><!--//certificates-section-->
+                                </details>
+
+                            </section><!--//languages-section-->

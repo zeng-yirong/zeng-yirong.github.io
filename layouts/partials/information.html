@@ -1,30 +1,42 @@
 
                             <section class="information-section py-3">
 
-                                <h3 class="resume-section-heading mb-4">{{ i18n "information" }}</h3>
+                                {{/* 段落折叠，约定见 CLAUDE.md「段落折叠」。标题**不放** <summary> 里：
+                                     <summary> 的隐含角色是 button，而 ARIA 里 button 的子元素是
+                                     presentational —— 放进去的话读屏的标题导航在 Firefox/WebKit
+                                     和 JAWS 上会失效。大纲由外面这个 .sr-only 的 <h3> 承担。 */}}
+                                {{ $title := i18n "information" }}
+                                <h3 class="sr-only">{{ $title }}</h3>
+                                <details class="section-fold" open>
+                                    <summary class="resume-section-heading mb-4">
+                                        <span>{{ $title }}</span>
+                                        <span class="fold-caret" aria-hidden="true"></span>
+                                    </summary>
 
-                                {{/* 数据来自 data/publications.yaml（由 scripts/sync-homepage.py 从 CV 生成）。
-                                     标题/作者/venue 两语言共用，徽章按语言取 badge.en / badge.zh。
+                                    {{/* 数据来自 data/publications.yaml（由 scripts/sync-homepage.py 从 CV 生成）。
+                                         标题/作者/venue 两语言共用，徽章按语言取 badge.en / badge.zh。
 
-                                     两个维度走两条互不干扰的视觉通道：
-                                       status（published / pending）→ 徽章的填充方式（实心 vs 描边）
-                                       有没有 href                   → 标题带不带下划线
-                                     早先徽章同时兼任链接，而且有链接和无链接的样式完全相同，
-                                     结果「录用了没」「能不能点」两件事糊在一起分不出来。 */}}
-                                {{ range .Site.Data.publications }}
-                                <div class="information-item information-item--{{ .status }}">
-                                    <div class="paper-title">
-                                        {{ if .href }}
-                                        <a href="{{ .href }}" target="_blank" rel="noopener">{{ .title }}</a>
-                                        {{ else }}
-                                        {{ .title }}
-                                        {{ end }}
-                                    </div>
-                                    <div class="paper-authors">
-                                        <strong>{{ i18n "authors" }}:</strong> {{ .authors }}
-                                    </div>
-                                    <span class="paper-venue paper-venue--{{ .status }}">{{ index .badge $.Site.Language.Lang }}</span>
-                                </div><!--//information-item-->
-                                {{ end }}
+                                         两个维度走两条互不干扰的视觉通道：
+                                           status（published / pending）→ 徽章的填充方式（实心 vs 描边）
+                                           有没有 href                   → 标题带不带下划线
+                                         早先徽章同时兼任链接，而且有链接和无链接的样式完全相同，
+                                         结果「录用了没」「能不能点」两件事糊在一起分不出来。 */}}
+                                    {{ range .Site.Data.publications }}
+                                    <div class="information-item information-item--{{ .status }}">
+                                        <div class="paper-title">
+                                            {{ if .href }}
+                                            <a href="{{ .href }}" target="_blank" rel="noopener">{{ .title }}</a>
+                                            {{ else }}
+                                            {{ .title }}
+                                            {{ end }}
+                                        </div>
+                                        <div class="paper-authors">
+                                            <strong>{{ i18n "authors" }}:</strong> {{ .authors }}
+                                        </div>
+                                        <span class="paper-venue paper-venue--{{ .status }}">{{ index .badge $.Site.Language.Lang }}</span>
+                                    </div><!--//information-item-->
+                                    {{ end }}
+
+                                </details>
 
                             </section><!--//information-section-->

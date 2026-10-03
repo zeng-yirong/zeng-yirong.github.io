@@ -1,28 +1,40 @@
 
                             <section class="internships-section py-3">
 
-                                <h3 class="resume-section-heading mb-4">{{ i18n "internships" }}</h3>
+                                {{/* 段落折叠，约定见 CLAUDE.md「段落折叠」。标题**不放** <summary> 里：
+                                     <summary> 的隐含角色是 button，而 ARIA 里 button 的子元素是
+                                     presentational —— 放进去的话读屏的标题导航在 Firefox/WebKit
+                                     和 JAWS 上会失效。大纲由外面这个 .sr-only 的 <h3> 承担。 */}}
+                                {{ $title := i18n "internships" }}
+                                <h3 class="sr-only">{{ $title }}</h3>
+                                <details class="section-fold" open>
+                                    <summary class="resume-section-heading mb-4">
+                                        <span>{{ $title }}</span>
+                                        <span class="fold-caret" aria-hidden="true"></span>
+                                    </summary>
 
-                                {{/* 华为那条的事实（机构 / 日期）跟主栏 Experience 是同一份数据，
-                                     不往 config.toml 里再抄一遍 —— 抄了的话 CV 改了日期，侧栏会和
-                                     主栏并存两个不同的日期，而且没有任何机制拦住这件事。
-                                     下面 config 里那两条是主页独有、CV 里没有的早期实习。
+                                    {{/* 华为那条的事实（机构 / 日期）跟主栏 Experience 是同一份数据，
+                                         不往 config.toml 里再抄一遍 —— 抄了的话 CV 改了日期，侧栏会和
+                                         主栏并存两个不同的日期，而且没有任何机制拦住这件事。
+                                         下面 config 里那两条是主页独有、CV 里没有的早期实习。
 
-                                     两行式（机构粗体 + 日期灰色），和「教育背景」那段的排版一致；
-                                     挤成一行的写法在 ~240px 宽的侧栏里必然折行。 */}}
-                                <ul class="list-unstyled side-list mb-0">
-                                    {{ range index (index .Site.Data .Site.Language.Lang) "experience" }}
-                                    <li class="side-entry">
-                                        <div class="side-entry-org">{{ .sidebar_org }}</div>
-                                        <div class="side-entry-time">{{ .sidebar_dates }}</div>
-                                    </li>
-                                    {{ end }}
-                                    {{ range .Site.Params.internships.list }}
-                                    <li class="side-entry">
-                                        <div class="side-entry-org">{{ .org }}</div>
-                                        <div class="side-entry-time">{{ .dates }}</div>
-                                    </li>
-                                    {{ end }}
-                                </ul>
+                                         两行式（机构粗体 + 日期灰色），和「教育背景」那段的排版一致；
+                                         挤成一行的写法在 ~240px 宽的侧栏里必然折行。 */}}
+                                    <ul class="list-unstyled side-list mb-0">
+                                        {{ range index (index .Site.Data .Site.Language.Lang) "experience" }}
+                                        <li class="side-entry">
+                                            <div class="side-entry-org">{{ .sidebar_org }}</div>
+                                            <div class="side-entry-time">{{ .sidebar_dates }}</div>
+                                        </li>
+                                        {{ end }}
+                                        {{ range .Site.Params.internships.list }}
+                                        <li class="side-entry">
+                                            <div class="side-entry-org">{{ .org }}</div>
+                                            <div class="side-entry-time">{{ .dates }}</div>
+                                        </li>
+                                        {{ end }}
+                                    </ul>
+
+                                </details>
 
                             </section><!--//internships-section-->

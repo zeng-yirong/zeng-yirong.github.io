@@ -1,26 +1,38 @@
 
                             <section class="software-section py-3">
 
-                                <h3 class="resume-section-heading mb-4">{{ i18n "software" }}</h3>
+                                {{/* 段落折叠，约定见 CLAUDE.md「段落折叠」。标题**不放** <summary> 里：
+                                     <summary> 的隐含角色是 button，而 ARIA 里 button 的子元素是
+                                     presentational —— 放进去的话读屏的标题导航在 Firefox/WebKit
+                                     和 JAWS 上会失效。大纲由外面这个 .sr-only 的 <h3> 承担。 */}}
+                                {{ $title := i18n "software" }}
+                                <h3 class="sr-only">{{ $title }}</h3>
+                                <details class="section-fold" open>
+                                    <summary class="resume-section-heading mb-4">
+                                        <span>{{ $title }}</span>
+                                        <span class="fold-caret" aria-hidden="true"></span>
+                                    </summary>
 
-                                {{/* 数据来自 data/software.yaml（由 scripts/sync-homepage.py 生成）。
-                                     name / desc / authors 按语言各一份，meta 与 href 两语言共用。
+                                    {{/* 数据来自 data/software.yaml（由 scripts/sync-homepage.py 生成）。
+                                         name / desc / authors 按语言各一份，meta 与 href 两语言共用。
 
-                                     两行式（名称 + 描述 / 作者 · 指标），比早先的三行渐变卡片紧凑一半。
-                                     名称本身是链接，和论文那边「标题即链接」一致。
-                                     颜色一律走 SCSS —— 这里不再内联 primaryColor。 */}}
-                                {{ range .Site.Data.software }}
-                                <div class="software-item">
-                                    <div class="software-head">
-                                        <span class="software-name">
-                                            {{ if .href }}<a href="{{ .href }}" target="_blank" rel="noopener">{{ .name }}</a>{{ else }}{{ .name }}{{ end }}
-                                        </span>
-                                        <span class="software-desc">{{ index .desc $.Site.Language.Lang }}</span>
-                                    </div>
-                                    <div class="software-meta">
-                                        {{ index .authors $.Site.Language.Lang }} · {{ .meta }}
-                                    </div>
-                                </div><!--//software-item-->
-                                {{ end }}
+                                         两行式（名称 + 描述 / 作者 · 指标），比早先的三行渐变卡片紧凑一半。
+                                         名称本身是链接，和论文那边「标题即链接」一致。
+                                         颜色一律走 SCSS —— 这里不再内联 primaryColor。 */}}
+                                    {{ range .Site.Data.software }}
+                                    <div class="software-item">
+                                        <div class="software-head">
+                                            <span class="software-name">
+                                                {{ if .href }}<a href="{{ .href }}" target="_blank" rel="noopener">{{ .name }}</a>{{ else }}{{ .name }}{{ end }}
+                                            </span>
+                                            <span class="software-desc">{{ index .desc $.Site.Language.Lang }}</span>
+                                        </div>
+                                        <div class="software-meta">
+                                            {{ index .authors $.Site.Language.Lang }} · {{ .meta }}
+                                        </div>
+                                    </div><!--//software-item-->
+                                    {{ end }}
+
+                                </details>
 
                             </section><!--//software-section-->

@@ -4,6 +4,21 @@
                                 {{ range .Site.Params.contact.list }}
                                 <li class="mb-2"><i class="{{ .icon }} fa-fw fa-lg mr-2"></i><a class="resume-link" href="{{ .url | safeURL }}">{{ .text }}</a></li>
                                 {{ end }}
-                                <li class="mb-0"><i class="fas fa-map-marker-alt fa-fw fa-lg mr-2"></i>{{ .Site.Params.contact.location }}</li>
+
+                                {{/* 三个版本的简历（HTML）。产物在 static/cv/，Hugo 原样发布到 /cv/。
+                                     必须走 relURL —— 用 relLangURL 的话英文页会拼出 /en/cv/…（404），
+                                     和 head.html 里 favicon 那条是同一类坑。
+                                     这一栏在 xl 断点只有 ~250px 宽，三个链接允许自然折行（别加 text-nowrap）。 */}}
+                                {{ with .Site.Params.contact.cv }}
+                                <li class="mb-0">
+                                    <i class="{{ .icon }} fa-fw fa-lg mr-2"></i>{{ .prefix }}
+                                    {{ range $i, $c := .list }}{{ if $i }} · {{ end }}<a class="resume-link" href="{{ $c.url | relURL }}">{{ $c.text }}</a>{{ end }}
+                                </li>
+                                {{ end }}
+
+                                {{/* 地点：2026-10-03 按要求换成了上面 contact.list 里的 GitHub。
+                                     按本仓约定，不显示的部件以注释保留在这里，想恢复改一行即可
+                                     （config 里的 location 键也留着）。 */}}
+                                <!--<li class="mb-0"><i class="fas fa-map-marker-alt fa-fw fa-lg mr-2"></i>{{ .Site.Params.contact.location }}</li>-->
                             </ul>
                         </div><!--//resume-contact-->

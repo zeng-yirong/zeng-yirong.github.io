@@ -1,28 +1,39 @@
 
                             <section class="interests-section py-3">
 
-                                <h3 class="resume-section-heading mb-4">{{ i18n "interests" }}</h3>
+                                {{/* 段落折叠，约定见 CLAUDE.md「段落折叠」。这一层是段落级，
+                                     里面每个研究方向组还有一层 <details>（嵌套合法，互不连动）。
 
-                                {{/* 数据来自 data/<lang>/interests.yaml（由 scripts/sync-homepage.py 从 CV 的
-                                     research_focus 生成）。每个字符串都是译文，所以走 experience 那种
-                                     「按语言分文件」的做法，模板只需按语言取一次。
-
-                                     用原生 <details open>：无 JS，默认展开、可手动收起。
-                                     summary 里放 <span> 而不是 <h3> —— 规范上放标题合法，但读屏对
-                                     「按钮里的标题」暴露不一致，按键浏览常找不到；标题语义由上面那个
-                                     section 级的 <h3> 承担。 */}}
-                                {{ range index (index .Site.Data .Site.Language.Lang) "interests" }}
-                                <details class="interest" open>
-                                    <summary class="interest-summary">
-                                        <span class="interest-name">{{ .name }}</span>
-                                        <span class="interest-time">{{ .time }}</span>
+                                     注意分组那层的 <summary> 里用的是 <span>，而大纲由**本层外面**
+                                     这个 .sr-only 的 <h3> 承担 —— 原则是「标题永远不放 <summary> 里」，
+                                     理由见 CLAUDE.md。 */}}
+                                {{ $title := i18n "interests" }}
+                                <h3 class="sr-only">{{ $title }}</h3>
+                                <details class="section-fold" open>
+                                    <summary class="resume-section-heading mb-4">
+                                        <span>{{ $title }}</span>
+                                        <span class="fold-caret" aria-hidden="true"></span>
                                     </summary>
-                                    <ul class="interest-list mb-0">
-                                        {{ range .bullets }}
-                                        <li>{{ . }}</li>
-                                        {{ end }}
-                                    </ul>
+
+                                    {{/* 数据来自 data/<lang>/interests.yaml（由 scripts/sync-homepage.py 从 CV 的
+                                         research_focus 生成）。每个字符串都是译文，所以走 experience 那种
+                                         「按语言分文件」的做法，模板只需按语言取一次。
+
+                                         组级用原生 <details open>：无 JS，默认展开、可手动收起。 */}}
+                                    {{ range index (index .Site.Data .Site.Language.Lang) "interests" }}
+                                    <details class="interest" open>
+                                        <summary class="interest-summary">
+                                            <span class="interest-name">{{ .name }}</span>
+                                            <span class="interest-time">{{ .time }}</span>
+                                        </summary>
+                                        <ul class="interest-list mb-0">
+                                            {{ range .bullets }}
+                                            <li>{{ . }}</li>
+                                            {{ end }}
+                                        </ul>
+                                    </details>
+                                    {{ end }}
+
                                 </details>
-                                {{ end }}
 
                             </section><!--//interests-section-->

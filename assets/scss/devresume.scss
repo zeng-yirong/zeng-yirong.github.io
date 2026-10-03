@@ -187,6 +187,23 @@ a.resume-link {
 .resume-intro {
 	font-size: 1rem;
     line-height: 1.7;
+
+    // 简介里允许 markdown 链接（config 的 summary.text，模板走 markdownify），
+    // 目前是实验室主页那个。
+    // ⚠️ Bootstrap 4 的 a 默认**没有**下划线（只有 hover 才有），正文里的链接
+    //    会「不像链接」。这里补上和 a.theme-link 同款的处理。
+    a {
+        color: $theme-color-primary;
+        text-decoration: underline;
+        text-decoration-color: rgba($theme-color-primary, .35);
+        text-underline-offset: 2px;
+        transition: color .2s ease, text-decoration-color .2s ease;
+
+        &:hover {
+            color: $accent;
+            text-decoration-color: $accent;
+        }
+    }
 }
 
 .resume-main {
@@ -275,6 +292,52 @@ a.resume-link {
     font-variant-numeric: tabular-nums;
 }
 
+/*********** 段落折叠（11 个 section 共用）**********/
+// 每个段落都是 <details class="section-fold" open>，默认展开、可收起，无 JS。
+// ⚠️ 交互规则写在 `.section-fold > summary` 上，**不并进 `.resume-section-heading`** ——
+//    layouts/404.html 的 <h3> 也挂那个类，把 cursor / flex 漏过去会出洋相。
+.section-fold > summary {
+    display: flex;
+    align-items: baseline;
+    gap: .5rem;
+}
+
+// summary 的两条通用处理，段落级折叠与研究方向的分组级共用。
+// ⚠️ Bootstrap 4 全局只有一条 details 规则（_reboot 里的
+//    summary{display:list-item;cursor:pointer}），所以原生三角一定会显示，
+//    必须显式关掉再自己画；而关掉之后焦点环也得自己补上。
+.interest-summary,
+.section-fold > summary {
+    list-style: none;
+    cursor: pointer;
+
+    &::-webkit-details-marker {
+        display: none;
+    }
+
+    &:focus-visible {
+        outline: 2px solid rgba($theme-color-primary, .5);
+        outline-offset: 2px;
+    }
+}
+
+.fold-caret {
+    // 推到最右。它在 DOM 里已经是最后一个子元素，不需要 order。
+    margin-left: auto;
+    font-size: .75rem;
+    color: $muted;
+
+    &:before {
+        content: "▸";
+        display: inline-block;
+        transition: transform .15s ease;
+    }
+}
+
+.section-fold[open] .fold-caret:before {
+    transform: rotate(90deg);
+}
+
 /*********** 研究方向（主栏）**********/
 .interest {
     border-bottom: 1px solid $rule;
@@ -284,27 +347,13 @@ a.resume-link {
     }
 }
 
-// ⚠️ Bootstrap 4 全局只有一条 details 规则（_reboot 里的
-//    summary{display:list-item;cursor:pointer}），所以原生三角一定会显示，
-//    必须显式关掉再自己画一个；否则「可展开」这件事在收起状态下看不出来。
+// marker / 焦点环 / cursor 那几条在「段落折叠」块里和段落级的 summary 共用了。
 .interest-summary {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     gap: .25rem .5rem;
-    list-style: none;
-    cursor: pointer;
     padding: .625rem 0 .375rem;
-
-    &::-webkit-details-marker {
-        display: none;
-    }
-
-    // 关掉原生 marker 后必须自己补焦点环，否则键盘用户看不出焦点在哪
-    &:focus-visible {
-        outline: 2px solid rgba($theme-color-primary, .5);
-        outline-offset: 2px;
-    }
 }
 
 .interest-name {
@@ -546,6 +595,11 @@ a.resume-link {
     // 屏幕上不需要、纸面上更不需要的两块
     .lang-switch,
     .resume-social-list {
+        display: none;
+    }
+
+    // 纸面上折叠指示符没有意义（内容本来就全展开着）
+    .fold-caret {
         display: none;
     }
 

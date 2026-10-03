@@ -1,34 +1,46 @@
 
                             <section class="experience-section py-3">
 
-                                <h3 class="resume-section-heading mb-4">{{ i18n "experiences" }}</h3>
+                                {{/* 段落折叠，约定见 CLAUDE.md「段落折叠」。标题**不放** <summary> 里：
+                                     <summary> 的隐含角色是 button，而 ARIA 里 button 的子元素是
+                                     presentational —— 放进去的话读屏的标题导航在 Firefox/WebKit
+                                     和 JAWS 上会失效。大纲由外面这个 .sr-only 的 <h3> 承担。 */}}
+                                {{ $title := i18n "experiences" }}
+                                <h3 class="sr-only">{{ $title }}</h3>
+                                <details class="section-fold" open>
+                                    <summary class="resume-section-heading mb-4">
+                                        <span>{{ $title }}</span>
+                                        <span class="fold-caret" aria-hidden="true"></span>
+                                    </summary>
 
-                                {{/* 数据来自 data/<lang>/experience.yaml（由 scripts/sync-homepage.py 从 CV 生成）。
-                                    Hugo 的 data 是「先目录后文件名」：data/en/experience.yaml
-                                    对应 .Site.Data.en.experience，所以是两层 index，不是 .Site.Data.experience.en。 */}}
-                                {{ range index (index .Site.Data .Site.Language.Lang) "experience" }}
-                                <div class="item mb-3">
-                                    <div class="item-heading row align-items-center mb-2">
-                                        <h4 class="item-title col-12 col-md-6 col-lg-6 mb-2 mb-md-0">{{ .title }}</h4>
-                                        <div class="item-meta col-12 col-md-6 col-lg-6 text-muted text-left text-md-right">{{ .company }} | {{ .dates }}</div>
-                                    </div>
-                                    <div class="item-content">
-                                        <p>{{ with .details }}{{ . | markdownify }}{{ end }}</p>
+                                    {{/* 数据来自 data/<lang>/experience.yaml（由 scripts/sync-homepage.py 从 CV 生成）。
+                                        Hugo 的 data 是「先目录后文件名」：data/en/experience.yaml
+                                        对应 .Site.Data.en.experience，所以是两层 index，不是 .Site.Data.experience.en。 */}}
+                                    {{ range index (index .Site.Data .Site.Language.Lang) "experience" }}
+                                    <div class="item mb-3">
+                                        <div class="item-heading row align-items-center mb-2">
+                                            <h4 class="item-title col-12 col-md-6 col-lg-6 mb-2 mb-md-0">{{ .title }}</h4>
+                                            <div class="item-meta col-12 col-md-6 col-lg-6 text-muted text-left text-md-right">{{ .company }} | {{ .dates }}</div>
+                                        </div>
+                                        <div class="item-content">
+                                            <p>{{ with .details }}{{ . | markdownify }}{{ end }}</p>
 
-                                        {{/* 2026-10-03：按要求简化，只保留上面那段总述 ——
-                                            华为实习的 3 组 9 条要点不再渲染，让论文成为视觉重心。
-                                            数据没有被删，仍完整躺在 data/<lang>/experience.yaml
-                                            （由 scripts/sync-homepage.py 从 CV 生成）；
-                                            要恢复就把下面的 if false 换成 if .items。 */}}
-                                        {{ if false }}
-                                        <ul class="resume-list">
-                                            {{ range .items }}
-                                            <li>{{ with .details }}{{ . | markdownify }}{{ end }}</li>
+                                            {{/* 2026-10-03：按要求简化，只保留上面那段总述 ——
+                                                华为实习的 3 组 9 条要点不再渲染，让论文成为视觉重心。
+                                                数据没有被删，仍完整躺在 data/<lang>/experience.yaml
+                                                （由 scripts/sync-homepage.py 从 CV 生成）；
+                                                要恢复就把下面的 if false 换成 if .items。 */}}
+                                            {{ if false }}
+                                            <ul class="resume-list">
+                                                {{ range .items }}
+                                                <li>{{ with .details }}{{ . | markdownify }}{{ end }}</li>
+                                                {{ end }}
+                                            </ul>
                                             {{ end }}
-                                        </ul>
-                                        {{ end }}
-                                    </div>
-                                </div><!--//item-->
-                                {{ end }}
+                                        </div>
+                                    </div><!--//item-->
+                                    {{ end }}
+
+                                </details>
 
                             </section><!--//experience-section-->

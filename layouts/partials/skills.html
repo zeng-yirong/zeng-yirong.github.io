@@ -1,17 +1,29 @@
 
                             <section class="skills-section py-3">
 
-                                <h3 class="resume-section-heading mb-4">{{ i18n "skills" }}</h3>
+                                {{/* 段落折叠，约定见 CLAUDE.md「段落折叠」。标题**不放** <summary> 里：
+                                     <summary> 的隐含角色是 button，而 ARIA 里 button 的子元素是
+                                     presentational —— 放进去的话读屏的标题导航在 Firefox/WebKit
+                                     和 JAWS 上会失效。大纲由外面这个 .sr-only 的 <h3> 承担。 */}}
+                                {{ $title := i18n "skills" }}
+                                <h3 class="sr-only">{{ $title }}</h3>
+                                <details class="section-fold" open>
+                                    <summary class="resume-section-heading mb-4">
+                                        <span>{{ $title }}</span>
+                                        <span class="fold-caret" aria-hidden="true"></span>
+                                    </summary>
 
-                                {{ range .Site.Params.skills.list }}
-                                <div class="item">
-                                    <h4 class="item-title">{{ .title }}</h4>
-                                    <ul class="list-unstyled resume-skills-list">
-                                        {{ range .items }}
-                                        <li class="mb-2">{{ with .details }}{{ . | markdownify }}{{ end }}</li>
-                                        {{ end }}
-                                    </ul>
-                                </div><!--//item-->
-                                {{ end }}
+                                    {{ range .Site.Params.skills.list }}
+                                    <div class="item">
+                                        <h4 class="item-title">{{ .title }}</h4>
+                                        <ul class="list-unstyled resume-skills-list">
+                                            {{ range .items }}
+                                            <li class="mb-2">{{ with .details }}{{ . | markdownify }}{{ end }}</li>
+                                            {{ end }}
+                                        </ul>
+                                    </div><!--//item-->
+                                    {{ end }}
+
+                                </details>
 
                             </section><!--//skills-section-->
