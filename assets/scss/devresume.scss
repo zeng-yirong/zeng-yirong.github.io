@@ -7,38 +7,66 @@
  * License: Creative Commons Attribution 3.0 License
  * Website: http://themes.3rdwavemedia.com/
  *
- * 2026-10-03 视觉重设计：配色改为「学术出版物」路线（纸感暖中性 + 深藏青 +
- * 一个暖强调色），去掉了原主题的渐变与重阴影，标题不再全大写，并补了打印样式。
- * 下面带 ⚠️ 的注释记的都是这次踩实的坑。
+ * 2026-10-03 二次改版（方案 4「明亮多彩」）：
+ *   浅冷灰页底 + 白色主卡片（柔和投影、18px 圆角）+ 每个内容类型一层淡色调底板
+ *   （论文淡蓝 / 在投淡紫 / 研究方向淡靛 / 开源淡橙 / 侧栏极浅灰）。
+ *   段落标题带一个琥珀色圆点，主色亮蓝 #2563eb，在投徽章洋红。
+ *   同日早些时候还做过一版「纸感暖中性」的重设计，已被这一版取代。
+ * 下面带 ⚠️ 的注释记的都是踩实的坑，别当成可选建议。
 */
 
 /*************************** Theme Colours ****************************/
+// 2026-10-03 第二次改版（方案 4「明亮多彩」）：从纸感暖中性改成冷色现代卡片。
+// 页面底改回浅冷灰、卡片带柔和投影、每个内容类型套一层淡色调底板。
 // 主色与标题色由 config.toml 注入（两棵 params 树各写一份，值相同）。
-$theme-color-primary: {{ .Site.Params.primaryColor | default "#1f3a5f" }};
-$theme-text-color-primary: {{ .Site.Params.textPrimaryColor | default "#16202a" }};
+$theme-color-primary: {{ .Site.Params.primaryColor | default "#2563eb" }};
+$theme-text-color-primary: {{ .Site.Params.textPrimaryColor | default "#0f172a" }};
 
 // 其余 token 在这里显式写死，**不再用 lighten() 从主色推**。
 // ⚠️ 旧版是推的，推出来的浅色在正文尺寸下普遍不达 WCAG AA —— 比如
 //    .item-meta 的 lighten(主色, 40%) = #6f8ab6，白底只有 3.51:1，而它是 12px。
-//    括号里是对比度（白底），改色时照着这个底线走。
-$ink: $theme-text-color-primary;   // 标题          16.5:1
-$body-text: #3b4753;               // 正文           9.4:1
-$muted: #5b6672;                   // 次要文字/日期   5.85:1
-$accent: #8c2f39;                  // 强调占位符/hover 8.1:1
-$page-bg: #f4f1ec;                 // 纸面底色
-$rule: #dcd6cc;                    // 细线
+//    括号里是对比度（白底 / 淡色底），改色时照着这个底线走。
+$ink: $theme-text-color-primary;   // 标题              17.9:1
+$body-text: #334155;               // 正文               10.4:1
+$muted: #64748b;                   // 白底上的次要/日期     4.8:1
+$muted-on-tint: #475569;           // 淡色底板上的次要文字  7.5:1（#64748b 在淡底上会掉到 4.4，不够）
+$accent: #f59e0b;                  // 段落标题的圆点（纯装饰，不承载文字）
+$page-bg: #f6f8fb;                 // 页面底
+$rule: #e2e8f0;                    // 细线 / 描边
+
+// ---- 各内容类型的专属淡色调底板（方案 4 的「卡片」就是它们）----
+// 2026-10-03 按要求把「在投」与「开源」两张底板调淡了一档（参考值：与白底的对比度，
+// 越接近 1.000 越淡）—— 它们原本是暖/紫色相，在同等亮度下看起来就是比蓝更「有色」。
+$tint-paper:       #eff6ff;        // 论文（已录用）：淡蓝      1.088
+$tint-paper-wait:  #fefbff;        // 论文（在投）：极淡紫      1.027（原 #fdf4ff = 1.074）
+$tint-soft:        #fffbf7;        // 开源：极淡暖白            1.030（原 #fff7ed = 1.062）
+$tint-side:        #f8fafc;        // 侧栏条目：极浅灰
+
+// ---- 强调色（只在真正需要「另一个色」的地方用，别到处撒）----
+$c-blue:   #2563eb;                // 主色：链接、已录用徽章
+$c-indigo: #4f46e5;                // 悬停
+
+// 在投徽章：浅底 + 深字，不再是实心重色（2026-10-03 按要求调浅）。
+// 顺带好处：和已录用的「实心」形成**结构**差异，不再只靠色相区分。
+// 对比度 5.43:1（原来是实心 #c026d3 + 白字 = 4.71:1，调浅后反而更高）。
+$c-wait-bg:   #fae8ff;
+$c-wait-text: #a21caf;
+
+// ⚠️ 开源链接必须用这个深橙 #c2410c（5.03:1）。**再浅一档就不达标** ——
+//    实测 #cc4a10 只有 4.48:1、#ea580c 只有 3.46:1，都跌破 AA 的 4.5。
+//    橙色相天生亮度高，做浅色文字很难兼顾对比度，别为了「好看」往下调。
+$c-orange: #c2410c;
 
 /*************************** Variables Section. *****************************/
-// 覆盖 Bootstrap 自己用的变量。灰阶改成暖灰，别让它的组件（边框、text-muted、
-// 禁用态）在暖色页面上发蓝。
-$gray-100: #f2efe9;
-$gray-200: #e8e4dc;
+// 覆盖 Bootstrap 自己用的变量。冷灰阶，和上面的 token 同一套。
+$gray-100: #f1f5f9;
+$gray-200: #e2e8f0;
 $gray-300: $rule;
-$gray-400: #bdb6aa;
-$gray-500: #8f887c;
+$gray-400: #cbd5e1;
+$gray-500: #94a3b8;
 $gray-600: $muted;
-$gray-700: #46515c;
-$gray-800: #2b3540;
+$gray-700: #475569;
+$gray-800: #1e293b;
 $gray-900: $ink;
 
 // ⚠️ 系统字体栈 + 显式 CJK，必须在 @import bootstrap 之前定义。
@@ -85,8 +113,8 @@ a.theme-link {
     text-decoration-color: rgba($theme-color-primary, 0.3);
     transition: color 0.2s ease, text-decoration-color 0.2s ease;
     &:hover {
-	    color: $accent;
-	    text-decoration-color: rgba($accent, 0.7);
+	    color: $c-indigo;
+	    text-decoration-color: rgba($c-indigo, 0.7);
     }
 }
 
@@ -121,14 +149,23 @@ a.theme-link {
 }
 
 /*********** Resume **********/
-// 卡片：从「重阴影浮起」改成「细线 + 纸面底」。原来那套 box-shadow 其实是无效代码 ——
-// 模板上的 shadow-lg 是 Bootstrap 的 !important 工具类，把这里的 box-shadow（连同
-// hover 那条）整个压掉了，所以卡片观感一直只来自 shadow-lg。这次两边一起收敛。
+// 主卡片：白底 + 柔和投影 + 大圆角。
+// ⚠️ 模板上**不要**再挂 shadow-lg —— 那是 Bootstrap 的 !important 工具类，会把这套
+//    box-shadow 整个压掉（上一版就是因此白写了一段没人发现的死代码）。
 .resume-wrapper {
 	background: #fff;
-	border: 1px solid $rule;
-	border-radius: .25rem;
-    box-shadow: none;
+	border: 0;
+	border-radius: 18px;
+    box-shadow:
+        0 1px 3px rgba(16, 24, 40, .06),
+        0 10px 28px rgba(16, 24, 40, .05);
+
+    // 卡片内那三道 <hr> 收细一点：卡片式布局里段落主要靠底板分层，
+    // 分隔线只做很轻的一档，不能像以前那样抢眼。
+    hr {
+        border-top: 1px solid $rule;
+        margin: 1.5rem 0;
+    }
 }
 
 .resume-section-heading {
@@ -138,31 +175,35 @@ a.theme-link {
 	font-size: 1.0625rem;
 	letter-spacing: .01em;
 	color: $ink;
-    font-weight: 600;
-    border-bottom: 1px solid $rule;
-    // 标题下沿的一道短标记，代替原来那条通高的渐变竖条
-    &:after {
+    font-weight: 700;
+
+    // 方案 4 的段落标记：左边一个琥珀色圆点 + 一圈同色淡光晕。
+    // 用 ::before 而不是 ::after —— 段落折叠的 caret 走右边，两者不抢位置。
+    &:before {
 	    content: "";
-	    position: absolute;
-	    left: 0;
-	    bottom: -1px;
-	    width: 2rem;
-	    height: 2px;
-	    background: $accent;
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 100px;
+        background: $accent;
+        box-shadow: 0 0 0 4px rgba($accent, .16);
+        margin-right: .25rem;
+        // 和文字视觉中线对齐（圆点没有文字基线）
+        vertical-align: 1px;
     }
 }
 
 .resume-name {
 	font-size: 2.25rem;
-	font-weight: 700;
-	letter-spacing: .02em;
+	font-weight: 800;
+	letter-spacing: .01em;
 	color: $ink;
 }
 
 .resume-tagline {
 	font-size: 1.0625rem;
-	font-weight: 400;
-    color: $muted;
+	font-weight: 600;
+    color: $theme-color-primary;
 }
 
 .resume-contact {
@@ -181,7 +222,8 @@ a.resume-link {
 .resume-profile-image {
 	max-width: 108px;
     border-radius: 50%;
-    border: 1px solid $rule;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 14px rgba(16, 24, 40, .12);
 }
 
 .resume-intro {
@@ -200,8 +242,9 @@ a.resume-link {
         transition: color .2s ease, text-decoration-color .2s ease;
 
         &:hover {
-            color: $accent;
-            text-decoration-color: $accent;
+            // ⚠️ 别用 $accent（琥珀）—— 它是装饰色，白底只有约 2:1，当文字色不达标
+            color: $c-indigo;
+            text-decoration-color: $c-indigo;
         }
     }
 }
@@ -226,7 +269,8 @@ a.resume-link {
 }
 
 .resume-aside {
-	border-left: 1px solid $rule;
+	// 方案 4 去掉了主栏/侧栏之间那道竖线：两栏现在各自是卡片，靠间距分就够了，
+	// 再加一条通高直线会显得像表格。窄屏下的 border-top 仍保留（见下面的响应式块）。
 	.item {
 		font-size: .875rem;
 	}
@@ -262,23 +306,24 @@ a.resume-link {
 
 /*********** 侧栏条目：机构/学位粗体 + 日期灰色小字 **********/
 // 教育、实习、荣誉三处共用同一套节奏，别再各写一份。
+// 方案 4：也做成卡片（极浅灰底板），和主栏的彩色卡片是同一套语言、
+// 但刻意更弱 —— 侧栏是次要信息，不能和论文抢注意力。
 .side-list .side-entry,
 .resume-education-list > li,
 .resume-awards-list > li {
-    padding-bottom: .75rem;
-    margin-bottom: .75rem;
-    border-bottom: 1px solid $rule;
+    padding: .6875rem .875rem;
+    margin-bottom: .5rem;
+    border-radius: 12px;
+    background: $tint-side;
 
     &:last-child {
-        padding-bottom: 0;
         margin-bottom: 0;
-        border-bottom: 0;
     }
 }
 
 .resume-degree,
 .side-entry-org {
-    font-weight: 600;
+    font-weight: 700;
     color: $ink;
     line-height: 1.4;
 }
@@ -339,11 +384,15 @@ a.resume-link {
 }
 
 /*********** 研究方向（主栏）**********/
+// 研究方向的每个分组也做成卡片（淡靛底板，和论文的淡蓝、开源的淡橙区分开）。
 .interest {
-    border-bottom: 1px solid $rule;
+    padding: .25rem 1rem .5rem;
+    margin-bottom: .625rem;
+    border-radius: 16px;
+    background: #eef2ff;
 
     &:last-child {
-        border-bottom: 0;
+        margin-bottom: 0;
     }
 }
 
@@ -398,13 +447,21 @@ a.resume-link {
 }
 
 /*********** Paper / Information Section **********/
+// 方案 4：每篇论文是一张**淡色底板的卡片**，已录用淡蓝、在投淡紫。
+// 不再是细线分隔 —— 这是这一版「加卡片」的主要落点。
 .information-item {
-    padding: .875rem 0;
-    border-bottom: 1px solid $rule;
+    padding: .9375rem 1.125rem;
+    border-radius: 16px;
+    margin-bottom: .6875rem;
+    background: $tint-paper;
 
     &:last-child {
-        border-bottom: 0;
-        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+
+    // 在投：换成淡紫底板，和已录用的淡蓝一眼可分
+    &--pending {
+        background: $tint-paper-wait;
     }
 
     .paper-title {
@@ -415,7 +472,7 @@ a.resume-link {
         color: $ink;
         margin-bottom: .375rem;
 
-        // 标题即链接：可点性由**下划线**表达（另一个维度 status 走徽章的填充方式，
+        // 标题即链接：可点性由**下划线**表达（另一个维度 status 走徽章颜色 + 底板色，
         // 两条通道互不干扰）。没有 href 的标题就是普通文本，不带下划线。
         a {
             color: inherit;
@@ -433,43 +490,47 @@ a.resume-link {
 
     .paper-authors {
         font-size: .8125rem;
-        color: $body-text;
+        // ⚠️ 淡色底板上要用更深的次要色：$muted(#64748b) 在白底是 4.8:1，
+        //    落到 #eff6ff 上会掉到约 4.4，不够 AA
+        color: $muted-on-tint;
         line-height: 1.5;
-        margin-bottom: .375rem;
+        margin-bottom: .4375rem;
     }
 }
 
 .paper-venue {
     display: inline-block;
-    padding: .125rem .5rem;
-    border-radius: .2rem;
+    padding: .1875rem .6875rem;
+    border-radius: 100px;
     font-size: .75rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: .01em;
 }
 
 // 已录用：实心
 .paper-venue--published {
-    background: $theme-color-primary;
+    background: $c-blue;
     color: #fff;
 }
 
-// 在投：描边。⚠️ 用真 border 而不是 box-shadow —— Bootstrap 的 print 块会把
-// box-shadow 全部 !important 干掉，用 box-shadow 画的框打印时会整个消失。
+// 在投：浅底 + 深字（2026-10-03 按要求调浅）。
+// 两者除了色相还差在**填充方式**（实心 vs 浅底），所以即使色觉有差异也分得开；
+// 再加上徽章文案里本来就写着「在投 / Under Review」，信息载体是文字不是颜色。
 .paper-venue--pending {
-    background: transparent;
-    color: $theme-color-primary;
-    border: 1px solid rgba($theme-color-primary, .45);
+    background: $c-wait-bg;
+    color: $c-wait-text;
 }
 
 /*********** Software Section **********/
+// 和论文同一套卡片语言，但换成淡橙底板 —— 一眼能看出这是「另一类东西」。
 .software-item {
-    padding: .75rem 0;
-    border-bottom: 1px solid $rule;
+    padding: .875rem 1.125rem;
+    border-radius: 16px;
+    margin-bottom: .625rem;
+    background: $tint-soft;
 
     &:last-child {
-        border-bottom: 0;
-        padding-bottom: 0;
+        margin-bottom: 0;
     }
 }
 
@@ -478,35 +539,34 @@ a.resume-link {
 }
 
 .software-name {
-    font-weight: 600;
+    font-weight: 700;
     color: $ink;
 
     a {
-        color: inherit;
-        text-decoration: underline;
-        text-decoration-color: rgba($theme-color-primary, .35);
-        text-underline-offset: 2px;
+        color: $c-orange;
+        text-decoration: none;
 
         &:hover {
-            color: $theme-color-primary;
-            text-decoration-color: $theme-color-primary;
+            text-decoration: underline;
+            text-decoration-color: rgba($c-orange, .5);
         }
     }
 }
 
 .software-desc {
-    color: $muted;
+    color: $muted-on-tint;
     font-size: .9375rem;
 
     &:before {
         content: " — ";
-        color: $rule;
+        color: #fed7aa;   // 纯装饰的分隔符，调浅无对比度负担
     }
 }
 
 .software-meta {
     font-size: .75rem;
-    color: $muted;
+    color: $muted-on-tint;
+    opacity: .85;
 }
 
 /*********** 语言切换器 **********/
@@ -583,6 +643,18 @@ a.resume-link {
     body,
     .main-wrapper {
         background: #fff;
+    }
+
+    // 方案 4 的卡片全靠**淡色底板**分层，而浏览器默认不打印背景色 ——
+    // 不补的话所有卡片在纸上会塌成一片。改成细描边，层级才留得下来。
+    .information-item,
+    .software-item,
+    .interest,
+    .side-list .side-entry,
+    .resume-education-list > li,
+    .resume-awards-list > li {
+        background: transparent !important;
+        border: 1px solid #d8d8d8 !important;
     }
 
     .resume-wrapper {
