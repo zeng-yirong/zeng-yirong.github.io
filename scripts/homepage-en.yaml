@@ -55,10 +55,12 @@ research_focus:
   "智能体强化学习（Agentic RL）":
     name: "Agentic Reinforcement Learning"
     time: "2024.09 - Present"
+    # ⚠️ 条数必须与 CV research_focus 里那条**逐条对应**（脚本会校验）。
+    # 2026-10-03：CV 里把「近期探索：通过训练 Skill 管理器…」注释掉了，这里也同步去掉；
+    # 那句在主页上仍然显示 —— 它被搬到了 sync-homepage.py 的 INTEREST_EXTRA（主页专属补充）。
     bullets:
       - "Acquiring environment and human feedback through tool calls and continuously updating model parameters to raise the performance ceiling — a mainstream post-training route for large models."
       - "Research coverage: stability and ceiling of long-horizon training (NeurIPS 2026, EMNLP 2025×2, ICLR 2027 under review), adaptive fast/slow thinking (ICLR 2026), tool environments and data synthesis (NeurIPS 2026, ICLR 2027 under review), and lightweight Harness with In-Harness RL (AAAI 2027 under review)."
-      - "Recent exploration: evolving Agent Skills by training a Skill manager."
   "指令遵循（Instruction Following）":
     name: "Instruction Following"
     time: "2025.06 - Present"

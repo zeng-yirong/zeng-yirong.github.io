@@ -11,6 +11,8 @@
 #
 # 模板用原生 <details open> 渲染，一组一条；bullets 是纯文本，
 # 不过 markdownify（CV 里这几条本来就没有 markdown）。
+# （末尾那条「近期探索：通过训练 Skill 管理器…」是主页专属，
+#   来自 sync-homepage.py 的 INTEREST_EXTRA，CV 简历里已注释掉。）
 # ==========================================================
 
 

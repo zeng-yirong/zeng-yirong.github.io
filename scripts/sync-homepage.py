@@ -119,6 +119,18 @@ SOFTWARE_DEMO = {
 }
 
 
+# 主页专属的研究方向补充条目：**CV 里没有，只出现在主页**。
+# 2026-10-03：按要求把「近期探索：通过训练 Skill 管理器…」从三份简历里注释掉了，
+# 但个人主页保留 —— 主页的 research_focus 是从 CV a 生成的，不能只删掉了事，
+# 所以那条搬到这里。键 = CV research_focus[].name（中文组名，逐字相同），
+# 值按语言各一份（中文侧也从 CV 里拿不到了，只能一起放这儿）。
+INTEREST_EXTRA = {
+    "智能体强化学习（Agentic RL）": {
+        "zh": "近期探索：通过训练 Skill 管理器来实现 Agent Skill 的进化",
+        "en": "Recent exploration: evolving Agent Skills by training a Skill manager.",
+    },
+}
+
 # CV 的 org 是「华为（北京）小艺 · 基础算法开发部」，侧栏只有 ~240px 宽，
 # 放不下整串。取第一个「·」之前的部分（EN 的 prose company 同样含「·」，规则通用）。
 # 断言而不是静默截断：哪天 CV 把「·」去掉了，这里要报错让人来改规则，
@@ -350,6 +362,11 @@ def gen_interests(cv, prose):
     if unused:
         sys.exit("scripts/homepage-en.yaml 里这些组名在 CV research_focus 中不存在：%s" % "、".join(unused))
 
+    # 主页专属补充条目的组名必须真在 CV 里 —— 写错组名时宁可报错，也不要静默丢掉
+    stray_extra = [k for k in INTEREST_EXTRA if k not in {g["name"] for g in zh_groups}]
+    if stray_extra:
+        sys.exit("INTEREST_EXTRA 里这些组名在 CV research_focus 中不存在：%s" % "、".join(stray_extra))
+
     for g in zh_groups:
         en = en_groups[g["name"]]
         if len(en["bullets"]) != len(g["bullets"]):
@@ -373,7 +390,9 @@ def gen_interests(cv, prose):
                          "带中文「至今」，norm_date() 只换破折号、推不出英文。",
                          "",
                          "模板用原生 <details open> 渲染，一组一条；bullets 是纯文本，",
-                         "不过 markdownify（CV 里这几条本来就没有 markdown）。"])]
+                         "不过 markdownify（CV 里这几条本来就没有 markdown）。",
+                         "（末尾那条「近期探索：通过训练 Skill 管理器…」是主页专属，",
+                         "  来自 sync-homepage.py 的 INTEREST_EXTRA，CV 简历里已注释掉。）"])]
         for g in zh_groups:
             en = en_groups[g["name"]]
             lines.append("")
@@ -382,6 +401,10 @@ def gen_interests(cv, prose):
             lines.append("  bullets:")
             for b in (en["bullets"] if lang == "en" else g["bullets"]):
                 lines.append("    - %s" % q(b))
+            # 主页专属补充条目排在最后（和它原先在 CV 里的位置一致）
+            extra = INTEREST_EXTRA.get(g["name"])
+            if extra:
+                lines.append("    - %s" % q(extra[lang]))
         out[lang] = "\n".join(lines) + "\n"
 
     write(os.path.join(DATA_DIR, "zh", "interests.yaml"), out["zh"])

@@ -116,7 +116,9 @@ research_focus:
     bullets:
       - "通过工具调用获取环境与人类反馈、持续更新模型参数来提升性能上限，是大模型后训练的主流技术路线"
       - "研究覆盖：长程训练的稳定性与上限提升（NeurIPS 2026、EMNLP 2025×2、ICLR2027 在投）、自适应快慢思考（ICLR 2026）、工具环境与数据合成（NeurIPS 2026、ICLR 2027 在投）、轻量化 Harness 与 In-Harness RL（AAAI 2027 在投）"
-      - "近期探索：通过训练 Skill 管理器来实现 Agent Skill 的进化"
+      # 2026-10-03 按要求从简历里注释掉（个人主页保留，见 scripts/sync-homepage.py 的
+      # INTEREST_EXTRA —— 主页的 research_focus 是从这里生成的，所以不能只是删掉了事）。
+      # - "近期探索：通过训练 Skill 管理器来实现 Agent Skill 的进化"
   - name: "指令遵循（Instruction Following）"
     time: "2025.06 – 至今"
     bullets:
