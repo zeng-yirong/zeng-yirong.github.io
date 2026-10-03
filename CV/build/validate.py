@@ -33,7 +33,8 @@ import yaml
 
 ROOT     = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
-OUT_HTML = ROOT / "output" / "html"
+# 与 build.py 保持一致：HTML 产物在站点的 static/cv/（仓库根是 ROOT 的上两级）。
+OUT_HTML = ROOT.parent.parent / "static" / "cv"
 
 DATA = {"A": "A-general.yaml", "B": "B-institute.yaml", "C": "C-talent.yaml"}
 HTML = {"A": "resume-A-general.html", "B": "resume-B-institute.html", "C": "resume-C-talent.html"}

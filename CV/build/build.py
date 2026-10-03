@@ -31,7 +31,10 @@ ROOT     = Path(__file__).resolve().parent          # CV/build
 CV_DIR   = ROOT.parent                              # CV
 DATA_DIR = ROOT / "data"
 TPL_DIR  = ROOT / "templates"
-OUT_HTML = ROOT / "output" / "html"
+# HTML 产物直接写进站点的 static/cv/ —— 主页头部要链接这三份简历，
+# 而 Hugo 只发布 static/ 下的东西。放在这里就没有第二份会漂移的副本。
+# （ROOT 是 CV/build，仓库根是它的上两级。）
+OUT_HTML = ROOT.parent.parent / "static" / "cv"
 OUT_PDF  = ROOT / "output" / "pdf"
 PHOTO    = CV_DIR / "personal-photo.jpg"            # 固定常量：与数据文件所在目录解耦
 

@@ -1,14 +1,14 @@
 # 简历构建系统（一版一数据、一版一模板）
 
 数据 → 模板 → HTML + A4 PDF。三个版本**各有各的数据文件和模板**，不共享任何字段。
-产物直接提交进仓库（除了在线看，还要能直接从仓库拿到 PDF）。
+产物直接提交进仓库（HTML 由站点发布，PDF 供从仓库直接下载）。
 
 ```
 CV/
 ├── personal-photo.jpg          # 唯一照片资产（内联 base64 进产物，不属于「事实」，故不进数据文件）
 ├── RESUME_CONTENT.md           # docx 底稿存档，不参与构建
 └── build/
-    ├── build.py                # 构建：data/<版本>.yaml -> output/{html,pdf}/resume-<版本>.*
+    ├── build.py                # 构建：data/<版本>.yaml -> HTML 到 static/cv/、PDF 到 output/pdf/
     ├── validate.py             # 校验：三份数据承载的事实是否一致、页面上有没漏渲染
     ├── data/                   # ★ 要改内容就改这里
     │   ├── A-general.yaml      # 通用版
@@ -19,9 +19,22 @@ CV/
     │   ├── style-B-minimal.html.j2        # 极简单栏学术风（LaTeX 感，打印最佳，3 页，含照片+页脚页码）
     │   └── style-C-tech-timeline.html.j2  # 科技风·时间轴（hero + 时间轴，含照片；2026-09-30 起无渐变）
     └── output/
-        ├── html/resume-{A-general,B-institute,C-talent}.html
-        └── pdf /resume-{A-general,B-institute,C-talent}.pdf   # A 4 页、B/C 各 3 页（A4）
+        └── pdf/resume-{A-general,B-institute,C-talent}.pdf   # A 4 页、B/C 各 3 页（A4）
+
+static/cv/                        # ★ HTML 产物在这里，**不在** build/output/ 下
+    ├── resume-A-general.html
+    ├── resume-B-institute.html
+    └── resume-C-talent.html
 ```
+
+> **为什么 HTML 产物不在 `build/output/` 里**（2026-10-03 搬迁）：主页头部要链接这三份简历，
+> 而 Hugo 只发布 `static/` 下的东西。放进 `static/cv/` 后由 Hugo 原样复制到 `/cv/`，
+> 线上可直接打开（`https://zeng-yirong.github.io/cv/resume-A-general.html`），
+> 而且**没有第二份会漂移的副本**。PDF 不在站点上发布，仍留在 `build/output/pdf/`。
+>
+> ⚠️ 这带来一条**静默失败**路径：`static/cv/` 里是提交进仓库的产物，而 CI 只跑
+> `hugo --minify`、不跑 `build.py`。改了 `data/` 却忘了重跑并提交，线上就是旧简历，
+> **Hugo 不会报任何错**。唯一防线是 `python validate.py --check-html`。
 
 ## 版本 ↔ 数据 ↔ 模板 ↔ 产物
 
@@ -31,7 +44,7 @@ CV/
 | **B** | 研究院版 | `data/B-institute.yaml` | `style-B-minimal.html.j2` | `resume-B-institute.*` |
 | **C** | 人才计划版 | `data/C-talent.yaml` | `style-C-tech-timeline.html.j2` | `resume-C-talent.*` |
 
-一句话规则：`data/<名字>.yaml` → `output/{html,pdf}/resume-<名字>.*`。
+一句话规则：`data/<名字>.yaml` → `resume-<名字>.*`（HTML 去 `static/cv/`，PDF 留 `output/pdf/`）。
 看到数据文件名就知道产物名，不用记第二个映射表。
 
 ## 日常用法
@@ -709,13 +722,16 @@ for i in range(d.page_count - 1):     # 上页底 150pt + 红缝 + 下页顶 150
 
 ## 不要做的事
 
-- **不要直接编辑 `output/` 里的 HTML/PDF**：它们是产物，`python build.py` 一跑就覆盖。
-  改文字要改 `data/*.yaml`（改版式才动 `templates/*.j2`）。
+- **不要直接编辑产物**（`static/cv/*.html` 与 `output/pdf/*.pdf`）：它们是产物，
+  `python build.py` 一跑就覆盖。改文字要改 `data/*.yaml`（改版式才动 `templates/*.j2`）。
   2026-09-28 就发生过一次：在产物 HTML 里改了 60 多处文字，重建后全部丢失，只能再逐条搬回数据文件。
   2026-09-29 又一次（小的）：产物里多了「主流」两个字，重建就没了，见上面那节。
-  所以**重建前先备份 `output/`**，重建后核对产物与数据——`validate.py --check-html` 报出
+  所以**重建前先备份产物**，重建后核对产物与数据——`validate.py --check-html` 报出
   「数据里有、页面上看不到」的条目，多半就是产物里那处手改被覆盖了（反过来，产物比数据多出的
   字它查不到，所以文字层面的核对还得把备份与产物对一遍）。
-- 不要把 `output/` 加回 `.gitignore`：产物是刻意提交的，忽略它会让新产物在 `git add .` 时被静默漏掉。
+- 不要把 HTML 产物挪回 `build/output/`：它们必须在 `static/cv/` 下才会被 Hugo 发布到站点上
+  （见开头那节）。挪回去线上链接就 404。
+- 不要把 `output/` 或 `static/cv/` 加回 `.gitignore`：产物是刻意提交的，忽略它会让新产物在
+  `git add .` 时被静默漏掉。
 - 不要给 `data/` 再引入一份「共享基础数据 + 各版覆盖」的文件：那正是这次重构去掉的东西
   （需要溯源看 `git show fadb334:CV/build/resume.yaml`）。
