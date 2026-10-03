@@ -5,7 +5,10 @@
 #     python scripts/sync-homepage.py
 # 本文件会被整个覆盖。
 # 标题 / 作者 / venue 两个语言页共用（学术惯例不译标题），
-# 只有徽章措辞按语言各一份：badge.en / badge.zh。
+# 徽章措辞按语言各一份：badge.en / badge.zh。
+#
+# status 取 CV 的 published / pending —— 模板用它区分「已录用」与
+# 「在投」的徽章样式（实心 vs 描边），不再靠徽章文案里那两个字。
 #
 # 三处对 CV 的规整（都在 sync-homepage.py 顶上写着）：
 #   标题补结尾句点（CV 不带、主页带）
@@ -17,18 +20,21 @@
 
 - title: "Unveiling Entropy-Performance Decoupling in Agentic RL for Tool-Integrated Reasoning."
   authors: "Yirong Zeng, Shen You, et al."
+  status: "published"
   badge:
     en: "NeurIPS 2026 | CCF-A, First Author"
     zh: "NeurIPS 2026 ｜ CCF-A，一作"
 
 - title: "ClawBenchPro: Benchmarking How Well Agent Harnesses Work."
   authors: "Yufei Liu*, Yirong Zeng* (co-first), et al."
+  status: "published"
   badge:
     en: "NeurIPS 2026 | CCF-A, Co-First Author"
     zh: "NeurIPS 2026 ｜ CCF-A，共一"
 
 - title: "AutoTool: Automatic Scaling of Tool-Use Capabilities in RL via Decoupled Entropy Constraints."
   authors: "Yirong Zeng, Xiao Ding, Yufei Liu, Yuxian Wang, Qunyao Du, Yutai Hou, Wu Ning, Haonan Song, Duyu Tang, Dandan Tu, et al."
+  status: "published"
   badge:
     en: "ICLR 2026 | CCF-A, First Author"
     zh: "ICLR 2026 ｜ CCF-A，一作"
@@ -36,6 +42,7 @@
 
 - title: "TinyJudge: Unverifiable Constraint Alignment via Lightweight Specialist Ensembles."
   authors: "Yirong Zeng, Yufei Liu, Xiao Ding, Yutai Hou, Yuxian Wang, Wu Ning, Haonan Song, Dandan Tu, Qixun Zhang, et al."
+  status: "published"
   badge:
     en: "ACL 2026 | CCF-A, First Author"
     zh: "ACL 2026 ｜ CCF-A，一作"
@@ -43,6 +50,7 @@
 
 - title: "Tool Zero: Training Tool-Augmented LLMs via Pure RL from Scratch."
   authors: "Yirong Zeng, Xiao Ding, Yutai Hou, Yuxian Wang, Li Du, Juyi Dai, Qiuyang Ding, Duyu Tang, Dandan Tu, Weiwen Liu, Bing Qin, Ting Liu"
+  status: "published"
   badge:
     en: "EMNLP 2025 | Findings, CCF-B, First Author"
     zh: "EMNLP 2025 ｜ Findings，CCF-B，一作"
@@ -50,6 +58,7 @@
 
 - title: "iTool: Reinforced Fine-Tuning with Dynamic Deficiency Calibration for Advanced Tool Use."
   authors: "Yirong Zeng, Xiao Ding, Yuxian Wang, Weiwen Liu, Wu Ning, Xu Huang, Duyu Tang, Dandan Tu, Bing Qin, Ting Liu"
+  status: "published"
   badge:
     en: "EMNLP 2025 | Main, CCF-B, First Author"
     zh: "EMNLP 2025 ｜ Main，CCF-B，一作"
@@ -57,6 +66,7 @@
 
 - title: "Moderation Matters: Exploring Large Language Models for Effective Rumor Detection on Social Media."
   authors: "Yirong Zeng, Xiao Ding, Bibo Cai, Ting Liu and Bing Qin"
+  status: "published"
   badge:
     en: "NAACL 2025 | Main, CCF-B, First Author"
     zh: "NAACL 2025 ｜ Main，CCF-B，一作"
@@ -64,6 +74,7 @@
 
 - title: "RU22Fact: Optimizing Evidence for Multilingual Explainable Fact-Checking on Russia-Ukraine Conflict."
   authors: "Yirong Zeng, Xiao Ding, Yi Zhao, Xiangyu Li, Jie Zhang, Chao Yao, Ting Liu and Bing Qin"
+  status: "published"
   badge:
     en: "COLING 2024 | CCF-B, First Author"
     zh: "COLING 2024 ｜ CCF-B，一作"
@@ -71,6 +82,7 @@
 
 - title: "Human Cognitive Process Aligned Rumor Detection with Small Language Models Enhanced Large Language Models."
   authors: "Yirong Zeng, Xiao Ding, Bibo Cai, Bing Qin, Ting Liu"
+  status: "published"
   badge:
     en: "IPM 2026 | SCI-Q1, First Author"
     zh: "IPM 2026 ｜ SCI-Q1，一作"
@@ -78,12 +90,14 @@
 
 - title: "Less Harness, More Signal: Efficient In-Harness RL for Autonomous Agents."
   authors: "Yufei Liu*, Yirong Zeng* (co-first), et al."
+  status: "pending"
   badge:
     en: "AAAI 2027 | Under Review, CCF-A"
     zh: "AAAI 2027 ｜ 在投，CCF-A"
 
 - title: "Precision Bounds Diversity: Reward Engineering for Instruction Following via RLVR."
   authors: "Yirong Zeng, Yufei Liu, et al."
+  status: "pending"
   badge:
     en: "ICLR 2027 | Under Review, CCF-A"
     zh: "ICLR 2027 ｜ 在投，CCF-A"
@@ -91,6 +105,7 @@
 
 - title: "EnvCraft: Synthesizing Executable Environments in Agentic RL for Claw-like Agent."
   authors: "Yirong Zeng, Shen You, et al."
+  status: "pending"
   badge:
     en: "ICLR 2027 | Under Review, CCF-A"
     zh: "ICLR 2027 ｜ 在投，CCF-A"
@@ -98,18 +113,21 @@
 
 - title: "Constraint-Decoupled On-Policy Distillation for Multi-Constraint Instruction Following."
   authors: "Yirong Zeng, Weian Yu, et al."
+  status: "pending"
   badge:
     en: "ICLR 2027 | Under Review, CCF-A"
     zh: "ICLR 2027 ｜ 在投，CCF-A"
 
 - title: "Not Every Tool Call Helps: Fine-Grained Credit Assignment for Efficient Tool-Integrated Reasoning."
   authors: "Shen You*, Yirong Zeng* (co-first), et al."
+  status: "pending"
   badge:
     en: "ICLR 2027 | Under Review, CCF-A"
     zh: "ICLR 2027 ｜ 在投，CCF-A"
 
 - title: "Towards Scalable RLVR: Multimodal Instruction Following Data Synthesis and Distillation."
   authors: "Yirong Zeng, Sai Zhang, et al."
+  status: "pending"
   badge:
     en: "ACL-ARR | Under Review, CCF-A"
     zh: "ACL-ARR ｜ 在投，CCF-A"

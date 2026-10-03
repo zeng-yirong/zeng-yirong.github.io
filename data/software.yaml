@@ -4,43 +4,50 @@
 # 自动生成，请勿手改 —— 改 CV/build/data/A-general.yaml 里的源数据后跑
 #     python scripts/sync-homepage.py
 # 本文件会被整个覆盖。
-# title / name 按语言各一份，meta 与 href 两语言共用。
+# name / desc / authors 按语言各一份，meta 与 href 两语言共用。
 # 前 3 条从 CV 的 opensource 生成；第 4 条（Demo）不在 CV 里，
 # 写死在 scripts/sync-homepage.py 的 SOFTWARE_DEMO。
+#
+# 字段是拆开的：早先 title 里塞的是「名称 - 描述」、name 里塞的是
+# 作者行，模板只能靠字符串切分来分行，容易出错。
 # ==========================================================
 
 
-- title:
-    en: "ClawLoop - Lightweight Harness & RL Training Framework"
-    zh: "ClawLoop —— 轻量化 Harness 及 RL 训练框架"
-  name:
+- name: "ClawLoop"
+  desc:
+    en: "Lightweight Harness & RL Training Framework"
+    zh: "轻量化 Harness 及 RL 训练框架"
+  authors:
     en: "Yirong Zeng, et al."
     zh: "曾屹荣 等"
   meta: "⭐ 33 · GitHub"
   href: "https://github.com/zeng-yirong/clawloop"
 
-- title:
-    en: "ClawForge (EnvCraft) - Agentic RL Environments, Training Code & Models"
-    zh: "ClawForge (EnvCraft) —— Agentic RL 交互环境、配套训练代码及模型"
-  name:
+- name: "ClawForge (EnvCraft)"
+  desc:
+    en: "Agentic RL Environments, Training Code & Models"
+    zh: "Agentic RL 交互环境、配套训练代码及模型"
+  authors:
     en: "Yirong Zeng, et al."
     zh: "曾屹荣 等"
   meta: "⭐ 60 · GitHub"
   href: "https://github.com/zeng-yirong/EnvCraft"
 
-- title:
-    en: "MIFS - Multimodal Instruction-Following Dataset"
-    zh: "MIFS —— 多模态指令遵循数据集"
-  name:
+- name: "MIFS"
+  desc:
+    en: "Multimodal Instruction-Following Dataset"
+    zh: "多模态指令遵循数据集"
+  authors:
     en: "Yirong Zeng, et al."
     zh: "曾屹荣 等"
   meta: "11k+ downloads"
   href: "https://modelscope.cn/datasets/asdqfad/MIFS"
 
-- title:
-    en: "Misinformation Detection - Real-time Rumor Identification & Evidence Tracing"
-    zh: "虚假信息检测 —— 实时谣言识别与证据溯源"
-  name:
+- name: "Misinformation Detection"
+  desc:
+    en: "Real-time Rumor Identification & Evidence Tracing"
+    zh: "实时谣言识别与证据溯源"
+  authors:
     en: "Yirong Zeng, Juyi Dai, Shen You"
     zh: "Yirong Zeng, Juyi Dai, Shen You"
   meta: "Demo System"

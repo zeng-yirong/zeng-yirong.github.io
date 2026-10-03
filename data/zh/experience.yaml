@@ -14,6 +14,8 @@
 - title: "AI 算法工程师（研究型实习生）"
   company: "华为（北京）小艺 · 基础算法开发部"
   dates: "2024.09 - 2026.09"
+  sidebar_org: "华为（北京）小艺"
+  sidebar_dates: "2024.09 - 2026.09"
   details: "作为研究型实习生，负责小艺的全模态大模型系统训练技术的先导探索：在 Agentic RL、Harness Agent 训练、指令遵循方向产出 12 项研究成果，其中 4 项落地小艺业务。"
   items:
     - details: "**Agentic RL 算法研发**"

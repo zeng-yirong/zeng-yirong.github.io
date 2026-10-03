@@ -1,28 +1,32 @@
 
-                            <section class="project-section py-3">
+                            <section class="information-section py-3">
 
-                                <h3 class="text-uppercase resume-section-heading mb-4">{{ i18n "information" }}</h3>
+                                <h3 class="resume-section-heading mb-4">{{ i18n "information" }}</h3>
 
                                 {{/* 数据来自 data/publications.yaml（由 scripts/sync-homepage.py 从 CV 生成）。
-                                     标题/作者/venue 两语言共用，只有徽章按语言取 badge.en / badge.zh。 */}}
+                                     标题/作者/venue 两语言共用，徽章按语言取 badge.en / badge.zh。
+
+                                     两个维度走两条互不干扰的视觉通道：
+                                       status（published / pending）→ 徽章的填充方式（实心 vs 描边）
+                                       有没有 href                   → 标题带不带下划线
+                                     早先徽章同时兼任链接，而且有链接和无链接的样式完全相同，
+                                     结果「录用了没」「能不能点」两件事糊在一起分不出来。 */}}
                                 {{ range .Site.Data.publications }}
-                                <div class="information-item">
-                                    <div class="paper-title mb-2">
+                                <div class="information-item information-item--{{ .status }}">
+                                    <div class="paper-title">
+                                        {{ if .href }}
+                                        <a href="{{ .href }}" target="_blank" rel="noopener">{{ .title }}</a>
+                                        {{ else }}
                                         {{ .title }}
+                                        {{ end }}
                                     </div>
-                                    <div class="paper-authors mb-2">
+                                    <div class="paper-authors">
                                         <strong>{{ i18n "authors" }}:</strong> {{ .authors }}
                                     </div>
-                                    <div>
-                                        {{ if .href }}
-                                        <a href="{{ .href }}" target="_blank" rel="noopener" class="paper-venue">
-                                            {{ index .badge $.Site.Language.Lang }}
-                                        </a>
-                                        {{ else }}
-                                        <span class="paper-venue">{{ index .badge $.Site.Language.Lang }}</span>
-                                        {{ end }}
+                                    <div class="paper-meta">
+                                        <span class="paper-venue paper-venue--{{ .status }}">{{ index .badge $.Site.Language.Lang }}</span>
                                     </div>
                                 </div><!--//information-item-->
                                 {{ end }}
 
-                            </section><!--//project-section-->
+                            </section><!--//information-section-->

@@ -1,0 +1,28 @@
+# ==========================================================
+# 研究方向（主栏 interests）
+#
+# 自动生成，请勿手改 —— 改 CV/build/data/A-general.yaml 里的源数据后跑
+#     python scripts/sync-homepage.py
+# 本文件会被整个覆盖。
+# 英文 侧文案与 time 都来自 scripts/homepage-en.yaml。
+#
+# 为什么英文连 time 都要整串给：CV 里写的是「2024.09 – 至今」，
+# 带中文「至今」，norm_date() 只换破折号、推不出英文。
+#
+# 模板用原生 <details open> 渲染，一组一条；bullets 是纯文本，
+# 不过 markdownify（CV 里这几条本来就没有 markdown）。
+# ==========================================================
+
+
+- name: "Agentic Reinforcement Learning"
+  time: "2024.09 - Present"
+  bullets:
+    - "Acquiring environment and human feedback through tool calls and continuously updating model parameters to raise the performance ceiling — a mainstream post-training route for large models."
+    - "Research coverage: stability and ceiling of long-horizon training (NeurIPS 2026, EMNLP 2025×2, ICLR 2027 under review), adaptive fast/slow thinking (ICLR 2026), tool environments and data synthesis (NeurIPS 2026, ICLR 2027 under review), and lightweight Harness with In-Harness RL (AAAI 2027 under review)."
+    - "Recent exploration: evolving Agent Skills by training a Skill manager."
+
+- name: "Instruction Following"
+  time: "2025.06 - Present"
+  bullets:
+    - "Satisfying user-specified constraints while producing an answer — a prerequisite capability for agent dialogue and long-horizon task execution."
+    - "Research coverage: generalization mechanisms and ceiling improvement of instruction following under RL (ACL 2026, ICLR 2027 under review), multimodal instruction-following RL data synthesis (ACL-ARR under review), and the application of on-policy distillation (OPD) to this setting."

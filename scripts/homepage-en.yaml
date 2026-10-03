@@ -45,6 +45,27 @@ experience:
         - "A lightweight specialist ensemble to mitigate reward hacking in multi-constraint RL: +10% average performance, +12% reward precision, 3× training speed 【**TinyJudge, ACL 2026**】"
         - "Explored on-policy distillation (OPD) for instruction following: decoupled-aggregated correction of the teacher's distribution under multiple constraints, +4% performance 【ICLR 2027 under review】"
 
+# 研究方向（主栏 interests）。键 = CV research_focus[].name（中文组名，逐字相同）。
+# bullets 与该组的 bullets 一一对应，条数对不上时脚本报错。
+#
+# ⚠️ time 必须**整串**给出，不能只给区间：CV 里写的是「2024.09 – 至今」，带中文
+#   「至今」，从 CV 推不出英文。脚本会校验这里的起始日期（"2024.09"）与 CV 一致，
+#   不一致就报错 —— 防的是「CV 改了日期、这里忘了跟着改」。
+research_focus:
+  "智能体强化学习（Agentic RL）":
+    name: "Agentic Reinforcement Learning"
+    time: "2024.09 - Present"
+    bullets:
+      - "Acquiring environment and human feedback through tool calls and continuously updating model parameters to raise the performance ceiling — a mainstream post-training route for large models."
+      - "Research coverage: stability and ceiling of long-horizon training (NeurIPS 2026, EMNLP 2025×2, ICLR 2027 under review), adaptive fast/slow thinking (ICLR 2026), tool environments and data synthesis (NeurIPS 2026, ICLR 2027 under review), and lightweight Harness with In-Harness RL (AAAI 2027 under review)."
+      - "Recent exploration: evolving Agent Skills by training a Skill manager."
+  "指令遵循（Instruction Following）":
+    name: "Instruction Following"
+    time: "2025.06 - Present"
+    bullets:
+      - "Satisfying user-specified constraints while producing an answer — a prerequisite capability for agent dialogue and long-horizon task execution."
+      - "Research coverage: generalization mechanisms and ceiling improvement of instruction following under RL (ACL 2026, ICLR 2027 under review), multimodal instruction-following RL data synthesis (ACL-ARR under review), and the application of on-policy distillation (OPD) to this setting."
+
 # 开源/数据集。键 = CV opensource[].name（逐字相同）。
 # 英文标题按 "{name} - {desc}" 拼、中文按 "{name} —— {desc}" 拼，所以这里只给英文 desc。
 software:

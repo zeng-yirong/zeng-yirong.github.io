@@ -109,27 +109,23 @@ disableKinds = ["taxonomy", "term", "rss"]
             university = "Harbin Engineering University"
             dates = "2018.09 - 2022.07"
 
-        # 华为那段在主栏 Experience（detailed），所以侧栏这里只留更早的两段，
-        # 不再重复一行 Huawei——两处都写会让人以为是两段经历。
+        # 侧栏「实习经历」。华为那段**由脚本从 CV 生成**（侧栏读
+        # data/<lang>/experience.yaml 的 sidebar_org / sidebar_dates），
+        # 不在这里再抄一份 —— 抄了的话 CV 改日期时，侧栏会和主栏并存两个不同的日期。
+        # 所以这里只列主页独有、CV 里没有的两段早期实习。
         [languages.en.params.internships]
             enable = true
 
             [[languages.en.params.internships.list]]
-            name = "2023.7 - 2023.12  China Academy of Cyber"
+            org = "China Academy of Cyber"
+            dates = "2023.7 - 2023.12"
             [[languages.en.params.internships.list]]
-            name = "2021.12 - 2022.5  NEC"
+            org = "NEC"
+            dates = "2021.12 - 2022.5"
 
+        # 研究方向。内容在 data/<lang>/interests.yaml（自动生成，来自 CV 的 research_focus）。
         [languages.en.params.interests]
             enable = true
-
-            [[languages.en.params.interests.list]]
-            name = "Agentic RL (2024.09-)"
-            [[languages.en.params.interests.list]]
-            name = "Harness Agent Training (2024-)"
-            [[languages.en.params.interests.list]]
-            name = "Instruction Following (2025.06-)"
-            [[languages.en.params.interests.list]]
-            name = "Misinformation Detection (2022-2024)"
 
         [languages.en.params.hobbies]
             enable = true
@@ -218,26 +214,21 @@ disableKinds = ["taxonomy", "term", "rss"]
             university = "哈尔滨工程大学"
             dates = "2018.09 - 2022.07"
 
-        # 机构名保留英文原名：这两段的正式中文名没有权威来源，不去猜（NEC 本身就是英文名）
+        # 侧栏「实习经历」。华为那段由脚本从 CV 生成，见英文侧同样的说明。
+        # 机构名保留英文原名：这两段的正式中文名没有权威来源，不去猜（NEC 本身就是英文名）。
         [languages.zh.params.internships]
             enable = true
 
             [[languages.zh.params.internships.list]]
-            name = "2023.7 - 2023.12  China Academy of Cyber"
+            org = "China Academy of Cyber"
+            dates = "2023.7 - 2023.12"
             [[languages.zh.params.internships.list]]
-            name = "2021.12 - 2022.5  NEC"
+            org = "NEC"
+            dates = "2021.12 - 2022.5"
 
+        # 研究方向。内容在 data/<lang>/interests.yaml（自动生成，来自 CV 的 research_focus）。
         [languages.zh.params.interests]
             enable = true
-
-            [[languages.zh.params.interests.list]]
-            name = "智能体强化学习（Agentic RL）(2024.09-)"
-            [[languages.zh.params.interests.list]]
-            name = "Harness Agent 训练 (2024-)"
-            [[languages.zh.params.interests.list]]
-            name = "指令遵循 (2025.06-)"
-            [[languages.zh.params.interests.list]]
-            name = "虚假信息检测 (2022-2024)"
 
         [languages.zh.params.hobbies]
             enable = true

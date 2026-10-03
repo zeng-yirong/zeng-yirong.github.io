@@ -14,8 +14,11 @@
 
 产物（**全部是自动生成的，不要手改**）：
     data/publications.yaml         论文 15 条，标题/作者/venue/链接两语言共用，
-                                   只有徽章措辞按语言各一份（badge.en / badge.zh）
-    data/software.yaml             开源 4 条，title / name 按语言各一份
+                                   徽章措辞按语言各一份（badge.en / badge.zh）；
+                                   status（published/pending）决定「已录用/在投」的样式
+    data/software.yaml             开源 4 条，name / desc / authors 按语言各一份
+    data/zh/interests.yaml         研究方向（中文，全部从 CV 生成）
+    data/en/interests.yaml         研究方向（英文，结构从 CV、文案来自 homepage-en.yaml）
     data/zh/experience.yaml        华为实习（中文，全部从 CV 生成）
     data/en/experience.yaml        华为实习（英文，结构从 CV、文案来自 homepage-en.yaml）
 
@@ -105,14 +108,25 @@ ZH_EXPERIENCE_TITLE = "AI 算法工程师（研究型实习生）"
 # 第 4 条开源（Demo）不在 CV 的 opensource 里 —— CV 的 projects 里是「惊堂木」，
 # 主页用的却是另一套措辞和另一个链接。整个条目写死在这里，并从 opensource 的生成里排除。
 SOFTWARE_DEMO = {
-    "title": {
-        "en": "Misinformation Detection - Real-time Rumor Identification & Evidence Tracing",
-        "zh": "虚假信息检测 —— 实时谣言识别与证据溯源",
+    "name": "Misinformation Detection",
+    "desc": {
+        "en": "Real-time Rumor Identification & Evidence Tracing",
+        "zh": "实时谣言识别与证据溯源",
     },
-    "name": {"en": "Yirong Zeng, Juyi Dai, Shen You", "zh": "Yirong Zeng, Juyi Dai, Shen You"},
+    "authors": {"en": "Yirong Zeng, Juyi Dai, Shen You", "zh": "Yirong Zeng, Juyi Dai, Shen You"},
     "meta": "Demo System",
     "href": "https://huggingface.co/spaces/You-shen/React",
 }
+
+
+# CV 的 org 是「华为（北京）小艺 · 基础算法开发部」，侧栏只有 ~240px 宽，
+# 放不下整串。取第一个「·」之前的部分（EN 的 prose company 同样含「·」，规则通用）。
+# 断言而不是静默截断：哪天 CV 把「·」去掉了，这里要报错让人来改规则，
+# 而不是悄悄把整串塞进侧栏、把排版撑坏。
+def norm_org_short(s):
+    if "·" not in s:
+        sys.exit("组织名 %r 里没有「·」，侧栏取短名的规则（norm_org_short）需要更新" % s)
+    return s.split("·")[0].strip()
 
 
 # ============================================================
@@ -174,7 +188,10 @@ def gen_publications(cv, prose):
     pubs = cv["publications"]
     lines = [header("论文（已发表在前，顺序与 CV 一致）",
                     ["标题 / 作者 / venue 两个语言页共用（学术惯例不译标题），",
-                     "只有徽章措辞按语言各一份：badge.en / badge.zh。",
+                     "徽章措辞按语言各一份：badge.en / badge.zh。",
+                     "",
+                     "status 取 CV 的 published / pending —— 模板用它区分「已录用」与",
+                     "「在投」的徽章样式（实心 vs 描边），不再靠徽章文案里那两个字。",
                      "",
                      "三处对 CV 的规整（都在 sync-homepage.py 顶上写着）：",
                      "  标题补结尾句点（CV 不带、主页带）",
@@ -195,6 +212,7 @@ def gen_publications(cv, prose):
             lines.append("")
             lines.append("- title: %s" % q(title))
             lines.append("  authors: %s" % q(authors))
+            lines.append("  status: %s" % q(status))
             lines.append("  badge:")
             lines.append("    en: %s" % q(en))
             lines.append("    zh: %s" % q(zh))
@@ -216,16 +234,17 @@ def gen_publications(cv, prose):
 
 def gen_software(cv, prose):
     items = []
-    for i, o in enumerate(cv["opensource"]):
+    for o in cv["opensource"]:
         name = o["name"]
         try:
             en_desc = prose["software"][name]["desc"]
         except KeyError:
             sys.exit("scripts/homepage-en.yaml 的 software 里没有 %r 这一条" % name)
         items.append({
-            "title": {"en": "%s - %s" % (name, en_desc), "zh": "%s —— %s" % (name, o["desc"])},
+            "name": name,
+            "desc": {"en": en_desc, "zh": o["desc"]},
             # 作者行：开源这几条都是「本人主导」的缩写式
-            "name": {"en": "Yirong Zeng, et al.", "zh": "曾屹荣 等"},
+            "authors": {"en": "Yirong Zeng, et al.", "zh": "曾屹荣 等"},
             # CV 的 metric 是「⭐ 33」这种，主页跟一个平台名
             "meta": o["metric"] + (" · GitHub" if "github.com" in o.get("link", "") else ""),
             "href": o["link"],
@@ -234,17 +253,21 @@ def gen_software(cv, prose):
     items.append(SOFTWARE_DEMO)
 
     lines = [header("开源项目与数据集",
-                    ["title / name 按语言各一份，meta 与 href 两语言共用。",
+                    ["name / desc / authors 按语言各一份，meta 与 href 两语言共用。",
                      "前 3 条从 CV 的 opensource 生成；第 4 条（Demo）不在 CV 里，",
-                     "写死在 scripts/sync-homepage.py 的 SOFTWARE_DEMO。"])]
+                     "写死在 scripts/sync-homepage.py 的 SOFTWARE_DEMO。",
+                     "",
+                     "字段是拆开的：早先 title 里塞的是「名称 - 描述」、name 里塞的是",
+                     "作者行，模板只能靠字符串切分来分行，容易出错。"])]
     for it in items:
         lines.append("")
-        lines.append("- title:")
-        lines.append("    en: %s" % q(it["title"]["en"]))
-        lines.append("    zh: %s" % q(it["title"]["zh"]))
-        lines.append("  name:")
-        lines.append("    en: %s" % q(it["name"]["en"]))
-        lines.append("    zh: %s" % q(it["name"]["zh"]))
+        lines.append("- name: %s" % q(it["name"]))
+        lines.append("  desc:")
+        lines.append("    en: %s" % q(it["desc"]["en"]))
+        lines.append("    zh: %s" % q(it["desc"]["zh"]))
+        lines.append("  authors:")
+        lines.append("    en: %s" % q(it["authors"]["en"]))
+        lines.append("    zh: %s" % q(it["authors"]["zh"]))
         lines.append("  meta: %s" % q(it["meta"]))
         lines.append("  href: %s" % q(it["href"]))
     write(os.path.join(DATA_DIR, "software.yaml"), "\n".join(lines) + "\n")
@@ -285,10 +308,17 @@ def gen_experience(cv, prose):
                          "三个分组在 CV 里是 internship.groups，主页模板只支持「一段 details +",
                          "一个扁平 <ul>」，所以每组用一条**只有粗体组名**的条目当小标题"
                          "（模板会 markdownify 成 <em>）。"])]
+        company = prose["experience"]["company"] if lang == "en" else job["org"]
         lines.append("")
         lines.append("- title: %s" % q(prose["experience"]["title"] if lang == "en" else ZH_EXPERIENCE_TITLE))
-        lines.append("  company: %s" % q(prose["experience"]["company"] if lang == "en" else job["org"]))
+        lines.append("  company: %s" % q(company))
         lines.append("  dates: %s" % q(dates))
+        # 侧栏「实习经历」那一条用，拆成两行（机构粗体 + 日期灰色），和「教育背景」
+        # 那段的排版一致。侧栏只有 ~240px 宽，org 全称（「华为（北京）小艺 · 基础算法
+        # 开发部」）放不下，所以取短名。读这份数据而不是让 config.toml 再抄一份 ——
+        # 日期就不会和主栏漂移。
+        lines.append("  sidebar_org: %s" % q(norm_org_short(company)))
+        lines.append("  sidebar_dates: %s" % q(dates))
         lines.append("  details: %s" % q(prose["experience"]["details"] if lang == "en" else job["lead"]))
         lines.append("  items:")
         for g in zh_groups:
@@ -305,6 +335,61 @@ def gen_experience(cv, prose):
 
 
 # ============================================================
+# 研究方向（主栏 interests）
+# ============================================================
+
+def gen_interests(cv, prose):
+    zh_groups = cv["research_focus"]
+    en_groups = prose["research_focus"]
+
+    # 与 gen_experience 同构的两种校验：组名缺 / 多，都直接报错而不是静默丢内容
+    missing = [g["name"] for g in zh_groups if g["name"] not in en_groups]
+    if missing:
+        sys.exit("scripts/homepage-en.yaml 的 research_focus 缺少这些组：%s" % "、".join(missing))
+    unused = [k for k in en_groups if k not in {g["name"] for g in zh_groups}]
+    if unused:
+        sys.exit("scripts/homepage-en.yaml 里这些组名在 CV research_focus 中不存在：%s" % "、".join(unused))
+
+    for g in zh_groups:
+        en = en_groups[g["name"]]
+        if len(en["bullets"]) != len(g["bullets"]):
+            sys.exit("研究方向组 %r 的条数对不上：CV %d 条，译文 %d 条"
+                     % (g["name"], len(g["bullets"]), len(en["bullets"])))
+        # CV 的 time 里有中文「至今」，英文整串人工给 —— 这里校验起始日期没写错，
+        # 防的是「CV 改了日期、homepage-en.yaml 忘了跟着改」。
+        start = norm_date(g["time"]).split()[0]
+        if not norm_date(en["time"]).startswith(start):
+            sys.exit("研究方向组 %r 的英文 time=%r 与 CV 起始日期 %r 对不上，译文可能过期"
+                     % (g["name"], en["time"], start))
+
+    out = {}
+    for lang in ("zh", "en"):
+        lines = [header("研究方向（主栏 interests）",
+                        ["%s 侧%s。" % ("中文" if lang == "zh" else "英文",
+                                      "全部从 CV 生成" if lang == "zh"
+                                      else "文案与 time 都来自 scripts/homepage-en.yaml"),
+                         "",
+                         "为什么英文连 time 都要整串给：CV 里写的是「2024.09 – 至今」，",
+                         "带中文「至今」，norm_date() 只换破折号、推不出英文。",
+                         "",
+                         "模板用原生 <details open> 渲染，一组一条；bullets 是纯文本，",
+                         "不过 markdownify（CV 里这几条本来就没有 markdown）。"])]
+        for g in zh_groups:
+            en = en_groups[g["name"]]
+            lines.append("")
+            lines.append("- name: %s" % q(en["name"] if lang == "en" else g["name"]))
+            lines.append("  time: %s" % q(norm_date(en["time"]) if lang == "en" else norm_date(g["time"])))
+            lines.append("  bullets:")
+            for b in (en["bullets"] if lang == "en" else g["bullets"]):
+                lines.append("    - %s" % q(b))
+        out[lang] = "\n".join(lines) + "\n"
+
+    write(os.path.join(DATA_DIR, "zh", "interests.yaml"), out["zh"])
+    write(os.path.join(DATA_DIR, "en", "interests.yaml"), out["en"])
+    return len(zh_groups)
+
+
+# ============================================================
 
 def main():
     for p in (CV_DATA, EN_PROSE):
@@ -316,9 +401,10 @@ def main():
     print("源：%s" % os.path.relpath(CV_DATA, ROOT).replace("\\", "/"))
     n_pub = gen_publications(cv, prose)
     n_soft = gen_software(cv, prose)
+    n_int = gen_interests(cv, prose)
     gen_experience(cv, prose)
-    print("完成：论文 %d 条、开源 %d 条、实习 %d 组。"
-          % (n_pub, n_soft, len(cv["internship"]["groups"])))
+    print("完成：论文 %d 条、开源 %d 条、研究方向 %d 组、实习 %d 组。"
+          % (n_pub, n_soft, n_int, len(cv["internship"]["groups"])))
     print("本地预览：hugo server -M；上线：push main（CI 构建，不用提交产物）")
 
 

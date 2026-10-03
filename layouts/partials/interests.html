@@ -1,12 +1,28 @@
 
-                            <section class="skills-section py-3">
+                            <section class="interests-section py-3">
 
-                                <h3 class="text-uppercase resume-section-heading mb-4">{{ i18n "interests" }}</h3>
+                                <h3 class="resume-section-heading mb-4">{{ i18n "interests" }}</h3>
 
-                                <ul class="list-unstyled resume-interests-list mb-0">
-                                    {{ range .Site.Params.interests.list }}
-                                    <li class="mb-2">{{ .name }}</li>
-                                    {{ end }}
-                                </ul>
+                                {{/* 数据来自 data/<lang>/interests.yaml（由 scripts/sync-homepage.py 从 CV 的
+                                     research_focus 生成）。每个字符串都是译文，所以走 experience 那种
+                                     「按语言分文件」的做法，模板只需按语言取一次。
 
-                            </section><!--//certificates-section-->
+                                     用原生 <details open>：无 JS，默认展开、可手动收起。
+                                     summary 里放 <span> 而不是 <h3> —— 规范上放标题合法，但读屏对
+                                     「按钮里的标题」暴露不一致，按键浏览常找不到；标题语义由上面那个
+                                     section 级的 <h3> 承担。 */}}
+                                {{ range index (index .Site.Data .Site.Language.Lang) "interests" }}
+                                <details class="interest" open>
+                                    <summary class="interest-summary">
+                                        <span class="interest-name">{{ .name }}</span>
+                                        <span class="interest-time">{{ .time }}</span>
+                                    </summary>
+                                    <ul class="interest-list mb-0">
+                                        {{ range .bullets }}
+                                        <li>{{ . }}</li>
+                                        {{ end }}
+                                    </ul>
+                                </details>
+                                {{ end }}
+
+                            </section><!--//interests-section-->

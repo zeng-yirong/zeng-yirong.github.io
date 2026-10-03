@@ -14,6 +14,8 @@
 - title: "AI Algorithm Engineer (Research Intern)"
   company: "Huawei (Beijing) · Xiaoyi Foundation Algorithm Dept."
   dates: "2024.09 - 2026.09"
+  sidebar_org: "Huawei (Beijing)"
+  sidebar_dates: "2024.09 - 2026.09"
   details: "As a research intern, led the pioneer exploration of system-level training techniques for Xiaoyi's omni-modal large models: 12 research outcomes across Agentic RL, Harness Agent training and instruction following, 4 of which shipped in Xiaoyi's production business."
   items:
     - details: "**Agentic RL Algorithm R&D**"

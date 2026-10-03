@@ -1,32 +1,26 @@
 
-                            <section class="project-section py-3">
+                            <section class="software-section py-3">
 
-                                <h3 class="text-uppercase resume-section-heading mb-4">{{ i18n "software" }}</h3>
+                                <h3 class="resume-section-heading mb-4">{{ i18n "software" }}</h3>
 
                                 {{/* 数据来自 data/software.yaml（由 scripts/sync-homepage.py 生成）。
-                                     title 与 name 按语言各一份，meta / href 两语言共用。 */}}
+                                     name / desc / authors 按语言各一份，meta 与 href 两语言共用。
+
+                                     两行式（名称 + 描述 / 作者 · 指标），比早先的三行渐变卡片紧凑一半。
+                                     名称本身是链接，和论文那边「标题即链接」一致。
+                                     颜色一律走 SCSS —— 这里不再内联 primaryColor。 */}}
                                 {{ range .Site.Data.software }}
                                 <div class="software-item">
-                                    <div class="item-heading row align-items-center mb-2">
-                                        <h4 class="item-title col-12 mb-2">
-                                            {{ index .title $.Site.Language.Lang }}
-                                            {{ if .href }}
-                                            <a href="{{ .href }}" target="_blank" rel="noopener" class="ml-2">
-                                                <span class="badge" style="background: {{ $.Site.Params.primaryColor }}; color: #fff; font-weight: normal;">
-                                                    {{ .meta }} <i class="fas fa-external-link-alt ml-1"></i>
-                                                </span>
-                                            </a>
-                                            {{ else }}
-                                            <span class="badge" style="background: {{ $.Site.Params.primaryColor }}; font-weight: normal;">
-                                                {{ .meta }}
-                                            </span>
-                                            {{ end }}
-                                        </h4>
-                                        <p class="item-meta col-12">
-                                            <i class="fas fa-users"></i> {{ index .name $.Site.Language.Lang }}
-                                        </p>
+                                    <div class="software-head">
+                                        <span class="software-name">
+                                            {{ if .href }}<a href="{{ .href }}" target="_blank" rel="noopener">{{ .name }}</a>{{ else }}{{ .name }}{{ end }}
+                                        </span>
+                                        <span class="software-desc">{{ index .desc $.Site.Language.Lang }}</span>
+                                    </div>
+                                    <div class="software-meta">
+                                        {{ index .authors $.Site.Language.Lang }} · {{ .meta }}
                                     </div>
                                 </div><!--//software-item-->
                                 {{ end }}
 
-                            </section><!--//project-section-->
+                            </section><!--//software-section-->
