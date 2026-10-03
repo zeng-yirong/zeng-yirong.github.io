@@ -56,11 +56,22 @@
   .cols2{display:grid;grid-template-columns:1fr 1fr;gap:0 22px;align-items:start;
          break-inside:avoid;margin-bottom:22px}
   .cols2>section{margin-bottom:0}
+  /* 强制从新页开始。目前只有「实习经历」用它（理由见模板里那段注释）。 */
+  .pb{break-before:page}
   /* break-after:avoid（2026-09-30 加）：段落标题不能孤零零留在页尾。
      当天把教育背景提到最前后，实测「实习经历」这个标题一个人落在第 2 页最后一行、
      正文全在第 3 页——顺序一动就会碰上的老问题（C 版早就有这条，A 版段落短还没遇到）。
      与 C 的 section>h2{break-after:avoid} 同一个做法，只是 B 的 h2 直接选元素名。 */
-  h2{font-family:Georgia,"Songti SC",serif;font-size:15.5px;letter-spacing:2px;
+  /* 2026-10-04：字号 15.5px → 17px，并修掉中文字体回退。
+     ⚠️ 字体栈原来只写到 `Georgia,"Songti SC",serif` —— Windows 上没有 Songti SC，
+        中文落到通用 serif = **宋体**，而宋体**没有真 Bold**。结果 17px 的段落标题
+        笔画比 14px 的雅黑粗体还细，看着和正文加粗一样弱（实测 PDF 里 h2 的中文渲染
+        成一个无名字体，而正文粗体是 MicrosoftYaHei-Bold）。
+        在栈里补上雅黑/苹方后：拉丁字符仍走 Georgia（保留学术感），中文走有真粗体的
+        系统黑体。macOS 上 Songti SC 排在前面，仍是宋体标题。
+     ⚠️ 这和主页 SCSS 里那条是同一个坑：不要把中文交给没有粗体的衬线字体。 */
+  h2{font-family:Georgia,"Songti SC","Microsoft YaHei","PingFang SC",serif;
+     font-size:17px;letter-spacing:2px;
      border-bottom:1px solid var(--line);padding-bottom:5px;margin-bottom:10px;display:flex;
      justify-content:space-between;align-items:baseline;break-after:avoid}
   h2 .en{font-size:10px;color:#98a1af;letter-spacing:1px;font-weight:400}
@@ -86,7 +97,12 @@
          padding:0 8px;border-radius:10px;margin:2px 4px 2px 0}
   .gtitle{font-size:12.5px;font-weight:700;color:var(--accent);margin:8px 0 2px}
   ol.pubs{counter-reset:p;list-style:none}
-  ol.pubs li.pub{position:relative;padding:7px 0 7px 30px;border-bottom:1px dashed #e6e9ee;font-size:12.3px}
+  /* break-inside:avoid（2026-10-03 加）：一条论文是「标题 / 作者 / 注释」三行，
+     默认允许在行间断开——实测第 2 条（ClawBenchPro）的标题作者留在第 1 页页尾、
+     注释行被切到第 2 页开头，一条拆成两页。整条不许断之后，放不下就整条挪到下一页。
+     ⚠️ 注释长的条目会因此整条下移，页数可能变化——改完要重新核对页数与分页位置。 */
+  ol.pubs li.pub{position:relative;padding:7px 0 7px 30px;border-bottom:1px dashed #e6e9ee;
+                 font-size:12.3px;break-inside:avoid}
   ol.pubs li.pub::before{counter-increment:p;content:counter(p);position:absolute;left:0;top:9px;
     width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font-size:10.5px;
     display:flex;align-items:center;justify-content:center;font-weight:600}
@@ -120,7 +136,14 @@
   .awards ul.award-subs li{padding-left:11px;font-size:12px;color:#3a4150;margin-bottom:2px}
   .awards ul.award-subs li::before{content:"·";color:rgba(15,107,79,.75);font-size:14px;top:auto;left:0;line-height:1}
   .skill-line{font-size:12.5px;margin-bottom:5px}.skill-line b{color:var(--accent)}
-  @media print{body{background:#fff}.sheet{margin:0;box-shadow:none;max-width:100%;padding:36px 58px}}
+  /* 打印时的纸张留白。@page 已经给了 14mm，这里再叠内边距——两者是相加的。
+     2026-10-04：上内边距 36px → 10px（本人反馈页首空白太大）。原本
+     14mm + 36px ≈ 23mm，现在 ≈ 16mm。
+     下内边距仍是 36px：它是末页内容与页脚条之间那点余量，别跟着一起削。
+     ⚠️ 改这个值等于改首屏可用高度，**必须重新核对分页**（首页多出来的空间会让
+        后面所有内容整体上移，可能把某一段的断点推过页界）。 */
+  @media print{body{background:#fff}.sheet{margin:0;box-shadow:none;max-width:100%;
+                                          padding:10px 58px 36px}}
 </style>
 </head>
 <body>
@@ -181,7 +204,12 @@
       </section>
 
       {%- elif sec.key == 'internship' %}
-      <section><h2>{{ sec.title }}<span class="en">{{ sec.en }}</span></h2>
+      {#- class="pb" = break-before:page（2026-10-03 按要求加）。
+          不加之前：这一段的 h2 + 机构行 + 两个徽章能挤进第 2 页页尾，而正文（总述与
+          三组要点）整块落在第 3 页——标题成了孤零零的一小段。h2 上的 break-after:avoid
+          管不住这个：它只保证标题后面还有东西，管不到「后面那点东西够不够撑住」。
+          强制从新页开始最省事，代价是上页可能留一段空白。 -#}
+      <section class="pb"><h2>{{ sec.title }}<span class="en">{{ sec.en }}</span></h2>
         <div class="entry">
           <div class="entry-head"><h3>{{ d.internship.org }} <span class="where">{{ d.internship.role }}</span></h3><span class="time">{{ d.internship.time }}</span></div>
           <p>{% for bd in d.internship.badges %}<span class="badge">{{ bd }}</span>{% endfor %}</p>
