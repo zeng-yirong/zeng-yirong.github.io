@@ -76,10 +76,16 @@ scripts/         仓库自己的小工具
 layouts/         本站的模板（原 themes/hugo-devresume-theme/layouts，已提升到根）
 assets/scss/     SCSS 源
 static/          favicon.ico、assets/images/me.png（头像）
+  cv/                    ★ 三个版本的简历 HTML（CV 系统的产物，发布到 /cv/）
 i18n/            en.yaml / zh.yaml，12 个键，两语言各一套全套键
 public/          本地构建产物，**已 gitignore**（线上由 CI 构建，见「上线路径」）
 CV/              简历构建系统（独立的一套，见 CV/build/README.md）
 ```
+
+⚠️ **`static/cv/` 里是提交进仓库的产物**（由 `CV/build/build.py` 生成，2026-10-03 从
+`CV/build/output/html/` 搬过来，为的是让主页头部能链接它们 —— Hugo 只发布 `static/` 下的东西）。
+CI 只跑 `hugo --minify`、**不跑 build.py**：改了 CV 数据却忘了重跑并提交，线上就是旧简历，
+**Hugo 不会报任何错**。唯一防线是 `python CV/build/validate.py --check-html`。
 
 ### 主题已本地化（没有 themes/ 目录）
 
@@ -137,7 +143,16 @@ TOML 里裸键只属于第一张表头之前的根表，写到 `[languages]` 底
 |---|---|---|
 | 论文、开源、研究方向、华为实习 | `data/` | **脚本生成**，改 `CV/build/data/A-general.yaml` 后重跑 |
 | 英文译文 | `scripts/homepage-en.yaml` | 手工（译文无法从 CV 推出） |
-| 段落开关、颜色、头像、联系方式、教育、爱好、社交、两段早期实习 | `config.toml` | 手工 |
+| 段落开关、颜色、头像、联系方式与三个 CV 链接、教育、社交、两段早期实习 | `config.toml` | 手工 |
+
+`summary.text`（个人简介）**允许 markdown**（模板走 `| markdownify`，`summary.html`），
+目前用它给实验室挂了链接。⚠️ **别在字符串里加空行** —— 空行会让 markdownify 返回 `<p>`，
+嵌进外层 `<p class="mb-0">` 是非法嵌套，浏览器会把外层 `<p>` 拆掉（静默的排版炸弹）。
+另外 Bootstrap 4 的 `a` 默认没有下划线，正文里的链接会「不像链接」，
+所以 `.resume-intro a` 单独补了下划线处理。
+
+`contact.cv` 是头部那一行三个简历链接。⚠️ 模板里必须用 **`relURL`**，不能用 `relLangURL` ——
+后者在 `/en/` 页会拼出 `/en/cv/…`（404），和 `head.html` 里 favicon 那条是同一类坑。
 
 ⚠️ **`data/` 是提交进仓库的，而 CI 不跑 `sync-homepage.py`。** 忘了重跑、或者跑了却忘了
 `git add` 新文件，Hugo 不会报错（`index` 取不到的键静默为空），线上会安静地少一整段。
@@ -170,10 +185,25 @@ CV 的三份数据里只有 **A**（`A-general.yaml`）与主页同形（有 `in
   `status`（published/pending）→ 徽章的填充方式（实心 vs 描边）；
   有没有 `href` → **标题**带不带下划线。早先徽章兼任链接、且有无链接样式完全相同，
   结果「录用了没」和「能不能点」糊在一起 —— 别再合并回去。
-- `interests.html` 用**原生 `<details open>`** 渲染研究方向，无 JS，默认展开可收起。
-  两个坑：① Bootstrap 4 只给 `summary` 加了 `display:list-item`，原生三角一定会显示，
-  要显式关掉再自己画（`.interest-summary` 那段）；② `summary` 里放 `<span>` 而不是 `<h3>` ——
-  规范上放标题合法，但读屏对「按钮里的标题」暴露不一致，按键浏览常找不到。
+- **段落折叠**：每个带标题的段落都是一个 `<details class="section-fold" open>`，
+  默认展开、可收起，无 JS。分组级的折叠（研究方向的两组）再嵌一层。
+  - 🚫 **`<h1>`–`<h6>` 永远不放进 `<summary>`。** `<summary>` 的隐含角色是 button，
+    而 ARIA 里 **button 的子元素是 presentational** —— Firefox / WebKit 与 JAWS
+    因此**不把 summary 里的 h3 当标题暴露**（只有 Chrome 和 NVDA 会）。放进去
+    并没有真的保住标题导航，只是把 h3 留给了爬虫。
+  - 标题语义一律放在 `<details>` **外面**：分段级折叠的可见标题只能落在 summary 里时，
+    就在 `<details>` 前补一个 `<h3 class="sr-only">`（`.sr-only` 是 Bootstrap 自带的，
+    不用新加类）；已经在外面的（研究方向的分组 —— section 级 `<h3>` 在 details 之前），
+    summary 里直接用 `<span>`。
+  - 代价是标题文字在 a11y 树里出现两次（heading + button 名），这是这个模式的固有代价，
+    ARIA APG 的 disclosure 模式也这么做。
+  - ⚠️ 折叠相关的交互样式（`flex` / `cursor` / `list-style` / `:focus-visible`）
+    写在 **`.section-fold > summary`** 上，**不要并进 `.resume-section-heading`** ——
+    `404.html` 的 `<h3>` 也挂那个类。
+  - 别加 `name` 属性（那是手风琴互斥语义，这里要各自独立）。
+- `interests.html` 用**原生 `<details open>`** 渲染研究方向的分组，无 JS。
+  Bootstrap 4 只给 `summary` 加了 `display:list-item`，原生三角一定会显示，
+  要显式关掉再自己画（`.interest-summary` 那段，和段落折叠共用一套规则）。
 - `internships.html` 里华为那条读 `data/<lang>/experience.yaml` 的 `sidebar_org` /
   `sidebar_dates`，**不往 `config.toml` 再抄一份** —— 抄了的话 CV 改日期时侧栏会和主栏
   并存两个不同的日期，没有任何机制拦得住。config 里只留主页独有、CV 里没有的两段。

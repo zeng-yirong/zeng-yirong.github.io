@@ -57,6 +57,7 @@ layouts/         页面模板
 assets/scss/     SCSS 源（devresume.scss + bootstrap/）
 i18n/            界面固定文案（en.yaml / zh.yaml，两份键集必须一致）
 static/          favicon.ico、头像 assets/images/me.png
+  cv/                    三个版本的简历 HTML（CV 系统的产物，发布到 /cv/）
 scripts/         仓库自己的小工具
   sync-homepage.py        从简历数据生成 data/ 的脚本
   homepage-en.yaml        英文译文（手工维护）
@@ -154,7 +155,12 @@ python build.py --no-pdf   # 只出 HTML，快速预览
 python validate.py         # 校验三份数据承载的事实是否一致
 ```
 
-产物**是刻意提交进仓库的** —— 除了在线看，还要能直接从仓库拿到 PDF。
+产物**是刻意提交进仓库的**，分两处：HTML 落在 `static/cv/`（由站点发布，
+主页头部就链接着它们，线上在 <https://zeng-yirong.github.io/cv/>），
+PDF 留在 `CV/build/output/pdf/`（供从仓库直接下载）。
+
+⚠️ **`static/cv/` 里是产物，而 CI 不跑 `build.py`** —— 改了数据却忘了重跑并提交，
+线上就是旧简历，Hugo 不会报任何错。防线是 `python validate.py --check-html`。
 
 详细说明见 **[CV/build/README.md](CV/build/README.md)**。
 
