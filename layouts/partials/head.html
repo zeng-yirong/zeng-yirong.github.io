@@ -12,10 +12,12 @@
          /en/favicon.ico（那里没有这个文件，英文页就没有图标） -->
     <link rel="shortcut icon" href="{{ "favicon.ico" | relURL }}">
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900">
+    <!-- 这里原先加载 Google Fonts 的 Roboto。2026-10-03 删掉了：
+         Bootstrap 的 $font-family-sans-serif 把 -apple-system / Segoe UI 排在前面，
+         全仓没有任何规则把 Roboto 提到栈首 —— 所以那个请求**从来没有生效过**，
+         纯粹是阻塞渲染的额外往返；而 fonts.googleapis.com 在国内还经常不通。
+         字体栈现在全在 assets/scss/devresume.scss 里（系统 sans + 显式 CJK，
+         衬线只给论文标题，也用本地字体）。 -->
 
     <!-- Open Graph / Facebook：og:url 用 .Permalink，英文页才指向 /en/ 而不是指回中文页 -->
     <meta property="og:type" content="website">

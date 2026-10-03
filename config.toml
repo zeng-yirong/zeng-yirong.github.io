@@ -71,8 +71,11 @@ disableKinds = ["taxonomy", "term", "rss"]
     [languages.en.params]
         author = "Yirong Zeng"
         description = "Yirong Zeng's Academic Resume"
-        primaryColor = "#2563eb"
-        textPrimaryColor = "#1e293b"
+        # 2026-10-03 视觉重设计：从亮蓝 + 冷灰改成深藏青 + 暖黑。
+        # 这两个值注入 assets/scss/devresume.scss，SCSS 里其余 token 在那边写死。
+        # 两棵语言树必须都写（值相同）—— 见本文件顶上「内容的两棵树都写全」。
+        primaryColor = "#1f3a5f"
+        textPrimaryColor = "#16202a"
 
         [languages.en.params.profile]
             enable = true
@@ -176,8 +179,11 @@ disableKinds = ["taxonomy", "term", "rss"]
     [languages.zh.params]
         author = "曾屹荣"
         description = "曾屹荣的个人主页 · 哈尔滨工业大学博士生，研究方向为 Agentic RL 与 Harness Agent 训练"
-        primaryColor = "#2563eb"
-        textPrimaryColor = "#1e293b"
+        # 2026-10-03 视觉重设计：从亮蓝 + 冷灰改成深藏青 + 暖黑。
+        # 这两个值注入 assets/scss/devresume.scss，SCSS 里其余 token 在那边写死。
+        # 两棵语言树必须都写（值相同）—— 见本文件顶上「内容的两棵树都写全」。
+        primaryColor = "#1f3a5f"
+        textPrimaryColor = "#16202a"
 
         [languages.zh.params.profile]
             enable = true

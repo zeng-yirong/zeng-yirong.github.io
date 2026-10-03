@@ -32,16 +32,17 @@
 
         <div class="container px-3 px-lg-5">
 
-            <article class="resume-wrapper mx-auto theme-bg-light p-5 mb-5 my-5 shadow-lg text-center">
+            <article class="resume-wrapper mx-auto p-4 p-lg-5 mb-4 my-4 my-lg-5 text-center">
 
                 <h1 class="resume-name mb-2">404</h1>
 
                 <p class="resume-tagline mb-5">Page not found&nbsp;·&nbsp;页面不存在</p>
 
-                {{/* d-inline-block 是必要的：resume-section-heading 左侧的竖条是
-                     position:absolute + padding-left，居中布局下不加会让竖条
-                     贴到卡片最左边。 */}}
-                <h3 class="text-uppercase resume-section-heading d-inline-block mb-4">Home&nbsp;·&nbsp;返回首页</h3>
+                {{/* d-inline-block 仍然要留着：resume-section-heading 现在带一道下沿细线，
+                     居中布局下如果是块级，细线会横贯整张卡片；inline-block 让它收缩到
+                     文字宽度。（2026-10-03 重设计前，它是为了压住那条 position:absolute
+                     的渐变竖条。） */}}
+                <h3 class="resume-section-heading d-inline-block mb-4">Home&nbsp;·&nbsp;返回首页</h3>
 
                 <ul class="list-inline mb-0">
                     {{ range .Site.Home.AllTranslations }}

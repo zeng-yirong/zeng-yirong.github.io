@@ -6,31 +6,58 @@
  * Twitter: @3rdwave_themes
  * License: Creative Commons Attribution 3.0 License
  * Website: http://themes.3rdwavemedia.com/
+ *
+ * 2026-10-03 视觉重设计：配色改为「学术出版物」路线（纸感暖中性 + 深藏青 +
+ * 一个暖强调色），去掉了原主题的渐变与重阴影，标题不再全大写，并补了打印样式。
+ * 下面带 ⚠️ 的注释记的都是这次踩实的坑。
 */
 
-/*************************** Theme Colours****************************/
-// Define theme colour scheme
-$theme-color-primary: {{ .Site.Params.primaryColor | default "#2563eb" }};
-$theme-text-color-primary: {{ .Site.Params.textPrimaryColor | default "#1e293b" }};
-$theme-text-color-secondary: lighten($theme-text-color-primary, 15%);
-$theme-text-color-light: lighten($theme-text-color-primary, 40%);
-$theme-border-color:  lighten($theme-text-color-primary, 60%);
+/*************************** Theme Colours ****************************/
+// 主色与标题色由 config.toml 注入（两棵 params 树各写一份，值相同）。
+$theme-color-primary: {{ .Site.Params.primaryColor | default "#1f3a5f" }};
+$theme-text-color-primary: {{ .Site.Params.textPrimaryColor | default "#16202a" }};
+
+// 其余 token 在这里显式写死，**不再用 lighten() 从主色推**。
+// ⚠️ 旧版是推的，推出来的浅色在正文尺寸下普遍不达 WCAG AA —— 比如
+//    .item-meta 的 lighten(主色, 40%) = #6f8ab6，白底只有 3.51:1，而它是 12px。
+//    括号里是对比度（白底），改色时照着这个底线走。
+$ink: $theme-text-color-primary;   // 标题          16.5:1
+$body-text: #3b4753;               // 正文           9.4:1
+$muted: #5b6672;                   // 次要文字/日期   5.85:1
+$accent: #8c2f39;                  // 强调占位符/hover 8.1:1
+$page-bg: #f4f1ec;                 // 纸面底色
+$rule: #dcd6cc;                    // 细线
 
 /*************************** Variables Section. *****************************/
-// Create variables to override the default value for variables used in the Bootstrap SCSS files.
-$gray-100: lighten($theme-text-color-primary, 60%);
-$gray-200: lighten($theme-text-color-primary, 55%);
-$gray-300: lighten($theme-text-color-primary, 50%);
-$gray-400: lighten($theme-text-color-primary, 45%);
-$gray-500: lighten($theme-text-color-primary, 40%);
-$gray-600: lighten($theme-text-color-primary, 30%);
-$gray-700: lighten($theme-text-color-primary, 20%);
-$gray-800: lighten($theme-text-color-primary, 10%);
-$gray-900: $theme-text-color-primary;
+// 覆盖 Bootstrap 自己用的变量。灰阶改成暖灰，别让它的组件（边框、text-muted、
+// 禁用态）在暖色页面上发蓝。
+$gray-100: #f2efe9;
+$gray-200: #e8e4dc;
+$gray-300: $rule;
+$gray-400: #bdb6aa;
+$gray-500: #8f887c;
+$gray-600: $muted;
+$gray-700: #46515c;
+$gray-800: #2b3540;
+$gray-900: $ink;
+
+// ⚠️ 系统字体栈 + 显式 CJK，必须在 @import bootstrap 之前定义。
+//    原先靠 head.html 加载 Google Fonts 的 Roboto，但 Bootstrap 的默认栈把
+//    -apple-system / Segoe UI 排在前面，**Roboto 从来没有被用上过** —— 那个请求
+//    是纯浪费，而且 fonts.googleapis.com 在国内经常不通。现在已经把请求删了。
+$font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto,
+  "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC",
+  Arial, sans-serif;
+
+// 衬线**只给论文标题**（两个语言页里它都是英文，学术惯例不译标题）。
+// 刻意用本地衬线而不是 webfont：不依赖外部 CDN。
+// ⚠️ 不要把含中文的元素放进这个栈：Windows 上中文衬线的默认是宋体（SimSun），
+//    它没有真 Bold，大字号会笔画发虚。姓名是中英混排，所以保持 sans。
+$font-family-serif: Charter, Georgia, "Times New Roman", serif;
 
 $theme-colors: (
   "primary":  $theme-color-primary,
-  "secondary":  $theme-text-color-secondary,
+  "secondary": $muted,
 );
 
 /*************************** Import Bootstrap  *****************************/
@@ -40,36 +67,40 @@ $theme-colors: (
 /*************************** DevResume Styles ****************************/
 
 /*********** Theme Generic **********/
+// 基准字号保持 16px 不动，避免全站重排。
 body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: $theme-text-color-secondary;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    color: $body-text;
 }
 
 h1, h2, h3, h4, h5, h6 {
-	color: $theme-text-color-primary;
-	font-weight: bold;
+	color: $ink;
+	font-weight: 700;
 }
 
 a.theme-link {
-	color: $theme-text-color-primary;
+	color: $theme-color-primary;
 	text-decoration: underline;
-    -webkit-text-decoration-color: rgba($theme-text-color-primary,0.3);
-    text-decoration-color: rgba($theme-text-color-primary,0.3);
+    text-decoration-color: rgba($theme-color-primary, 0.3);
     transition: color 0.2s ease, text-decoration-color 0.2s ease;
     &:hover {
-	    color: $theme-color-primary;
-	    -webkit-text-decoration-color: rgba($theme-color-primary,0.8);
-	        text-decoration-color: rgba($theme-color-primary,0.8);
+	    color: $accent;
+	    text-decoration-color: rgba($accent, 0.7);
     }
 }
 
+.main-wrapper {
+    background: $page-bg;
+}
+
+/*********** Buttons（模板目前没用到，留着以免以后加时回落到 Bootstrap 默认的圆角胶囊）**********/
 .btn {
-	font-weight: bold;
+	font-weight: 600;
 	padding: .375rem 1rem;
 	height: 2.5rem;
 	font-size: 1rem;
+    border-radius: .2rem;
     transition: all 0.2s ease;
 }
 
@@ -90,57 +121,57 @@ a.theme-link {
 }
 
 /*********** Resume **********/
+// 卡片：从「重阴影浮起」改成「细线 + 纸面底」。原来那套 box-shadow 其实是无效代码 ——
+// 模板上的 shadow-lg 是 Bootstrap 的 !important 工具类，把这里的 box-shadow（连同
+// hover 那条）整个压掉了，所以卡片观感一直只来自 shadow-lg。这次两边一起收敛。
 .resume-wrapper {
-	border: 1px solid rgba(0, 0, 0, 0.025);
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    transition: box-shadow 0.3s ease;
-    &:hover {
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-    }
+	background: #fff;
+	border: 1px solid $rule;
+	border-radius: .25rem;
+    box-shadow: none;
 }
 
 .resume-section-heading {
 	position: relative;
-	padding-left: 1rem;
-	font-size: 1.125rem;
-	letter-spacing: 0.15rem;
-	color: $theme-color-primary;
-    font-weight: 700;
-   &:before {
-	   content: "";
-	    display: inline-block;
-	    width: 5px;
-	    height: 100%;
-	    background: linear-gradient(180deg, $theme-color-primary, lighten($theme-color-primary, 20%));
-	    border-radius: 2px;
+	padding-left: 0;
+	padding-bottom: .5rem;
+	font-size: 1.0625rem;
+	letter-spacing: .01em;
+	color: $ink;
+    font-weight: 600;
+    border-bottom: 1px solid $rule;
+    // 标题下沿的一道短标记，代替原来那条通高的渐变竖条
+    &:after {
+	    content: "";
 	    position: absolute;
 	    left: 0;
-	    top: 0;
-   }
+	    bottom: -1px;
+	    width: 2rem;
+	    height: 2px;
+	    background: $accent;
+    }
 }
 
 .resume-name {
-	font-size: 2.75rem;
-	font-weight: 900;
-	letter-spacing: 0.4rem;
-	color: $theme-color-primary;
-    text-shadow: 0 1px 2px rgba($theme-color-primary, 0.1);
+	font-size: 2.25rem;
+	font-weight: 700;
+	letter-spacing: .02em;
+	color: $ink;
 }
 
 .resume-tagline {
-	font-size: 1.25rem;
-	font-weight: 300;
-    color: $theme-text-color-secondary;
+	font-size: 1.0625rem;
+	font-weight: 400;
+    color: $muted;
 }
 
 .resume-contact {
-	border-left: 1px solid rgba(0, 0, 0, 0.08);
-	font-size: 0.75rem;
+	border-left: 1px solid $rule;
+	font-size: .75rem;
 }
 
 a.resume-link {
-	color: $theme-text-color-secondary;
+	color: $body-text;
     transition: color 0.2s ease;
 	&:hover {
 		color: $theme-color-primary;
@@ -148,44 +179,39 @@ a.resume-link {
 }
 
 .resume-profile-image {
-	max-width: 120px;
+	max-width: 108px;
     border-radius: 50%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-    }
+    border: 1px solid $rule;
 }
 
 .resume-intro {
-	font-size: 0.875rem;
+	font-size: 1rem;
     line-height: 1.7;
 }
 
 .resume-main {
 	.item-title {
-		font-size: 1.1rem;
+		font-size: 1.25rem;
         font-weight: 600;
         line-height: 1.4;
-        color: $theme-text-color-primary;
-        transition: color 0.2s ease;
+        color: $ink;
 	}
 
     .item-meta {
-	   font-size: 0.75rem;
-       color: $theme-text-color-light;
+	   font-size: .8125rem;
+       // ⚠️ 这里原来是 lighten(主色,40%) = #6f8ab6，白底 3.51:1，12px 正文不达 AA
+       color: $muted;
    }
    .item-content {
-		font-size: 0.875rem;
-        line-height: 1.6;
+		font-size: .9375rem;
+        line-height: 1.65;
 	}
 }
 
 .resume-aside {
-	border-left: 1px solid rgba(0, 0, 0, 0.08);
+	border-left: 1px solid $rule;
 	.item {
-		font-size: 0.875rem;
+		font-size: .875rem;
 	}
 	.item-title {
 		font-size: 1rem;
@@ -194,108 +220,272 @@ a.resume-link {
 
 }
 
-
 .resume-education-list, .resume-awards-list {
-    font-size: 0.875rem;
+    font-size: .8125rem;
 }
 
 
 .resume-degree-time-org, .resume-degree-time {
-	font-size: 0.75rem;
+	font-size: .75rem;
 }
 
 .resume-lang-list, .resume-interests-list {
-	font-size: 0.875rem;
+	font-size: .875rem;
 }
 
 .resume-social-list {
-	font-size: 0.75rem;
+	font-size: .75rem;
     gap: 0.75rem;
 }
 
 
 .fa-heart {
-	color: #fb866a;
+	color: $accent;
 }
 
-/*********** Paper/Information Section Enhanced Styles **********/
-.information-item {
-    padding: 1rem;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-    &:hover {
-        background-color: rgba($theme-color-primary, 0.04);
-        transform: translateX(4px);
+/*********** 侧栏条目：机构/学位粗体 + 日期灰色小字 **********/
+// 教育、实习、荣誉三处共用同一套节奏，别再各写一份。
+.side-list .side-entry,
+.resume-education-list > li,
+.resume-awards-list > li {
+    padding-bottom: .75rem;
+    margin-bottom: .75rem;
+    border-bottom: 1px solid $rule;
+
+    &:last-child {
+        padding-bottom: 0;
+        margin-bottom: 0;
+        border-bottom: 0;
     }
-    .paper-title {
-        font-size: 1.05rem;
-        font-weight: 600;
-        color: $theme-text-color-primary;
-        margin-bottom: 0.5rem;
+}
+
+.resume-degree,
+.side-entry-org {
+    font-weight: 600;
+    color: $ink;
+    line-height: 1.4;
+}
+
+.resume-degree-org,
+.resume-degree-time,
+.side-entry-time {
+    font-size: .75rem;
+    color: $muted;
+    // 日期用等宽数字，几行叠起来时竖向对齐
+    font-variant-numeric: tabular-nums;
+}
+
+/*********** 研究方向（主栏）**********/
+.interest {
+    border-bottom: 1px solid $rule;
+
+    &:last-child {
+        border-bottom: 0;
     }
-    .paper-authors {
-        font-size: 0.85rem;
-        color: $theme-text-color-secondary;
-        margin-bottom: 0.5rem;
+}
+
+// ⚠️ Bootstrap 4 全局只有一条 details 规则（_reboot 里的
+//    summary{display:list-item;cursor:pointer}），所以原生三角一定会显示，
+//    必须显式关掉再自己画一个；否则「可展开」这件事在收起状态下看不出来。
+.interest-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .25rem .5rem;
+    list-style: none;
+    cursor: pointer;
+    padding: .625rem 0 .375rem;
+
+    &::-webkit-details-marker {
+        display: none;
     }
-    .paper-venue {
+
+    // 关掉原生 marker 后必须自己补焦点环，否则键盘用户看不出焦点在哪
+    &:focus-visible {
+        outline: 2px solid rgba($theme-color-primary, .5);
+        outline-offset: 2px;
+    }
+}
+
+.interest-name {
+    font-weight: 600;
+    color: $ink;
+    line-height: 1.4;
+
+    &:before {
+        content: "▸";
         display: inline-block;
-        padding: 0.25rem 0.75rem;
-        background: linear-gradient(135deg, $theme-color-primary, lighten($theme-color-primary, 15%));
-        color: #fff;
-        border-radius: 1rem;
-        font-size: 0.75rem;
-        font-weight: 500;
-        text-decoration: none;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        box-shadow: 0 2px 4px rgba($theme-color-primary, 0.3);
-        &:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba($theme-color-primary, 0.4);
-            color: #fff;
+        width: 1em;
+        color: $muted;
+        transition: transform .15s ease;
+    }
+}
+
+.interest[open] .interest-name:before {
+    transform: rotate(90deg);
+}
+
+.interest-time {
+    margin-left: auto;
+    font-size: .8125rem;
+    color: $muted;
+    font-variant-numeric: tabular-nums;
+}
+
+.interest-list {
+    font-size: .9375rem;
+    line-height: 1.65;
+    color: $body-text;
+    padding-left: 1.25rem;
+    margin: .125rem 0 .875rem;
+
+    li {
+        margin-bottom: .25rem;
+
+        &:last-child {
+            margin-bottom: 0;
         }
     }
 }
 
-/*********** Software Section Enhanced Styles **********/
-.software-item {
-    padding: 1rem;
-    border-radius: 0.5rem;
-    background: linear-gradient(135deg, rgba($theme-color-primary, 0.02), rgba($theme-color-primary, 0.01));
-    border: 1px solid rgba($theme-color-primary, 0.08);
-    margin-bottom: 1rem;
-    transition: all 0.2s ease;
-    &:hover {
-        background: linear-gradient(135deg, rgba($theme-color-primary, 0.05), rgba($theme-color-primary, 0.02));
-        border-color: rgba($theme-color-primary, 0.2);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba($theme-color-primary, 0.1);
+/*********** Paper / Information Section **********/
+.information-item {
+    padding: .875rem 0;
+    border-bottom: 1px solid $rule;
+
+    &:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
     }
-    a {
-        text-decoration: none;
-        &:hover {
+
+    .paper-title {
+        font-family: $font-family-serif;
+        font-size: 1.0625rem;
+        font-weight: 600;
+        line-height: 1.35;
+        color: $ink;
+        margin-bottom: .375rem;
+
+        // 标题即链接：可点性由**下划线**表达（另一个维度 status 走徽章的填充方式，
+        // 两条通道互不干扰）。没有 href 的标题就是普通文本，不带下划线。
+        a {
+            color: inherit;
             text-decoration: underline;
+            text-decoration-color: rgba($theme-color-primary, .35);
+            text-underline-offset: 2px;
+            transition: color .2s ease, text-decoration-color .2s ease;
+
+            &:hover {
+                color: $theme-color-primary;
+                text-decoration-color: $theme-color-primary;
+            }
+        }
+    }
+
+    .paper-authors {
+        font-size: .8125rem;
+        color: $body-text;
+        line-height: 1.5;
+        margin-bottom: .375rem;
+    }
+}
+
+.paper-venue {
+    display: inline-block;
+    padding: .125rem .5rem;
+    border-radius: .2rem;
+    font-size: .75rem;
+    font-weight: 500;
+    letter-spacing: .01em;
+}
+
+// 已录用：实心
+.paper-venue--published {
+    background: $theme-color-primary;
+    color: #fff;
+}
+
+// 在投：描边。⚠️ 用真 border 而不是 box-shadow —— Bootstrap 的 print 块会把
+// box-shadow 全部 !important 干掉，用 box-shadow 画的框打印时会整个消失。
+.paper-venue--pending {
+    background: transparent;
+    color: $theme-color-primary;
+    border: 1px solid rgba($theme-color-primary, .45);
+}
+
+/*********** Software Section **********/
+.software-item {
+    padding: .75rem 0;
+    border-bottom: 1px solid $rule;
+
+    &:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+}
+
+.software-head {
+    line-height: 1.45;
+}
+
+.software-name {
+    font-weight: 600;
+    color: $ink;
+
+    a {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-color: rgba($theme-color-primary, .35);
+        text-underline-offset: 2px;
+
+        &:hover {
+            color: $theme-color-primary;
+            text-decoration-color: $theme-color-primary;
         }
     }
 }
 
-// Medium devices (tablets, less than 992px)
+.software-desc {
+    color: $muted;
+    font-size: .9375rem;
+
+    &:before {
+        content: " — ";
+        color: $rule;
+    }
+}
+
+.software-meta {
+    font-size: .75rem;
+    color: $muted;
+}
+
+/*********** 语言切换器 **********/
+// ⚠️ 这个类此前在 SCSS 里**根本没有定义**（和 .theme-bg-light、.resume-list 一样
+//    是原主题残留的空类），所以它一直靠 Bootstrap 的默认间距在撑。这里补上。
+.lang-switch {
+    font-size: .8125rem;
+
+    .list-inline-item {
+        margin-right: .75rem;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
+// Responsive
 @media (max-width: 991.98px) {
     .resume-aside {
 	    border-left: 0;
-        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        border-top: 1px solid $rule;
         padding-top: 1.5rem;
         margin-top: 1.5rem;
     }
 
-    .resume-wrapper {
-        padding: 1.5rem !important;
-    }
-
     .resume-name {
-        font-size: 2rem;
-        letter-spacing: 0.2rem;
+        font-size: 1.875rem;
     }
 
     .resume-contact {
@@ -305,15 +495,13 @@ a.resume-link {
 }
 
 
-// Small devices (landscape phones, less than 768px)
 @media (max-width: 767.98px) {
 	.resume-contact {
 	    border-left: 0;
     }
 
     .resume-name {
-        font-size: 1.75rem;
-        letter-spacing: 0.15rem;
+        font-size: 1.625rem;
     }
 
     .resume-tagline {
@@ -324,40 +512,76 @@ a.resume-link {
         font-size: 1rem;
     }
 
-    .information-item {
-        .paper-title {
-            font-size: 1rem;
-        }
-        .paper-venue {
-            font-size: 0.7rem;
-            padding: 0.2rem 0.5rem;
-        }
+    .information-item .paper-title {
+        font-size: 1rem;
     }
 
-    // Improve readability on small screens
     .resume-main .item-title {
-        font-size: 1rem;
+        font-size: 1.125rem;
         word-wrap: break-word;
     }
 }
 
 
-// Dark mode support (optional - can be toggled via JS)
-@media (prefers-color-scheme: dark) {
-    // Uncomment to enable automatic dark mode
-    // body {
-    //     background-color: #0f172a;
-    //     color: #e2e8f0;
-    // }
-    // .resume-wrapper {
-    //     background-color: #1e293b;
-    //     border-color: rgba(255, 255, 255, 0.1);
-    // }
+/*********** 打印 **********/
+// 之前完全没有打印样式，而徽章是「彩色底 + 白字」—— 浏览器默认不打印背景色，
+// 于是整条徽章会变成**白底白字、凭空消失**。这里强制成「黑字 + 灰框」。
+@media print {
+    @page {
+        margin: 14mm 12mm;
+    }
+
+    body,
+    .main-wrapper {
+        background: #fff;
+    }
+
+    .resume-wrapper {
+        border: 0;
+        border-radius: 0;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    // 屏幕上不需要、纸面上更不需要的两块
+    .lang-switch,
+    .resume-social-list {
+        display: none;
+    }
+
+    .paper-venue,
+    .paper-venue--published,
+    .paper-venue--pending,
+    .badge {
+        background: transparent !important;
+        color: #000 !important;
+        border: 1px solid #767676 !important;
+        box-shadow: none !important;
+    }
+
+    // 纸面上链接不可点，下划线只剩干扰
+    a {
+        color: inherit !important;
+        text-decoration: none !important;
+    }
+
+    // 条目、条目内的小块都别被分页切开
+    .information-item,
+    .software-item,
+    .interest,
+    .side-entry,
+    li {
+        break-inside: avoid;
+    }
+
+    .resume-section-heading {
+        break-after: avoid;
+    }
+
+    // 折叠起来的 <details> 默认不打印。默认是展开的，所以只有「手动收起后打印」
+    // 才会碰到；::details-content 是 2025 年才 Baseline 的，老浏览器会忽略这行
+    // （那时收起的组就是不打），可以接受。
+    details:not([open])::details-content {
+        content-visibility: visible;
+    }
 }
-
-
-
-
-
-
-

@@ -23,9 +23,7 @@
                                     <div class="paper-authors">
                                         <strong>{{ i18n "authors" }}:</strong> {{ .authors }}
                                     </div>
-                                    <div class="paper-meta">
-                                        <span class="paper-venue paper-venue--{{ .status }}">{{ index .badge $.Site.Language.Lang }}</span>
-                                    </div>
+                                    <span class="paper-venue paper-venue--{{ .status }}">{{ index .badge $.Site.Language.Lang }}</span>
                                 </div><!--//information-item-->
                                 {{ end }}
 
