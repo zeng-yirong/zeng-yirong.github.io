@@ -182,7 +182,7 @@ timeline:
     link: "https://github.com/zeng-yirong/clawloop"
   - type: opensource
     time: "2026.06"
-    meta: "⭐ 60"
+    meta: "⭐ 91"
     logo: "github"
     title: "ClawForge (EnvCraft)"
     sub: "Agentic RL 交互环境、配套训练代码及模型"

@@ -175,7 +175,7 @@ publications:
 # link 写完整 URL（https://…），模板渲染成名称上的超链接，正文里不再出现明文 URL。
 opensource:
   - {name: "ClawLoop", desc: "轻量化 Harness 及 RL 训练框架", time: "2026.06", metric: "⭐ 33", link: "https://github.com/zeng-yirong/clawloop", detail: "轻量化专门用于 Agentic RL 训练的 harness 及其训练代码 in Verl，支撑大规模在线 In-Harness RL 训练"}
-  - {name: "ClawForge (EnvCraft)", desc: "Agentic RL 交互环境、配套训练代码及模型", time: "2026.06", metric: "⭐ 60", link: "https://github.com/zeng-yirong/EnvCraft", detail: "139 个沙箱隔离交互环境、约 2 万复杂任务，支持 claw-like agent RL 训练"}
+  - {name: "ClawForge (EnvCraft)", desc: "Agentic RL 交互环境、配套训练代码及模型", time: "2026.06", metric: "⭐ 91", link: "https://github.com/zeng-yirong/EnvCraft", detail: "139 个沙箱隔离交互环境、约 2 万复杂任务，支持 claw-like agent RL 训练"}
   - {name: "MIFS", desc: "多模态指令遵循数据集", time: "2026.06", metric: "11k+ downloads", link: "https://modelscope.cn/datasets/asdqfad/MIFS", detail: "支持 RLVR 训练的多模态指令遵循数据集"}
 
 awards:
