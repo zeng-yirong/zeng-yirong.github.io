@@ -120,9 +120,9 @@ internship:
   groups:
     - title: "Agentic RL 算法研发"
       items:
-        - "发现长程 Agentic RL 训练后期性能停滞/崩溃的一个关键原因是轨迹中的大量无效交互，通过提前截断轨迹 + token 掩码提升训练稳定性与上限【**NeurIPS 2026**, ICLR2027 在投】"
+        - "发现长程 Agentic RL 训练后期性能停滞/崩溃的一个关键原因是轨迹中的大量无效交互，通过提前截断轨迹 + token 掩码提升训练稳定性与上限【**NeurIPS 2026**; ICLR2027 在投】"
         - "提出解耦熵约束策略，实现大模型使用工具时依据问题复杂度自适应调整快慢思考模式 【**AutoTool, ICLR 2026**】"
-        - "完成华为昇腾生态训练适配，初步探索 RL 训练反馈信用分配机制【iTool EMNLP 2025；Tool Zero EMNLP 2025】"
+        - "昇腾训练生态适配，探索 RL 训练信用分配机制，发表首篇面向通用领域基于 GRPO 进行 Agentic Tool Use 训练的论文【**Tool Zero, EMNLP 2025**; iTool, EMNLP 2025】"
     - title: "Harness Agent 训练体系搭建"
       items:
         - "构建 SFT 数据生产流水线，产出 2+ 万条数据、覆盖 42 类 Harness 使用场景，支撑大规模 Agent 训练数据供给【NeurIPS 2026】"
