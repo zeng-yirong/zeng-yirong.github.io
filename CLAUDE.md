@@ -76,7 +76,8 @@ scripts/         仓库自己的小工具
 layouts/         本站的模板（原 themes/hugo-devresume-theme/layouts，已提升到根）
 assets/scss/     SCSS 源
 static/          favicon.ico、assets/images/me.png（头像）
-  cv/                    ★ 三个版本的简历 HTML（CV 系统的产物，发布到 /cv/）
+  cv/                    ★ 三个版本的简历 HTML（A/B/C，发布到 /cv/）
+                          —— D 华为专供版**不上线**，HTML 在 CV/build/output/html/
 i18n/            en.yaml / zh.yaml，12 个键，两语言各一套全套键
 public/          本地构建产物，**已 gitignore**（线上由 CI 构建，见「上线路径」）
 CV/              简历构建系统（独立的一套，见 CV/build/README.md）
@@ -84,6 +85,8 @@ CV/              简历构建系统（独立的一套，见 CV/build/README.md�
 
 ⚠️ **`static/cv/` 里是提交进仓库的产物**（由 `CV/build/build.py` 生成，2026-10-03 从
 `CV/build/output/html/` 搬过来，为的是让主页头部能链接它们 —— Hugo 只发布 `static/` 下的东西）。
+**2026-10-08 起 `output/html/` 又有人住了**：D 华为专供版按本人要求「只出文件、不上线」，
+HTML 出在那里（`VARIANTS["D"]["publish"] = False`）。**不上线 ≠ 保密**：仓库是公开的。
 CI 只跑 `hugo --minify`、**不跑 build.py**：改了 CV 数据却忘了重跑并提交，线上就是旧简历，
 **Hugo 不会报任何错**。唯一防线是 `python CV/build/validate.py --check-html`。
 
@@ -162,8 +165,10 @@ TOML 里裸键只属于第一张表头之前的根表，写到 `[languages]` 底
 标题补句点、作者行 `（共一）` 归一、venue 的 Findings/Main 拆分、7 篇的完整作者名单覆盖等），
 以及一张显式的覆盖表。**组名/条数对不上时脚本直接报错**，不会静默漏内容。
 
-CV 的三份数据里只有 **A**（`A-general.yaml`）与主页同形（有 `internship`/`publications`/
-`opensource` 块）；C 是 timeline 结构，字段对不上。三份的事实由 `CV/build/validate.py` 保证一致。
+CV 的四份数据里只有 **A**（`A-general.yaml`）与主页同形（有 `internship`/`publications`/
+`opensource` 块）；C 是 timeline 结构、D 是 C 的派生版（2026-10-08 加的华为专供版），
+字段都对不上。四份的事实由 `CV/build/validate.py` 保证一致——D 与 C 之间有 8 项
+**有意**差异（华为版简介 + 实习时间「至今」），校验器只报告、不判失败。
 
 ### Partial 契约（改模板前先看）
 

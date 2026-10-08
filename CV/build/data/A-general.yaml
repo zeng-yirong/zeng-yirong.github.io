@@ -129,16 +129,19 @@ research_focus:
 # url: 论文链接，模板渲染成标题上的超链接（不再明文显示）。来源：CV/zeng-yirong_resume_all.docx；
 #      那儿没有链接的篇目（2 篇 NeurIPS 2026 + 3 篇在投）就不写 url，标题照常显示、只是不可点。
 publications:
+  # 顺序 = 显示顺序，编号 [n] 由模板按位置自动生成。
+  # **排列规则（本人 2026-10-08 定）：A 类成果优先**——CCF-A 4 篇 → SCI-Q1 1 篇
+  # （IPM；本人明确「它也算 A 类成果」）→ CCF-B 4 篇。别再按 venue 或年份重排回去。
   published:
     - {title: "Unveiling Entropy-Performance Decoupling in Agentic RL for Tool-Integrated Reasoning", authors: "Yirong Zeng, Shen You, et al.", venue: "NeurIPS 2026", tier: "A", first: true,  note: "发现轨迹中的无效交互是长程 Agentic RL 训练后期性能停滞的关键原因；通过在训练中监控无效交互次数，并提前截断轨迹，实现提升训练稳定性；减少 34% 的无效交互，同时性能上限提升 3%"}
     - {title: "ClawBenchPro: Benchmarking How Well Agent Harnesses Work", authors: "Yufei Liu*, Yirong Zeng*（共一）, et al.", venue: "NeurIPS 2026", tier: "A", co: true, note: "设计 Harness 的数据生产线，合成多样化的测试数据集，评测不同 Agent 在不同 Harness 下的表现与差异"}
     - {title: "AutoTool: Automatic Scaling of Tool-Use Capabilities in RL via Decoupled Entropy Constraints", authors: "Yirong Zeng, Xiao Ding, et al.", venue: "ICLR 2026", tier: "A", first: true, note: "解耦 Agentic RL 下不同问题的熵约束策略，实现在环境交互过程中，根据难度自适应地快慢思考", url: "https://proceedings.iclr.cc/paper_files/paper/2026/hash/65ea878cb90b440e8b4cd34fe0959914-Abstract-Conference.html"}
     - {title: "TinyJudge: Unverifiable Constraint Alignment via Lightweight Specialist Ensembles", authors: "Yirong Zeng, Yufei Liu, et al.", venue: "ACL 2026", tier: "A", first: true, note: "轻量小型奖励专家模型的训练与集成（~0.6B），来提升强化学习下指令遵从的泛化能力：平均性能 +10%、奖励精度 +12%、训练速度 3×", url: "https://aclanthology.org/2026.acl-long.1204/"}
+    - {title: "Human Cognitive Process Aligned Rumor Detection with Small Language Models Enhanced Large Language Models", authors: "Yirong Zeng, Xiao Ding, et al.", venue: "IPM 2026", tier: "Q1", first: true, note: "人类认知过程对齐的谣言检测，小模型增强大模型框架", note_hidden: true, url: "https://www.sciencedirect.com/science/article/pii/S0306457326000518"}
     - {title: "Tool Zero: Training Tool-Augmented LLMs via Pure RL from Scratch", authors: "Yirong Zeng, Xiao Ding, et al.", venue: "EMNLP 2025 Findings", tier: "B", first: true, note: "发表业界首篇, 面向通用领域, 基于 GRPO 进行 Agentic Tool Use 训练的论文", url: "https://aclanthology.org/2025.findings-emnlp.485/"}
     - {title: "iTool: Reinforced Fine-Tuning with Dynamic Deficiency Calibration for Advanced Tool Use", authors: "Yirong Zeng, Xiao Ding, et al.", venue: "EMNLP 2025 Main", tier: "B", first: true, note: "动态缺陷校准强化微调，复杂场景较基线提升 6.5%", note_hidden: true, url: "https://aclanthology.org/2025.emnlp-main.701/"}
     - {title: "Moderation Matters: Exploring Large Language Models for Effective Rumor Detection on Social Media", authors: "Yirong Zeng, Xiao Ding, et al.", venue: "NAACL 2025", tier: "B", first: true, note: "探索 LLM 在社交媒体谣言检测中的有效性，提出 moderation 增强方法", note_hidden: true, url: "https://aclanthology.org/2025.naacl-long.128.pdf"}
     - {title: "RU22Fact: Optimizing Evidence for Multilingual Explainable Fact-Checking on Russia-Ukraine Conflict", authors: "Yirong Zeng, Xiao Ding, et al.", venue: "COLING 2024", tier: "B", first: true, note: "多语言可解释事实验证，优化证据选择策略", note_hidden: true, url: "https://aclanthology.org/2024.lrec-main.1239/"}
-    - {title: "Human Cognitive Process Aligned Rumor Detection with Small Language Models Enhanced Large Language Models", authors: "Yirong Zeng, Xiao Ding, et al.", venue: "IPM 2026", tier: "Q1", first: true, note: "人类认知过程对齐的谣言检测，小模型增强大模型框架", note_hidden: true, url: "https://www.sciencedirect.com/science/article/pii/S0306457326000518"}
   pending:
     - {title: "Less Harness, More Signal: Efficient In-Harness RL for Autonomous Agents", authors: "Yufei Liu*, Yirong Zeng*（共一）, et al.", venue: "AAAI 2027", tier: "P", co: true, note: "构建轻量化的 Harness 以及无效 token 掩码策略来支撑低成本的 In-Harness RL 训练：训练资源开销↓8×、推理开销↓32%"}
     - {title: "Precision Bounds Diversity: Reward Engineering for Instruction Following via RLVR", authors: "Yirong Zeng, Yufei Liu, et al.", venue: "ICLR 2027", tier: "P", first: true, note: "反馈信号质量是指令遵从 RL 中的关键瓶颈；提出通过控制训练数据中的约束密度，以低成本提升模型的性能上限 +5%", url: "https://arxiv.org/abs/2601.04954"}

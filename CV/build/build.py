@@ -3,19 +3,21 @@
 """
 一条命令：data/<版本>.yaml（各自独立的数据源） -> 该版本的 HTML + PDF
 
-一版一数据、一版一模板，三份数据不共享任何字段：
+一版一数据；模板通常一版一份，**D 是唯一的例外**（与 C 共用一份，见 VARIANTS 里的注释）。
+各份数据不共享任何字段：
 
-  版本       数据文件                模板                            输出
-  A 通用版    data/A-general.yaml    style-A-sidebar.html.j2         resume-A-general.*
-  B 研究院版  data/B-institute.yaml  style-B-minimal.html.j2         resume-B-institute.*
-  C 人才计划版 data/C-talent.yaml    style-C-tech-timeline.html.j2   resume-C-talent.*
+  版本         数据文件                模板                            输出
+  A 通用版     data/A-general.yaml     style-A-sidebar.html.j2        resume-A-general.*
+  B 研究院版   data/B-institute.yaml   style-B-minimal.html.j2        resume-B-institute.*
+  C 人才计划版 data/C-talent.yaml      style-C-tech-timeline.html.j2  resume-C-talent.*
+  D 华为专供版 data/D-huawei.yaml      （同上，与 C 共用）             resume-D-huawei.*
 
 用法：
-  python build.py                # 三份全出（HTML + PDF）
-  python build.py --style C      # 只出人才计划版
+  python build.py                # 四份全出（HTML + PDF）
+  python build.py --style C      # 只出人才计划版（字母 = 数据与模板名）
   python build.py --no-pdf       # 只出 HTML，快速预览
 
-改完数据后另跑 python validate.py 校验三份文件承载的事实是否一致。
+改完数据后另跑 python validate.py 校验各份文件承载的事实是否一致。
 """
 import argparse
 import base64
@@ -35,6 +37,9 @@ TPL_DIR  = ROOT / "templates"
 # 而 Hugo 只发布 static/ 下的东西。放在这里就没有第二份会漂移的副本。
 # （ROOT 是 CV/build，仓库根是它的上两级。）
 OUT_HTML = ROOT.parent.parent / "static" / "cv"
+# 不进站的版本（VARIANTS 里 publish: False，当前只有 D 华为专供版）的 HTML 落点：
+# 与 PDF 并列放在 build/output/ 下，站点的 static/cv/ 里不会出现它。
+OUT_HTML_LOCAL = ROOT / "output" / "html"
 OUT_PDF  = ROOT / "output" / "pdf"
 PHOTO    = CV_DIR / "personal-photo.jpg"            # 固定常量：与数据文件所在目录解耦
 
@@ -45,6 +50,14 @@ VARIANTS = {
           "tpl": "style-B-minimal.html.j2"},
     "C": {"basename": "C-talent",    "data": "C-talent.yaml",    "label": "人才计划版",
           "tpl": "style-C-tech-timeline.html.j2"},
+    # D = C 的派生版（2026-10-08 本人要求）。两处与别版不同，都写在这里而不是散在代码里：
+    #   publish: False —— **不上线**：HTML 与 PDF 都出到 build/output/，不写进站点的
+    #     static/cv/，主页头部那行链接也不加它（本人选的「只出文件，不上线」）。
+    #     想把 D 也发布到 /cv/，删掉这一行即可（产物会改写到 static/cv/）。
+    #   tpl 与 C 同一个 —— 这是「一版一模板」的明示例外：D 与 C 只差数据（顺序、简介、
+    #     实习时间），照抄一份 411 行的模板只会让以后每改一次 C 的版式都要同步两遍。
+    "D": {"basename": "D-huawei",    "data": "D-huawei.yaml",    "label": "华为专供版",
+          "tpl": "style-C-tech-timeline.html.j2", "publish": False},
 }
 
 # 校验用：每版期望的顶层键，以及各版允许出现在顺序表里的段落名
@@ -54,6 +67,8 @@ REQUIRED = {
     "B": ["header", "sections", "summary", "education", "internship",
           "research_focus", "publications", "opensource", "awards", "projects", "skills"],
     "C": ["hero", "kpis", "order", "timeline", "summary", "publications", "awards", "skills"],
+    # D 与 C 同结构（同模板），所以这三张表都照抄 C 的那一行。
+    "D": ["hero", "kpis", "order", "timeline", "summary", "publications", "awards", "skills"],
 }
 BLOCKS = {                       # 顺序表里可写的「整块」段落名
     "A": {"summary", "education", "internship", "research_focus", "publications",
@@ -61,8 +76,9 @@ BLOCKS = {                       # 顺序表里可写的「整块」段落名
     "B": {"summary", "highlights", "education", "internship", "research_focus",
           "publications", "opensource", "awards", "projects", "skills"},
     "C": {"summary", "publications", "awards", "skills"},
+    "D": {"summary", "publications", "awards", "skills"},
 }
-ORDER_KEY = {"A": "main_sections", "B": "sections", "C": "order"}
+ORDER_KEY = {"A": "main_sections", "B": "sections", "C": "order", "D": "order"}
 
 # C 版数据里各结构的合法键。为什么值得单独挡一道：拼错的键（把 pgbreak 写成 pagebreak）
 # 在模板里只会取到 Undefined——不报错、不渲染、断页静默消失，肉眼很难发现。
@@ -71,6 +87,11 @@ C_KEYS = {
     "rail":  {"rail", "icon", "title", "note", "pgbreak"},
     "pair":  {"pair", "ratio"},
     "pubs":  {"published", "pending", "pgbreak"},
+    # 整块段落（summary / publications / awards / skills）也能带 pgbreak——
+    # 写成 {block: "publications", pgbreak: true}。2026-10-08 加：D 版的论文段正好落在
+    # 第 2 页页首，不给它 .pgbreak 就没有那 20px 页顶留白（正文会贴到纸边 2pt，见 README）。
+    # 光写成字符串 `- publications` 是带不了断页的（模板只从 mapping 行读 pgbreak）。
+    "block": {"block", "pgbreak"},
 }
 
 
@@ -138,6 +159,8 @@ def check(style: str, d: dict, path: Path) -> list:
                 continue
             elif isinstance(blk, dict) and "key" in blk:
                 name = blk["key"]
+            elif isinstance(blk, dict) and "block" in blk:
+                name = blk["block"]
             else:
                 errs.append(f"顺序表元素 {blk!r} 既不是段落名，也不是带 key/rail 的字典")
                 continue
@@ -148,7 +171,7 @@ def check(style: str, d: dict, path: Path) -> list:
             elif name not in d:
                 errs.append(f"顺序表引用了 {name!r}，但数据里没有这个段落")
 
-    if style == "C":                     # timeline 条目必须有槽位，否则会静默消失
+    if style in ("C", "D"):              # timeline 条目必须有槽位，否则会静默消失
         rails = set()
         for row in order:
             if isinstance(row, dict) and "pair" in row:
@@ -178,7 +201,8 @@ def check(style: str, d: dict, path: Path) -> list:
 
         for row in order:
             if isinstance(row, dict):
-                keys_of(row, "pair" if "pair" in row else "rail")
+                kind = "block" if "block" in row else ("pair" if "pair" in row else "rail")
+                keys_of(row, kind)
         pub = d.get("publications")
         if isinstance(pub, dict):
             keys_of(pub, "pubs")
@@ -211,6 +235,16 @@ def check(style: str, d: dict, path: Path) -> list:
                 errs.append(f"{style} 版开着 page_numbers，但模板里的 @page 已经不是 "
                             f"{rule!r}——页脚带子没了，页码会压到正文上。"
                             "改了模板的 @page 就要同步 FOOTER_BAND 这条登记")
+
+    # 续页的页顶留白（C/D 模板的 --top-pad，见模板 :root 那段注释）。默认 20px，
+    # 数据里写 page_top_pad: N 可以逐版覆盖（D 就调大了它）。
+    # 写成字符串会拼出 "40pxpx" 这种非法值——CSS 静默忽略 → 续页页顶留白归零、
+    # 标题直接贴到纸边，页数也跟着变。所以这里挡一道，别让它静默生效。
+    if "page_top_pad" in d:
+        v = d["page_top_pad"]
+        if isinstance(v, bool) or not isinstance(v, int):
+            errs.append(f"page_top_pad 必须是整数（像素值），现在是 {v!r}"
+                        "——写成字符串会在 CSS 里拼出 '40pxpx'，页顶留白会静默归零")
     return errs
 
 
@@ -244,6 +278,7 @@ PAGE_FOOTER = ('<div style="width:100%;font-size:8pt;color:#5b6472;text-align:ce
 FOOTER_BAND = {
     "B": "@page{size:A4;margin:14mm 0}",
     "C": "@page{size:A4;margin:0 0 10mm}",
+    "D": "@page{size:A4;margin:0 0 10mm}",   # 与 C 共用模板，登记值也必须与 C 相同
 }
 
 
@@ -302,9 +337,13 @@ def main():
         if errs:
             raise SystemExit(f"{path.name} 校验失败：\n  - " + "\n  - ".join(errs))
 
-        hp = OUT_HTML / f"resume-{v['basename']}.html"
+        out_html = OUT_HTML if v.get("publish", True) else OUT_HTML_LOCAL
+        out_html.mkdir(parents=True, exist_ok=True)
+        hp = out_html / f"resume-{v['basename']}.html"
         hp.write_text(render(env, st, d), encoding="utf-8")
         line = f"  {v['label']:<7} {hp.name}"
+        if not v.get("publish", True):
+            line += "（不上线：产物在 build/output/，不在站点里）"
         if not args.no_pdf:
             pp = OUT_PDF / f"resume-{v['basename']}.pdf"
             to_pdf(hp, pp, page_numbers=bool(d.get("page_numbers")))

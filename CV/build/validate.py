@@ -36,9 +36,15 @@ DATA_DIR = ROOT / "data"
 # 与 build.py 保持一致：HTML 产物在站点的 static/cv/（仓库根是 ROOT 的上两级）。
 OUT_HTML = ROOT.parent.parent / "static" / "cv"
 
-DATA = {"A": "A-general.yaml", "B": "B-institute.yaml", "C": "C-talent.yaml"}
-HTML = {"A": "resume-A-general.html", "B": "resume-B-institute.html", "C": "resume-C-talent.html"}
-LABEL = {"A": "通用版", "B": "研究院版", "C": "人才计划版"}
+DATA = {"A": "A-general.yaml", "B": "B-institute.yaml", "C": "C-talent.yaml",
+        "D": "D-huawei.yaml"}
+HTML = {"A": "resume-A-general.html", "B": "resume-B-institute.html",
+        "C": "resume-C-talent.html", "D": "resume-D-huawei.html"}
+LABEL = {"A": "通用版", "B": "研究院版", "C": "人才计划版", "D": "华为专供版"}
+# 产物落点：A/B/C 发布进站（static/cv/），**D 不上线**（build/output/html/，见 build.py 的
+# VARIANTS["D"]["publish"]）。--check-html 要按各版的真实落点去找文件。
+HTML_DIR = {"A": OUT_HTML, "B": OUT_HTML, "C": OUT_HTML, "D": ROOT / "output" / "html"}
+KEYS = "ABCD"          # 参与逐条核对与展示的版本；D 是 C 的派生版，同样要过地标与渲染检查
 
 # 段落名等结构性取值不是「事实」，参与比较只会产生噪音
 STRUCTURAL = {
@@ -204,6 +210,16 @@ UNRENDERED = {
         "一作已发表论文", "CCF-A 已发表",
         *HIDDEN_NOTES,
     },
+    # D 与 C 同模板、同结构（数据是 C 的副本），不渲染的那些字符串一模一样。
+    # 唯一要留意的：D 的 summary 换成了华为版，所以「summary 里也出现的字符串」在 D 里
+    # 仍然渲染着——与 C 的情况一致，照抄即可。
+    "D": {
+        "LLM Post-training",
+        "哈尔滨工业大学（本部）计算学部",
+        "华为研究成果", "成果落地小艺", "带教实习生(领头人)",
+        "一作已发表论文", "CCF-A 已发表",
+        *HIDDEN_NOTES,
+    },
 }
 
 
@@ -275,7 +291,7 @@ def main() -> int:
     fs   = {k: facts(v) for k, v in data.items()}
     bad  = 0
 
-    print("== 1. 三份数据的事实集合 ==")
+    print("== 1. 各份数据的事实集合 ==")
     # A↔B 逐字对齐（漏改的主要来源），不一致即失败。
     # C 曾经是例外：2026-09-28 本人单独重写过 C 的措辞（摘要、实习条目、论文 note、技能…），
     # A/B 当时没跟上，于是集合必然不同。**当天 A/B 已按 C 同步完毕**，所以现在两边也应当对齐，
@@ -316,33 +332,49 @@ def main() -> int:
         for x in sorted(extra):
             print(f"    {k} 多出（{ref} 没有）：{x}")
 
+    # D = C 的派生版（华为专供，2026-10-08 新建）：一份数据、一个模板都跟 C 同源，
+    # **有意**只差三处——① 模块顺序（只动 order，不进事实集合）② 个人简介换成华为版
+    # ③ 实习条目时间 2024.09 – 2026.09 → 2024.09 – 至今。所以与 C 一样只报差异、不判失败。
+    # 项数突然变多 = 有人改了数据却没同步，或者在别处也动了措辞。
+    extra_d = fs["D"] - fs["C"] - ONLY_IN.get("D", set())
+    miss_d  = fs["C"] - fs["D"] - ONLY_IN.get("D", set())
+    if extra_d or miss_d:
+        print(f"  D 与 C 措辞不同：D 独有 {len(extra_d)} 项、C 独有 {len(miss_d)} 项"
+              "（有意：简介是华为版、实习时间「至今」；不判失败）")
+        for x in sorted(extra_d)[:4]:
+            print(f"      D 有而 C 没有：{x[:58]}")
+        for x in sorted(miss_d)[:4]:
+            print(f"      C 有而 D 没有：{x[:58]}")
+    else:
+        print(f"  D 与 C 一致（{len(fs['D'])} 项）")
+
     print("== 2. 地标事实（论文/荣誉/经历/关键数字） ==")
     for fact in LANDMARKS:
         variants = (fact,) if isinstance(fact, str) else fact
         hit = {}
-        for k in "ABC":
+        for k in KEYS:
             found = [v for v in variants if norm(v) in text[k]]
             hit[k] = found[0] if found else None
-        absent = [k for k in "ABC" if hit[k] is None]
+        absent = [k for k in KEYS if hit[k] is None]
         if not absent:
-            if len({hit[k] for k in "ABC"}) == 1:
+            if len({hit[k] for k in KEYS}) == 1:
                 f = norm(hit["A"])
-                cnt = {k: text[k].count(f) for k in "ABC"}
+                cnt = {k: text[k].count(f) for k in KEYS}
                 tag = f"×{cnt['A']}" if len(set(cnt.values())) == 1 else \
-                      f"次数 A{cnt['A']}/B{cnt['B']}/C{cnt['C']}"
+                      "次数 " + "/".join(f"{k}{cnt[k]}" for k in KEYS)
                 print(f"  ok   {tag:>14}  {f[:64]}")
-            else:   # 各版用词不同：把三份各自的写法都显示出来
-                print(f"  ok   {'A/B/C 用词不同':>12}  " +
-                      " ｜ ".join(f"{k}:{norm(hit[k])[:28]}" for k in "ABC"))
+            else:   # 各版用词不同：把各自的写法都显示出来
+                print(f"  ok   {'/'.join(KEYS) + ' 用词不同':>12}  " +
+                      " ｜ ".join(f"{k}:{norm(hit[k])[:24]}" for k in KEYS))
         else:
             bad += 1
-            print(f"  !!   只在 {''.join(k for k in 'ABC' if hit[k]) or '（无）'}  —— "
+            print(f"  !!   只在 {''.join(k for k in KEYS if hit[k]) or '（无）'}  —— "
                   f"{norm(variants[0])[:64]}")
 
     if args.check_html:
         print("== 3. 产物 HTML 没漏渲染事实 ==")
-        for k in "ABC":
-            p = OUT_HTML / HTML[k]
+        for k in KEYS:
+            p = HTML_DIR[k] / HTML[k]
             if not p.exists():
                 print(f"  !!  {k}: 缺产物 {p.name}（先跑 build.py）")
                 bad += 1

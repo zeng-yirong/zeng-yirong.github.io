@@ -48,6 +48,14 @@
     zh: "ACL 2026 ｜ CCF-A，一作"
   href: "https://aclanthology.org/2026.acl-long.1204/"
 
+- title: "Human Cognitive Process Aligned Rumor Detection with Small Language Models Enhanced Large Language Models."
+  authors: "Yirong Zeng, Xiao Ding, Bibo Cai, Bing Qin, Ting Liu"
+  status: "published"
+  badge:
+    en: "IPM 2026 | SCI-Q1, First Author"
+    zh: "IPM 2026 ｜ SCI-Q1，一作"
+  href: "https://www.sciencedirect.com/science/article/pii/S0306457326000518"
+
 - title: "Tool Zero: Training Tool-Augmented LLMs via Pure RL from Scratch."
   authors: "Yirong Zeng, Xiao Ding, Yutai Hou, Yuxian Wang, Li Du, Juyi Dai, Qiuyang Ding, Duyu Tang, Dandan Tu, Weiwen Liu, Bing Qin, Ting Liu"
   status: "published"
@@ -79,14 +87,6 @@
     en: "COLING 2024 | CCF-B, First Author"
     zh: "COLING 2024 ｜ CCF-B，一作"
   href: "https://aclanthology.org/2024.lrec-main.1239/"
-
-- title: "Human Cognitive Process Aligned Rumor Detection with Small Language Models Enhanced Large Language Models."
-  authors: "Yirong Zeng, Xiao Ding, Bibo Cai, Bing Qin, Ting Liu"
-  status: "published"
-  badge:
-    en: "IPM 2026 | SCI-Q1, First Author"
-    zh: "IPM 2026 ｜ SCI-Q1，一作"
-  href: "https://www.sciencedirect.com/science/article/pii/S0306457326000518"
 
 - title: "Less Harness, More Signal: Efficient In-Harness RL for Autonomous Agents."
   authors: "Yufei Liu*, Yirong Zeng* (co-first), et al."
