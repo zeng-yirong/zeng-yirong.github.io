@@ -167,7 +167,7 @@ TOML 里裸键只属于第一张表头之前的根表，写到 `[languages]` 底
 
 CV 的四份数据里只有 **A**（`A-general.yaml`）与主页同形（有 `internship`/`publications`/
 `opensource` 块）；C 是 timeline 结构、D 是 C 的派生版（2026-10-08 加的华为专供版），
-字段都对不上。四份的事实由 `CV/build/validate.py` 保证一致——D 与 C 之间有 8 项
+字段都对不上。四份的事实由 `CV/build/validate.py` 保证一致——D 与 C 之间有 15/4 项
 **有意**差异（华为版简介 + 实习时间「至今」），校验器只报告、不判失败。
 
 ### Partial 契约（改模板前先看）

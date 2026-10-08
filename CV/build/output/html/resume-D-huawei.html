@@ -40,7 +40,9 @@
      C 的三页页顶曾经刻意对齐（都 20px），D 是有意让续页更宽——别把 .content 也改成 var()。 */
   :root{--brand:#5f65cc;--brand2:#8b5cf6;--ink:#1e293b;--muted:#64748b;--bg:#f8fafc;--card:#fff;--hl:#d5901d;
         --page-pad:64px;--rail-pad:22px;
-        --top-pad:32px}
+        --top-pad:32px;
+        --list-gap:10px;
+        --subhead-gap:18px}
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
   .wrap{max-width:920px;margin:0 auto 40px;background:var(--card);border-radius:16px;overflow:hidden;
@@ -99,12 +101,35 @@
   /* 两种导轨外壳都只干一件事：让出左侧留白，区别只在有没有那条竖线。
      留白不能加在 <section> 上——那会把段落标题一起推右，
      「研究方向/开源项目/项目经历」的标题就跟另外六段不齐了。 */
-  .timeline,.rail{padding-left:var(--rail-pad)}
-  .timeline{position:relative}
-  /* 时间轴导轨：原来那条是靛蓝→紫的渐变（opacity .35），2026-09-30 去掉渐变、其余一概不动——
-     仍是主色 + 同样的透明度，所以线的颜色观感、粗细、存在感与原来完全一致。 */
-  .timeline::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;
-                    background:var(--brand);opacity:.35;border-radius:2px}
+  /* 2026-10-08：导轨外壳也吃 `--top-pad`（**每个碎片一份**，同 ol.pubs 那套）。
+     起因是 D 的实习经历现在允许跨页（个人简介加长后第 1 页装不下），而碎片不带页顶留白——
+     实测续页的第一行文字落在纸边 **2pt** 处，正是本人以前抱怨过的「第 2 页上边距太小」。
+     盒首那一份用负外边距抵掉（margin 不参与碎片克隆），所以**没有碎片的版本（C）一个像素不动**。 */
+  .timeline,.rail{padding-left:var(--rail-pad);padding-top:var(--top-pad);
+                  margin-top:calc(-1 * var(--top-pad));
+                  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+  /* 时间轴导轨（那条竖线）。原来它是 ::before 的绝对定位色块（靛蓝→紫渐变，2026-09-30
+     去掉了渐变，改成主色 + opacity .35——线的粗细、存在感与原来一致），2026-10-08
+     改成了**背景**：伪元素只在盒首画一次、跨页时它在续页的 padding 区里也会被画出来，
+     于是第 2 页的线**从纸边直接开始**，而文字是从页顶留白之下起的——本人原话
+     「应该与文字出现位置同步显示」。背景在 box-decoration-break:clone 下
+     **每个碎片各画一份**，再配 background-origin/clip: content-box，线就只落在
+     **内容盒**里：续页那段线从文字开始处起，不再从纸边起。
+     颜色：color-mix 把 --brand 兑成 35% 透明，等价于原来的 opacity:.35，
+     所以改主色时线还会跟着走（别换回写死的 rgba）。
+     ⚠️ **原点用 content-box、裁剪必须用 border-box**：两个盒子差着一个 padding-left
+        （= --rail-pad = 22px），而竖线要落在**行首圆点**里（圆点在内容盒左侧 22px 处）。
+           · origin:content-box —— 纵向才对（线只占内容盒高度，续页不从纸边起）；
+           · clip:content-box 会把线**整个裁掉**（它在内容盒左边，2026-10-08 实测：
+             线的水平位置右移了 22px、跑到文字左边缘去了，本人当场指出）；
+           · 所以横向位置要自己减掉 --rail-pad，裁剪用 border-box 放它出去。 */
+  .timeline{position:relative;
+    background-image:linear-gradient(color-mix(in srgb, var(--brand) 35%, transparent),
+                                     color-mix(in srgb, var(--brand) 35%, transparent));
+    background-size:2px calc(100% - 12px);
+    background-position:calc(5px - var(--rail-pad)) 6px;
+    background-repeat:no-repeat;
+    background-origin:content-box;background-clip:border-box}
   .tl-item{position:relative;margin-bottom:16px}
   .tl-item::before{content:"";position:absolute;left:calc(-1 * var(--rail-pad));top:6px;width:12px;height:12px;border-radius:50%;
                    background:#fff;border:3px solid var(--brand)}
@@ -160,7 +185,14 @@
   /* 一个 ▸ 分组（分组标题 + 它的要点）整体不跨页：2026-09-28 实测实习段的最后一条要点
      被单独甩到下一页顶端，读者看到的是「这个分组没了」。一个分组约 100–140px，
      整体挪走的代价远小于把分组拆开。与 .tl-item 的大范围 avoid 是两回事（那个会留 1/3 页空白）。 */
-  .tl-group{break-inside:avoid}
+  /* 分组（▸ 组标题 + 它那几条要点）**允许跨页**：2026-10-08 本人要求「1-2 页不要在实习
+     经历模块中强制分页，自然分页即可」——实习段升到第 1 页后，一个约 105pt 的分组装不下
+     就整块挪到第 2 页，第 1 页尾部于是空出约 80pt（本人说「页边距很大」）。
+     拆开的代价用 `.gtitle{break-after:avoid}` 兜住：组标题绝不会与它的第一条要点分家。
+     ⚠️ 原先这里是 break-inside:avoid，理由是「整块挪走的代价远小于把分组拆开」——
+     那条在 C 成立（C 的实习段整段在后一页、每组都装得下），在 D 不成立，故改成允许拆。 */
+  .tl-group{break-inside:auto}
+  .gtitle{break-after:avoid}
   /* 续页页顶留白（本人 2026-09-30：「第二页上边距太小」）。
      .pubs 会被分页切开，**碎片不带 .content/.pgbreak 的页顶留白**——第 2 页那张卡片
      原来是贴着纸边起的（实测文字 y=8.1pt，而第 3 页是 16.4pt）。
@@ -179,7 +211,7 @@
      ——**margin 不参与碎片克隆**，只在盒首生效，于是「盒首那道缝恒为 20px，
      只有续页碎片吃到 --top-pad」。C 的 --top-pad 是 20px，这条 calc 恰好为 0。 */
   .pubs{list-style:none;padding-top:var(--top-pad);
-        margin-top:calc(20px - var(--top-pad));
+        margin-top:calc(var(--list-gap) - var(--top-pad));
         -webkit-box-decoration-break:clone;box-decoration-break:clone}
   /* 论文条目 = 卡片（2026-09-28 的往返：先按「为 3 页牺牲卡片感」改成平铺列表，
      当天本人又要求改回卡片——理由是第 2/3 页页尾空白太大。卡片每条多 26px
@@ -239,7 +271,8 @@
      现在把留白全挪到上方：**margin 30px 0 0**（下面那 20px 由列表自己给）。
      实测视觉留白（量到卡片边框）：**上 22.6pt、下 16.5pt**，方向对了，C/D 都仍是 3 页。
      代价：这一段总高比原版多 10px（12+8=20 → 30+0），换来第 2 页尾部少 7pt（C 余 45、D 余 67）。 */
-  .subhead{font-size:13px;color:var(--brand2);margin:30px 0 0;break-after:avoid}
+  .subhead{font-size:13px;color:var(--brand2);padding-top:var(--top-pad);
+           margin:calc(var(--subhead-gap) - var(--top-pad)) 0 0;break-after:avoid}
   .awards li{list-style:none;font-size:12.5px;margin-bottom:6px;padding-left:20px;position:relative}
   /* 奖项条目符：🏅 emoji。2026-09-30 曾换成单色 ◆（理由是"全份其余图标都是单色线条"），
      本人看后要求回到原样——**保留 emoji**，别再以风格断层为由换掉它。 */
@@ -271,7 +304,11 @@
   .summary{background:#eef2ff;border:1px solid #e0e7ff;border-radius:12px;
            padding:12px 16px;font-size:12.5px;color:#334155}
   .summary p{margin:0}.summary p+p{margin-top:7px}
-  @media print{body{background:#fff}.wrap{margin:0;box-shadow:none;max-width:100%;border-radius:0}}
+
+  /* ---- 并排行也会落在页首（D 实测过），同样补一份页顶留白 --------------------------
+     与 .pubs / .timeline 一个套路：负外边距抵掉盒首那份，所以 C（从不跨页）零影响。
+     `.subhead` 的同类处理写在它自己那条规则里（见上）。 */
+  .cols2{padding-top:var(--top-pad);margin-top:calc(-1 * var(--top-pad))}
 </style>
 </head>
 <body>
@@ -292,7 +329,7 @@
   <!-- <div class="kpis"><div class="kpi"><b>9</b><span>一作已发表论文</span></div><div class="kpi"><b>4</b><span>CCF-A 已发表</span></div><div class="kpi"><b>6</b><span>CCF-A 在投</span></div></div> -->
 
   <div class="content">
-    <section><h2><span class="dot"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 1.6l1.7 4.4 4.4 1.7-4.4 1.7L8 13.8 6.3 9.4 1.9 7.7l4.4-1.7z"/></svg></span>个人简介</h2><div class="summary"><p>曾屹荣，来自哈尔滨工业大学，社会计算与交互机器人研究中心 2022级直博生，导师刘挺教授。主要研究方向为大模型 Agentic RL、 Harness Agent 训练与指令遵循。以第一作者（含共一）在 NeurIPS、ICLR、ACL、EMNLP、NAACL、COLING、IPM 等顶级会议/期刊发表论文 9 篇（CCF-A 4 篇、CCF-B 4 篇、SCI-Q1 1 篇），另有 6 篇 CCF-A 在投。</p><p>2024年9月起至今在华为终端，基础算法开发部门实习。在实习期间，表现优秀，成为部门首批顶尖人才计划博士生实习生，部门内部实习生领头人；博士方向与部门重点研究方向高度匹配，有潜力在未来业务中做出关键突破，高价值成果。</p></div></section>        <section><h2><span class="dot"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3.4C6.7 2.5 4.7 2.1 2.4 2.4v9.2c2.3-.3 4.3.1 5.6 1 1.3-.9 3.3-1.3 5.6-1V2.4c-2.3-.3-4.3.1-5.6 1z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 3.4v9.2" stroke="currentColor" stroke-width="1.1"/></svg></span>教育背景</h2><div class="timeline">
+    <section><h2><span class="dot"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 1.6l1.7 4.4 4.4 1.7-4.4 1.7L8 13.8 6.3 9.4 1.9 7.7l4.4-1.7z"/></svg></span>个人简介</h2><div class="summary"><p>曾屹荣，来自哈尔滨工业大学，社会计算与交互机器人研究中心 2022级直博生，导师刘挺教授。顶刊顶会人才；曾获得国家奖学金，ACM银牌等；入选中国科协青年培育工程。主要研究方向为大模型 Agentic RL、 Harness Agent 训练与指令遵循。以第一作者（含共一）在 NeurIPS、ICLR、ACL、EMNLP、NAACL、COLING、IPM 等顶级会议/期刊发表论文 9 篇（CCF-A 4 篇、CCF-B 4 篇、SCI-Q1 1 篇），另有 6 篇 CCF-A 在投。</p><p>2024年9月起至今在华为终端，基础算法开发部门实习。在实习期间，表现优秀，成为部门首批顶尖人才计划博士生实习生，部门内部实习生领头人；带领实习生团队，重点参与小艺的全模态大模型系统训练技术的先导探索：在 Agentic RL、Harness Agent 训练、指令遵循方向产出 12 项研究成果，其中 4 项落地小艺业务。博士方向与部门重点研究方向高度匹配，有潜力在未来业务中做出关键突破，高价值成果。</p><p>科研经历上围绕大模型后训练的展开: (1)Agentic RL：定位长程训练后期性能停滞的关键原因（轨迹中的大量无效交互），以提前截断 + token 掩码、解耦熵约束等方法提升训练稳定性与性能上限；(2) Harness Agent 训练体系：搭建 SFT 数据生产线 (2+ 万条、42 类场景) 与 139 个工具交互环境，用轻量化 Harness 支撑大规模 In-Harness RL；(3) Agent中指令遵循泛化性提升：揭露出反馈信号质量是关键瓶颈，提出以多约束密度控制与轻量专家集成等方法提升指令遵从上限，并把成果落地小艺自研模型。</p></div></section>        <section><h2><span class="dot"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3.4C6.7 2.5 4.7 2.1 2.4 2.4v9.2c2.3-.3 4.3.1 5.6 1 1.3-.9 3.3-1.3 5.6-1V2.4c-2.3-.3-4.3.1-5.6 1z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 3.4v9.2" stroke="currentColor" stroke-width="1.1"/></svg></span>教育背景</h2><div class="timeline">
       <div class="tl-item">
         <div class="tl-head"><span class="pill-time">2022.09 – 至今（预计 2027.09 毕业）</span><h3>哈尔滨工业大学 <span class="org">直博五年级 · 博士候选人 · 计算学部 · 计算机科学与技术</span></h3></div>
 <p><span class="badge">科协青培博士人才</span><span class="badge">华为顶尖人才计划实习生</span></p><ul class="detail"><li>导师：刘挺教授（校长）；实验室：社会计算与交互机器人研究中心（SCIR）</li><li>研究方向：自然语言处理、大模型、Agentic RL、Harness Agent 训练、指令遵循</li><li>一作发表论文 9 篇（CCF-A 4 篇、CCF-B 4 篇、SCI-Q1 1 篇），另有 6 篇 CCF-A 在投</li></ul>      </div>      <div class="tl-item">
@@ -303,7 +340,7 @@
 <p><span class="badge">首批顶尖人才计划实习生</span><span class="badge">部门实习生领头人（带 7 人实习生团队）</span></p><p class="tl-desc">作为研究型实习生，负责小艺的全模态大模型系统训练技术的先导探索：在 Agentic RL、Harness Agent 训练、指令遵循方向产出 12 项研究成果，其中 4 项落地小艺业务。</p><div class="tl-group"><div class="gtitle">▸ Agentic RL 算法研发</div>
         <ul class="detail"><li>发现长程 Agentic RL 训练后期性能停滞/崩溃的一个关键原因是轨迹中的大量无效交互，通过提前截断轨迹 + token 掩码提升训练稳定性与上限【<em>NeurIPS 2026</em>; ICLR2027 在投】</li><li>提出解耦熵约束策略，实现大模型使用工具时依据问题复杂度自适应调整快慢思考模式 【<em>AutoTool, ICLR 2026</em>】</li><li>昇腾训练生态适配，探索 RL 训练信用分配机制，发表首篇面向通用领域基于 GRPO 进行 Agentic Tool Use 训练的论文【<em>Tool Zero, EMNLP 2025</em>; iTool, EMNLP 2025】</li></ul></div><div class="tl-group"><div class="gtitle">▸ Harness Agent 训练体系搭建</div>
         <ul class="detail"><li>构建 SFT 数据生产流水线，产出 2+ 万条数据、覆盖 42 类 Harness 使用场景，支撑大规模 Agent 训练数据供给【NeurIPS 2026】</li><li>主导搭建 139 个 Agentic RL Tool 环境，支撑业务 Agentic RL 先导探索【ICLR 2027 在投】</li><li>设计轻量化 Harness，支撑大规模在线 In-Harness RL 训练，训练资源开销减少 8 倍、推理开销减少 32%【AAAI 2027 在投】</li></ul></div><div class="tl-group"><div class="gtitle">▸ Agent 指令遵循性能提升</div>
-        <ul class="detail"><li>发现 RL 影响指令遵从能力的关键瓶颈是反馈信号质量，提出多约束下的密度控制，低成本提升指令遵从性能上限，落地小艺自研模型，对话满意度 <em>81→89</em>【ICLR 2027 在投】</li><li>轻量专家集成方法缓解多约束场景下强化学习的 reward hack 问题：平均性能 +10%、奖励精度 +12%、训练速度 3× 【<em>TinyJudge, ACL 2026</em>】</li><li>探索在线策略蒸馏（OPD）在指令遵从中的应用，解耦-聚合修正教师在多约束下的分布，性能 +4%【ICLR 2027 在投】</li></ul></div>      </div>    </div></section>        <section class="pgbreak"><h2><span class="dot"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.2" y="1.8" width="9.6" height="12.4" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M5.6 5.2h4.8M5.6 7.8h4.8M5.6 10.4h3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>已录用论文（一作/共一 9 篇）</h2>
+        <ul class="detail"><li>发现 RL 影响指令遵从能力的关键瓶颈是反馈信号质量，提出多约束下的密度控制，低成本提升指令遵从性能上限，落地小艺自研模型，对话满意度 <em>81→89</em>【ICLR 2027 在投】</li><li>轻量专家集成方法缓解多约束场景下强化学习的 reward hack 问题：平均性能 +10%、奖励精度 +12%、训练速度 3× 【<em>TinyJudge, ACL 2026</em>】</li><li>探索在线策略蒸馏（OPD）在指令遵从中的应用，解耦-聚合修正教师在多约束下的分布，性能 +4%【ICLR 2027 在投】</li></ul></div>      </div>    </div></section>        <section><h2><span class="dot"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.2" y="1.8" width="9.6" height="12.4" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M5.6 5.2h4.8M5.6 7.8h4.8M5.6 10.4h3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span>已录用论文（一作/共一 9 篇）</h2>
       <ol class="pubs">
         <li class="pub"><span class="tag A">CCF-A</span>
           <span class="pub-title">[1] Unveiling Entropy-Performance Decoupling in Agentic RL for Tool-Integrated Reasoning</span><br>
@@ -369,12 +406,7 @@
           <span class="pub-meta">Yirong Zeng, Sai Zhang, et al. ｜ <b>ACL-ARR</b>（在投） ｜ 一作</span><br>
 </li>
       </ol>
-    </section>        <section><h2><span class="dot"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.1" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M10.9 5.1l-1.7 4.1-4.1 1.7 1.7-4.1z" fill="currentColor"/></svg></span>研究方向</h2><div class="rail">
-      <div class="tl-item" style="margin-bottom:14px">
-        <div class="tl-head"><span class="pill-time">2024.09 – 至今</span><h3>智能体强化学习（Agentic RL）</h3></div>
-<ul class="detail"><li>通过工具调用获取环境与人类反馈、持续更新模型参数来提升性能上限，是大模型后训练的主流技术路线</li><li>研究覆盖：长程训练的稳定性与上限提升（NeurIPS 2026、EMNLP 2025×2、ICLR2027 在投）、自适应快慢思考（ICLR 2026）、工具环境与数据合成（NeurIPS 2026、ICLR 2027 在投）、轻量化 Harness 与 In-Harness RL（AAAI 2027 在投）</li></ul>      </div>      <div class="tl-item" style="margin-bottom:14px">
-        <div class="tl-head"><span class="pill-time">2025.06 – 至今</span><h3>指令遵循（Instruction Following）</h3></div>
-<ul class="detail"><li>在给出回答的同时额外满足用户指定的约束条件，是智能体对话与长程任务执行的必备能力</li><li>研究覆盖：RL 训练下指令遵从泛化性机制与上限提升（ACL 2026、ICLR 2027 在投）、多模态指令遵循 RL 数据合成（ACL-ARR 在投）、在线策略蒸馏 OPD 在其上的应用（ICLR 2027 在投）</li></ul>      </div>    </div></section>    <div class="cols2" style="grid-template-columns:0.78fr 1.22fr">    <section><h2><span class="dot"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.6 1.9h6.8v4.3a3.4 3.4 0 01-6.8 0z" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M4.6 3.1H2.4v1.2a2.4 2.4 0 002.4 2.4M11.4 3.1h2.2v1.2a2.4 2.4 0 01-2.4 2.4" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M8 9.6v2.4M5.2 14.1h5.6l-.6-2.1H5.8z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>荣誉奖项</h2>
+    </section>    <div class="cols2" style="grid-template-columns:0.78fr 1.22fr">    <section><h2><span class="dot"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.6 1.9h6.8v4.3a3.4 3.4 0 01-6.8 0z" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M4.6 3.1H2.4v1.2a2.4 2.4 0 002.4 2.4M11.4 3.1h2.2v1.2a2.4 2.4 0 01-2.4 2.4" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M8 9.6v2.4M5.2 14.1h5.6l-.6-2.1H5.8z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>荣誉奖项</h2>
       <ul class="awards"><li>中国科协青年科技人才培育工程博士生专项计划 · 2026</li><li>华为火花奖 · 2026<ul class="award-subs"><li>agent skill 渐近式披露</li><li>指令遵循泛化性探索</li></ul></li><li>教育部国家奖学金；各级校级奖学金</li><li>ACM 省赛银牌（队长） · 2021</li><li>全国大学生数学竞赛二等奖 · 2020</li><li>全国大学生数学建模竞赛一等奖 · 2019</li></ul>
     </section>    <section><h2><span class="dot"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="4.2" cy="3.2" r="1.7" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="4.2" cy="12.8" r="1.7" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="11.8" cy="8" r="1.7" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M4.2 4.9v6.2M11.8 6.3c0 2.4-2.4 1.7-5.4 1.7" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>主导的开源项目</h2><div class="rail">
       <div class="tl-item" style="margin-bottom:12px">

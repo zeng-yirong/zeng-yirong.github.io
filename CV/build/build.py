@@ -183,8 +183,11 @@ def check(style: str, d: dict, path: Path) -> list:
             t = e.get("type")
             if not t:
                 errs.append(f"timeline 条目缺少 type：{e.get('title')!r}")
-            elif t not in rails:
-                errs.append(f"timeline 条目 type={t!r}（{e.get('title')!r}）没有任何 rail 选中，会被漏渲染")
+            elif t not in rails and not e.get("unrendered"):
+                # `unrendered: true` = 这条**故意**不渲染（D 版撤掉「研究方向」段就是用它）。
+                # 没有这个标记却又没有 rail 选中，才是「漏渲染」——那才会报错。
+                errs.append(f"timeline 条目 type={t!r}（{e.get('title')!r}）没有任何 rail 选中，会被漏渲染"
+                            "（确属故意不渲染就给它加 unrendered: true）")
 
         # 拼错的键 = 静默失效（见 C_KEYS 的注释），逐层点名
         def keys_of(row, kind):
@@ -236,15 +239,17 @@ def check(style: str, d: dict, path: Path) -> list:
                             f"{rule!r}——页脚带子没了，页码会压到正文上。"
                             "改了模板的 @page 就要同步 FOOTER_BAND 这条登记")
 
-    # 续页的页顶留白（C/D 模板的 --top-pad，见模板 :root 那段注释）。默认 20px，
-    # 数据里写 page_top_pad: N 可以逐版覆盖（D 就调大了它）。
-    # 写成字符串会拼出 "40pxpx" 这种非法值——CSS 静默忽略 → 续页页顶留白归零、
-    # 标题直接贴到纸边，页数也跟着变。所以这里挡一道，别让它静默生效。
-    if "page_top_pad" in d:
-        v = d["page_top_pad"]
-        if isinstance(v, bool) or not isinstance(v, int):
-            errs.append(f"page_top_pad 必须是整数（像素值），现在是 {v!r}"
-                        "——写成字符串会在 CSS 里拼出 '40pxpx'，页顶留白会静默归零")
+    # 纵向留白的三个数据旋钮（C/D 模板的 CSS 变量，见模板 :root 那段注释）。
+    # 都默认取 C 的老值，逐版覆盖：page_top_pad=续页页顶留白(20)、
+    # pubs_gap=论文列表盒首那道缝(20)、subhead_gap=「在投论文」小标题上方(30)。
+    # 写成字符串会拼出 "40pxpx" 这种非法值——CSS 静默忽略 → 该留白归零、版式塌掉，
+    # 页数也跟着变。所以这里逐键挡一道，别让它静默生效。
+    for key in ("page_top_pad", "pubs_gap", "subhead_gap"):
+        if key in d:
+            v = d[key]
+            if isinstance(v, bool) or not isinstance(v, int):
+                errs.append(f"{key} 必须是整数（像素值），现在是 {v!r}"
+                            "——写成字符串会在 CSS 里拼出 '40pxpx'，那条留白会静默归零")
     return errs
 
 
