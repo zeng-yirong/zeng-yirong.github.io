@@ -38,7 +38,7 @@
   badge:
     en: "ICLR 2026 | CCF-A, First Author"
     zh: "ICLR 2026 ｜ CCF-A，一作"
-  href: "https://proceedings.iclr.cc/paper_files/paper/2026/hash/65ea878cb90b440e8b4cd34fe0959914-Abstract-Conference.html"
+  href: "https://iclr.cc/virtual/2026/poster/10006467"
 
 - title: "TinyJudge: Unverifiable Constraint Alignment via Lightweight Specialist Ensembles."
   authors: "Yirong Zeng, Yufei Liu, Xiao Ding, Yutai Hou, Yuxian Wang, Wu Ning, Haonan Song, Dandan Tu, Qixun Zhang, et al."
@@ -52,8 +52,8 @@
   authors: "Yirong Zeng, Xiao Ding, Bibo Cai, Bing Qin, Ting Liu"
   status: "published"
   badge:
-    en: "IPM 2026 | SCI-Q1, First Author"
-    zh: "IPM 2026 ｜ SCI-Q1，一作"
+    en: "IPM 2026 (IF=8.3) | SCI-Q1, First Author"
+    zh: "IPM 2026 (IF=8.3) ｜ SCI-Q1，一作"
   href: "https://www.sciencedirect.com/science/article/pii/S0306457326000518"
 
 - title: "Tool Zero: Training Tool-Augmented LLMs via Pure RL from Scratch."
