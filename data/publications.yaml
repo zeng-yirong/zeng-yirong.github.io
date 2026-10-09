@@ -24,6 +24,7 @@
   badge:
     en: "NeurIPS 2026 | CCF-A, First Author"
     zh: "NeurIPS 2026 ｜ CCF-A，一作"
+  href: "https://nips.cc/virtual/2026/loc/sydney/poster/150606"
 
 - title: "ClawBenchPro: Benchmarking How Well Agent Harnesses Work."
   authors: "Yufei Liu*, Yirong Zeng* (co-first), et al."
@@ -31,6 +32,7 @@
   badge:
     en: "NeurIPS 2026 | CCF-A, Co-First Author"
     zh: "NeurIPS 2026 ｜ CCF-A，共一"
+  href: "https://nips.cc/virtual/2026/loc/sydney/poster/139365"
 
 - title: "AutoTool: Automatic Scaling of Tool-Use Capabilities in RL via Decoupled Entropy Constraints."
   authors: "Yirong Zeng, Xiao Ding, Yufei Liu, Yuxian Wang, Qunyao Du, Yutai Hou, Wu Ning, Haonan Song, Duyu Tang, Dandan Tu, et al."

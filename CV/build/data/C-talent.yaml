@@ -217,7 +217,7 @@ summary: >
 
 # tier: A/B/P(在投); first: 独一; co: 共一
 # url: 论文链接，渲染成标题上的超链接（不再明文显示）。来源：CV/zeng-yirong_resume_all.docx；
-#      那儿没有链接的篇目（2 篇 NeurIPS 2026 + 3 篇在投）就不写 url，标题照常显示、只是不可点。
+#      没有链接的篇目（现在只剩 3 篇在投——2 篇 NeurIPS 2026 已于 2026-10-10 补上 poster 页）就不写 url，标题照常显示、只是不可点。
 # note_hidden: 该条只留事实、页面不显示 note（对应 validate.py 的 UNRENDERED["C"]）
 publications:
   # pgbreak: false（2026-09-30 由 true 改来）。原先是「在投论文」另起一页（本人 2026-09-28 要求），
@@ -230,8 +230,8 @@ publications:
   # **排列规则（本人 2026-10-08 定）：A 类成果优先**——CCF-A 4 篇 → SCI-Q1 1 篇
   # （IPM；本人明确「它也算 A 类成果」）→ CCF-B 4 篇。别再按 venue 或年份重排回去。
   published:
-    - {title: "Unveiling Entropy-Performance Decoupling in Agentic RL for Tool-Integrated Reasoning", authors: "Yirong Zeng, Shen You, et al.", venue: "NeurIPS 2026", tier: "A", first: true,  note: "发现轨迹中的无效交互是长程 Agentic RL 训练后期性能停滞的关键原因；通过在训练中监控无效交互次数，并提前截断轨迹，实现提升训练稳定性；减少 34% 的无效交互，同时性能上限提升 3%"}
-    - {title: "ClawBenchPro: Benchmarking How Well Agent Harnesses Work", authors: "Yufei Liu*, Yirong Zeng*（共一）, et al.", venue: "NeurIPS 2026", tier: "A", co: true, note: "设计 Harness 的数据生产线，合成多样化的测试数据集，评测不同 Agent 在不同 Harness 下的表现与差异"}
+    - {title: "Unveiling Entropy-Performance Decoupling in Agentic RL for Tool-Integrated Reasoning", authors: "Yirong Zeng, Shen You, et al.", venue: "NeurIPS 2026", tier: "A", first: true,  note: "发现轨迹中的无效交互是长程 Agentic RL 训练后期性能停滞的关键原因；通过在训练中监控无效交互次数，并提前截断轨迹，实现提升训练稳定性；减少 34% 的无效交互，同时性能上限提升 3%", url: "https://nips.cc/virtual/2026/loc/sydney/poster/150606"}
+    - {title: "ClawBenchPro: Benchmarking How Well Agent Harnesses Work", authors: "Yufei Liu*, Yirong Zeng*（共一）, et al.", venue: "NeurIPS 2026", tier: "A", co: true, note: "设计 Harness 的数据生产线，合成多样化的测试数据集，评测不同 Agent 在不同 Harness 下的表现与差异", url: "https://nips.cc/virtual/2026/loc/sydney/poster/139365"}
     - {title: "AutoTool: Automatic Scaling of Tool-Use Capabilities in RL via Decoupled Entropy Constraints", authors: "Yirong Zeng, Xiao Ding, et al.", venue: "ICLR 2026", tier: "A", first: true, note: "解耦 Agentic RL 下不同问题的熵约束策略，实现在环境交互过程中，根据难度自适应地快慢思考", url: "https://iclr.cc/virtual/2026/poster/10006467"}
     - {title: "TinyJudge: Unverifiable Constraint Alignment via Lightweight Specialist Ensembles", authors: "Yirong Zeng, Yufei Liu, et al.", venue: "ACL 2026", tier: "A", first: true, note: "轻量小型奖励专家模型的训练与集成（~0.6B），来提升强化学习下指令遵从的泛化能力：平均性能 +10%、奖励精度 +12%、训练速度 3×", url: "https://aclanthology.org/2026.acl-long.1204/"}
     - {title: "Human Cognitive Process Aligned Rumor Detection with Small Language Models Enhanced Large Language Models", authors: "Yirong Zeng, Xiao Ding, et al.", venue: "IPM 2026 (IF=8.3)", tier: "Q1", first: true, note: "人类认知过程对齐的谣言检测，小模型增强大模型框架", note_hidden: true, url: "https://www.sciencedirect.com/science/article/pii/S0306457326000518"}
